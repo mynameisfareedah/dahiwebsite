@@ -1,0 +1,8 @@
+{
+  "name": "DAHI — Doc Adi Health Initiative",
+  "short_name": "DAHI",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2E7D32"
+}
