@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 [build]
   publish = "."
   functions = "functions"
@@ -11,3 +12,18 @@
   X-Frame-Options = "DENY"
   X-Content-Type-Options = "nosniff"
   Referrer-Policy = "strict-origin-when-cross-origin"
+=======
+[build]
+  publish = "."
+  functions = "functions"
+
+[functions]
+  node_bundler = "esbuild"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+  X-Frame-Options = "DENY"
+  X-Content-Type-Options = "nosniff"
+  Referrer-Policy = "strict-origin-when-cross-origin"
+>>>>>>> fb6e75e28af5ae3749cffa9d8a0f147d26a0b8bb

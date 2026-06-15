@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "name": "DAHI — Doc Adi Health Initiative",
   "short_name": "DAHI",
@@ -6,3 +7,13 @@
   "background_color": "#ffffff",
   "theme_color": "#2E7D32"
 }
+=======
+{
+  "name": "DAHI — Doc Adi Health Initiative",
+  "short_name": "DAHI",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2E7D32"
+}
+>>>>>>> fb6e75e28af5ae3749cffa9d8a0f147d26a0b8bb
