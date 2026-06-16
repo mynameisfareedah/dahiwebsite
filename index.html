@@ -25,31 +25,76 @@
   <!-- Font Awesome for icons (kept for parity) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+  <style>
+    html{scroll-behavior:smooth}
+  </style>
+
   <script defer src="./scripts/main.js"></script>
   <link rel="shortcut icon" href="/favicon.ico">
 </head>
-<body class="antialiased text-gray-800 bg-white overflow-x-hidden break-words">
+<body class="pt-20 md:pt-24 antialiased text-gray-800 bg-white overflow-x-hidden break-words">
 
-  <!-- Header -->
-  <header class="sticky top-0 bg-white/90 backdrop-blur z-40">
-    <div class="w-full max-w-6xl mx-auto px-4 md:px-8 py-3 flex items-center justify-between">
-      <a href="#home" class="flex items-center gap-3">
-        <img src="logo.jpeg" alt="DAHI logo" loading="lazy" class="h-10 w-auto rounded-sm">
-        <span class="font-semibold text-dahiPrimary">DAHI</span>
-      </a>
+  <!-- Navbar (fixed) -->
+  <header class="fixed top-0 w-full bg-white/90 backdrop-blur shadow-sm z-50">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <a href="#hero" class="flex items-center gap-3">
+          <img src="logo.jpeg" alt="DAHI logo" loading="lazy" class="h-9 w-auto rounded-sm">
+          <div class="leading-tight">
+            <div class="font-semibold text-dahiPrimary">DAHI</div>
+            <div class="text-xs text-gray-500">Doc Adi Health Initiative</div>
+          </div>
+        </a>
+      </div>
 
-      <nav aria-label="Primary" class="hidden md:block">
-        <ul class="flex items-center gap-4 text-dahiSecondary">
-          <li><a href="#home" class="hover:text-dahiPrimary">Home</a></li>
-          <li><a href="#about" class="hover:text-dahiPrimary">About</a></li>
-          <li><a href="#services" class="hover:text-dahiPrimary">Services</a></li>
-          <li><a href="#previous" class="hover:text-dahiPrimary">Webinars</a></li>
-          <li><a href="#resources" class="hover:text-dahiPrimary">Resources</a></li>
-          <li><a href="#community" class="hover:text-dahiPrimary">Community</a></li>
-        </ul>
+      <nav class="hidden md:flex md:items-center md:gap-6" aria-label="Primary navigation">
+        <a href="#hero" class="text-gray-700 hover:text-gray-900 transition">Home</a>
+        <a href="#about" class="text-gray-700 hover:text-gray-900 transition">About</a>
+        <a href="#what-we-do" class="text-gray-700 hover:text-gray-900 transition">What We Do</a>
+        <a href="#impact" class="text-gray-700 hover:text-gray-900 transition">Impact</a>
+        <a href="#webinar" class="text-gray-700 hover:text-gray-900 transition">Webinar</a>
+        <a href="#resources" class="text-gray-700 hover:text-gray-900 transition">Resources</a>
+        <a href="#contact" class="text-gray-700 hover:text-gray-900 transition">Contact</a>
       </nav>
 
-      <button class="md:hidden p-2 rounded bg-gray-100" aria-label="Open menu">☰</button>
+      <div class="hidden md:block">
+        <a href="https://forms.gle/joTjf3VYW9anCA9MA" target="_blank" rel="noopener" class="bg-dahiPrimary text-white px-4 py-2 rounded-lg font-semibold hover:scale-105 transform transition">Join Community</a>
+      </div>
+
+      <!-- Mobile: hamburger -->
+      <div class="md:hidden">
+        <button id="nav-toggle" aria-expanded="false" aria-controls="mobile-menu" class="p-2 rounded bg-gray-100" aria-label="Open menu">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="hidden md:hidden bg-white/95 backdrop-blur border-t border-gray-100">
+      <div class="max-w-6xl mx-auto px-6 py-4 space-y-3">
+        <div class="flex items-center justify-between">
+          <div class="font-semibold">Menu</div>
+          <button id="nav-close" class="p-2 rounded bg-gray-100" aria-label="Close menu">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 011.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+            </svg>
+          </button>
+        </div>
+
+        <a href="#hero" class="block text-gray-700 py-2">Home</a>
+        <a href="#about" class="block text-gray-700 py-2">About</a>
+        <a href="#what-we-do" class="block text-gray-700 py-2">What We Do</a>
+        <a href="#impact" class="block text-gray-700 py-2">Impact</a>
+        <a href="#webinar" class="block text-gray-700 py-2">Webinar</a>
+        <a href="#resources" class="block text-gray-700 py-2">Resources</a>
+        <a href="#contact" class="block text-gray-700 py-2">Contact</a>
+
+        <div class="pt-3">
+          <a href="https://forms.gle/joTjf3VYW9anCA9MA" target="_blank" rel="noopener" class="block w-full text-center bg-dahiPrimary text-white px-4 py-2 rounded-lg font-semibold">Join Community</a>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -439,8 +484,8 @@
       </div>
     </section>
 
-  <!-- Footer -->
-  <footer class="bg-gray-900 text-white mt-10">
+    <!-- Footer -->
+  <footer id="contact" class="bg-gray-900 text-white mt-10">
     <div class="w-full max-w-6xl mx-auto px-4 md:px-8 py-8 grid grid-cols-1 md:grid-cols-3 gap-6">
       <div>
         <a href="#home" class="flex items-center gap-3">
@@ -473,5 +518,23 @@
   <!-- Sticky register button -->
   <a id="sticky-register" href="https://selar.com/112eyd273c" target="_blank" rel="noopener" class="fixed right-5 bottom-7 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-full shadow-lg hidden md:inline-block">Register for Webinar</a>
 
+  <script>
+    // Mobile menu toggle
+    const navToggle = document.getElementById('nav-toggle');
+    const navClose = document.getElementById('nav-close');
+    const mobileMenu = document.getElementById('mobile-menu');
+    if(navToggle){
+      navToggle.addEventListener('click', ()=>{
+        const expanded = navToggle.getAttribute('aria-expanded') === 'true';
+        navToggle.setAttribute('aria-expanded', String(!expanded));
+        mobileMenu.classList.toggle('hidden');
+      })
+    }
+    if(navClose){
+      navClose.addEventListener('click', ()=> mobileMenu.classList.add('hidden'))
+    }
+    // Close menu on link click
+    document.querySelectorAll('#mobile-menu a').forEach(a=> a.addEventListener('click', ()=> mobileMenu.classList.add('hidden')));
+  </script>
 </body>
 </html>
