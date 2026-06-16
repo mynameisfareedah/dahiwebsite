@@ -113,7 +113,6 @@ input[type="text"],input[type="email"]{width:100%;padding:0.6rem;margin-top:0.25
   .main-nav ul{flex-direction:column;gap:0.25rem}
   .main-nav .whatsapp-link{display:block;margin-top:0.5rem}
 }
-
 /* Webinar feature styles */
 .webinar-feature{display:grid;grid-template-columns:1fr;gap:1rem;align-items:start;padding:1rem;border-radius:10px;background:linear-gradient(180deg, #fff, rgba(255,255,255,0.98));box-shadow:0 6px 18px rgba(0,0,0,0.04);border:1px solid rgba(0,0,0,0.04)}
 .webinar-media img{width:100%;height:auto;border-radius:8px;object-fit:cover}
