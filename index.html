@@ -28,11 +28,11 @@
   <script defer src="./scripts/main.js"></script>
   <link rel="shortcut icon" href="/favicon.ico">
 </head>
-<body class="antialiased text-gray-800 bg-white">
+<body class="antialiased text-gray-800 bg-white overflow-x-hidden break-words">
 
   <!-- Header -->
   <header class="sticky top-0 bg-white/90 backdrop-blur z-40">
-    <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+    <div class="w-full max-w-6xl mx-auto px-4 md:px-8 py-3 flex items-center justify-between">
       <a href="#home" class="flex items-center gap-3">
         <img src="logo.jpeg" alt="DAHI logo" loading="lazy" class="h-10 w-auto rounded-sm">
         <span class="font-semibold text-dahiPrimary">DAHI</span>
@@ -53,10 +53,10 @@
     </div>
   </header>
 
-  <main class="max-w-5xl mx-auto px-4">
+  <main class="w-full overflow-x-hidden break-words">
 
     <!-- HERO -->
-    <section id="home" class="grid gap-6 md:grid-cols-2 items-center py-8">
+    <section id="home" class="w-full max-w-6xl mx-auto px-4 md:px-8 py-12 md:py-20 grid gap-6 md:grid-cols-2 items-center">
       <div>
         <h1 class="text-2xl md:text-4xl font-extrabold text-white bg-gradient-to-r from-dahiPrimary to-dahiAccent inline-block px-3 py-2 rounded">Empowering Women Through Health, Education & Faith-Based Wellness</h1>
 
@@ -67,9 +67,9 @@
 
         <p class="mt-4 text-gray-700">Trusted medical education, guided conversations, and supportive wellness resources for Muslim women.</p>
 
-        <div class="mt-6 flex flex-col sm:flex-row gap-3 sm:gap-4">
-          <a href="https://forms.gle/joTjf3VYW9anCA9MA" target="_blank" rel="noopener" class="inline-block px-4 py-3 rounded-md bg-dahiPrimary text-white font-semibold shadow">Join the Community</a>
-          <a href="#previous" class="inline-block px-4 py-3 rounded-md border-2 border-dahiSecondary text-dahiSecondary hover:bg-dahiSecondary/5">See Webinars</a>
+        <div class="mt-6 flex flex-col md:flex-row gap-4">
+          <a href="https://forms.gle/joTjf3VYW9anCA9MA" target="_blank" rel="noopener" class="w-full md:w-auto inline-block px-4 py-3 rounded-md bg-dahiPrimary text-white font-semibold shadow transition">Join the Community</a>
+          <a href="#previous" class="w-full md:w-auto inline-block px-4 py-3 rounded-md border-2 border-dahiSecondary text-dahiSecondary hover:bg-dahiSecondary/5 transition">See Webinars</a>
         </div>
       </div>
 
@@ -79,8 +79,8 @@
     </section>
 
     <!-- Highlights -->
-    <section id="trust" class="py-8">
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <section id="trust" class="w-full max-w-6xl mx-auto px-4 md:px-8 py-12 md:py-20">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <article class="bg-white shadow rounded-lg p-4">
           <img src="./ebook.svg" alt="Education icon" loading="lazy" class="h-10 mb-3">
           <h3 class="font-semibold">Women's health education</h3>
@@ -102,7 +102,7 @@
     </section>
 
     <!-- About -->
-    <section id="about" class="py-8">
+    <section id="about" class="w-full max-w-6xl mx-auto px-4 md:px-8 py-12 md:py-20">
       <div class="grid md:grid-cols-3 gap-6">
         <div class="md:col-span-2 space-y-4">
           <h2 class="text-2xl font-bold">About DAHI</h2>
@@ -125,11 +125,11 @@
     </section>
 
     <!-- Impact -->
-    <section id="impact" class="py-8">
+    <section id="impact" class="w-full max-w-6xl mx-auto px-4 md:px-8 py-12 md:py-20">
       <h2 class="text-2xl font-bold">Our Impact</h2>
       <p class="text-gray-700 mt-2">Real conversations. Real education. Real change in women’s health awareness since inception in November 2025.</p>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
         <div class="bg-white shadow rounded-lg p-4 flex items-center gap-4">
           <img src="./ebook.svg" alt="Women reached icon" loading="lazy" class="w-12 h-12 rounded-md">
           <div>
@@ -165,13 +165,13 @@
     </section>
 
     <!-- Upcoming events -->
-    <section id="upcoming" class="py-8">
+    <section id="upcoming" class="w-full max-w-6xl mx-auto px-4 md:px-8 py-12 md:py-20">
       <h2 class="text-2xl font-bold mb-3">Upcoming Events</h2>
       <div class="bg-gradient-to-r from-white to-white rounded-lg p-4 shadow">
         <div class="text-center mb-4 text-sm font-semibold text-red-700">Limited Spots Available — Registration Closes Soon</div>
-        <div class="grid md:grid-cols-2 gap-4 items-start">
-          <figure class="overflow-hidden rounded-lg">
-            <img src="doc adi webinar.jpeg" alt="Doc Adi webinar poster" loading="lazy" class="w-full h-64 object-cover object-center">
+        <div class="grid md:grid-cols-2 gap-6 items-start">
+          <figure class="overflow-hidden rounded-lg flex items-center justify-center">
+            <img src="doc adi webinar.jpeg" alt="Doc Adi webinar poster" loading="lazy" class="w-full h-64 md:h-72 object-cover object-center mx-auto">
           </figure>
 
           <div class="space-y-3">
@@ -194,9 +194,9 @@
               </div>
             </div>
 
-            <div class="mt-4 flex flex-col sm:flex-row gap-3">
-              <a id="primary-register" href="https://selar.com/112eyd273c" target="_blank" rel="noopener" class="w-full sm:w-auto px-5 py-3 rounded-md bg-dahiPrimary text-white font-bold shadow-lg">Register for Webinar</a>
-              <a href="https://forms.gle/25oKDJoDAC4w7VBfA" target="_blank" rel="noopener" class="w-full sm:w-auto px-5 py-3 rounded-md border-2 border-dahiSecondary text-dahiSecondary">Submit Your Questions</a>
+            <div class="mt-4 flex flex-col md:flex-row gap-4">
+              <a id="primary-register" href="https://selar.com/112eyd273c" target="_blank" rel="noopener" class="w-full md:w-auto px-5 py-3 rounded-md bg-red-600 hover:bg-red-700 text-white font-bold transition shadow-lg">Register for Webinar</a>
+              <a href="https://forms.gle/25oKDJoDAC4w7VBfA" target="_blank" rel="noopener" class="w-full md:w-auto px-5 py-3 rounded-md border-2 border-dahiSecondary text-dahiSecondary hover:bg-dahiSecondary/10 transition">Submit Your Questions</a>
             </div>
           </div>
         </div>
@@ -204,9 +204,9 @@
     </section>
 
     <!-- Services -->
-    <section id="services" class="py-8">
+    <section id="services" class="w-full max-w-6xl mx-auto px-4 md:px-8 py-12 md:py-20">
       <h2 class="text-2xl font-bold">Our Focus Areas</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
         <article class="bg-white rounded-lg shadow p-4">
           <h3 class="font-semibold">Menstrual Health</h3>
           <p class="text-sm text-gray-600">Understand cycles, pain management, and practical self-care.</p>
@@ -235,14 +235,14 @@
     </section>
 
     <!-- Previous Webinars -->
-    <section id="previous" class="py-8">
+    <section id="previous" class="w-full max-w-6xl mx-auto px-4 md:px-8 py-12 md:py-20">
       <h2 class="text-2xl font-bold">Previous Webinars</h2>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
         <!-- Card -->
         <article class="bg-white rounded-lg shadow overflow-hidden flex flex-col">
-          <figure class="w-full h-44 sm:h-40 md:h-48 lg:h-40 overflow-hidden">
-            <img src="Hormones and health illustration.jpg" alt="Hormones & health webinar" loading="lazy" class="w-full h-full object-cover object-center">
+          <figure class="w-full h-44 sm:h-48 md:h-56 lg:h-48 overflow-hidden flex items-center justify-center">
+            <img src="Hormones and health illustration.jpg" alt="Hormones & health webinar" loading="lazy" class="w-full h-full object-cover object-center mx-auto">
           </figure>
           <div class="p-4 flex-1 flex flex-col">
             <h3 class="font-semibold text-dahiPrimary">Hormones & Health: Conception & Contraception</h3>
@@ -252,9 +252,9 @@
         </article>
 
         <article class="bg-white rounded-lg shadow overflow-hidden flex flex-col">
-          <figure class="w-full h-44 sm:h-40 md:h-48 lg:h-40 overflow-hidden">
-            <img src="CONTRACEPTION.jpg" alt="Contraception webinar" loading="lazy" class="w-full h-full object-cover object-center">
-          </figure>
+            <figure class="w-full h-44 sm:h-48 md:h-56 lg:h-48 overflow-hidden flex items-center justify-center">
+              <img src="CONTRACEPTION.jpg" alt="Contraception webinar" loading="lazy" class="w-full h-full object-cover object-center mx-auto">
+            </figure>
           <div class="p-4 flex-1 flex flex-col">
             <h3 class="font-semibold text-dahiPrimary">Contraception & Family Planning for Muslim Women</h3>
             <p class="text-gray-700 mt-2 flex-1">An interactive discussion helping women understand contraception options and make informed decisions.</p>
@@ -263,8 +263,8 @@
         </article>
 
         <article class="bg-white rounded-lg shadow overflow-hidden flex flex-col">
-          <figure class="w-full h-44 sm:h-40 md:h-48 lg:h-40 overflow-hidden">
-            <img src="MENOPAUSE.jpg" alt="Menopause webinar" loading="lazy" class="w-full h-full object-cover object-center">
+          <figure class="w-full h-44 sm:h-48 md:h-56 lg:h-48 overflow-hidden flex items-center justify-center">
+            <img src="MENOPAUSE.jpg" alt="Menopause webinar" loading="lazy" class="w-full h-full object-cover object-center mx-auto">
           </figure>
           <div class="p-4 flex-1 flex flex-col">
             <h3 class="font-semibold text-dahiPrimary">Menopause Webinar</h3>
@@ -274,8 +274,8 @@
         </article>
 
         <article class="bg-white rounded-lg shadow overflow-hidden flex flex-col">
-          <figure class="w-full h-44 sm:h-40 md:h-48 lg:h-40 overflow-hidden">
-            <img src="MENSTRUAL HEALTH.jpg" alt="Menstrual health masterclass" loading="lazy" class="w-full h-full object-cover object-center">
+          <figure class="w-full h-44 sm:h-48 md:h-56 lg:h-48 overflow-hidden flex items-center justify-center">
+            <img src="MENSTRUAL HEALTH.jpg" alt="Menstrual health masterclass" loading="lazy" class="w-full h-full object-cover object-center mx-auto">
           </figure>
           <div class="p-4 flex-1 flex flex-col">
             <h3 class="font-semibold text-dahiPrimary">Menstrual Health Masterclass</h3>
@@ -287,9 +287,9 @@
     </section>
 
     <!-- Resources -->
-    <section id="resources" class="py-8">
+    <section id="resources" class="w-full max-w-6xl mx-auto px-4 md:px-8 py-12 md:py-20">
       <h2 class="text-2xl font-bold">Resources</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
         <article class="bg-white rounded-lg shadow overflow-hidden flex flex-col">
           <figure class="w-full h-40 overflow-hidden">
             <img src="sunnah-reset-a-7-day-meno-selar.com-6a0c3775671cd.png" alt="Sunnah Reset cover" loading="lazy" class="w-full h-full object-cover object-center">
@@ -297,7 +297,7 @@
           <div class="p-4 flex-1 flex flex-col">
             <h3 class="font-semibold">Sunnah Reset – 7 Day Menopause Reset Guide</h3>
             <p class="text-gray-700 mt-2 flex-1">Faith-conscious 7-day menopause reset.</p>
-            <div class="mt-3"><a href="https://selar.com/66566z1k7x" target="_blank" rel="noopener" class="inline-block px-4 py-2 rounded bg-dahiPrimary text-white font-semibold">Download</a></div>
+            <div class="mt-3"><a href="https://selar.com/66566z1k7x" target="_blank" rel="noopener" class="inline-block w-full md:w-auto px-4 py-2 rounded bg-dahiPrimary text-white font-semibold transition">Download</a></div>
           </div>
         </article>
 
@@ -308,7 +308,7 @@
           <div class="p-4 flex-1 flex flex-col">
             <h3 class="font-semibold">Comprehensive Menstrual Health Guide</h3>
             <p class="text-gray-700 mt-2 flex-1">Practical menstrual health and management.</p>
-            <div class="mt-3"><a href="https://selar.com/p346083214" target="_blank" rel="noopener" class="inline-block px-4 py-2 rounded bg-dahiPrimary text-white font-semibold">Download</a></div>
+            <div class="mt-3"><a href="https://selar.com/p346083214" target="_blank" rel="noopener" class="inline-block w-full md:w-auto px-4 py-2 rounded bg-dahiPrimary text-white font-semibold transition">Download</a></div>
           </div>
         </article>
 
@@ -319,21 +319,21 @@
           <div class="p-4 flex-1 flex flex-col">
             <h3 class="font-semibold">8 Weeks to Understanding Your Cycle – Islamic Approach</h3>
             <p class="text-gray-700 mt-2 flex-1">Structured program to understand menstrual cycles.</p>
-            <div class="mt-3"><a href="https://selar.com/d661vie336" target="_blank" rel="noopener" class="inline-block px-4 py-2 rounded bg-dahiPrimary text-white font-semibold">Download</a></div>
+            <div class="mt-3"><a href="https://selar.com/d661vie336" target="_blank" rel="noopener" class="inline-block w-full md:w-auto px-4 py-2 rounded bg-dahiPrimary text-white font-semibold transition">Download</a></div>
           </div>
         </article>
       </div>
     </section>
 
     <!-- Newsletter CTA -->
-    <section id="newsletter" class="py-8">
+    <section id="newsletter" class="w-full max-w-6xl mx-auto px-4 md:px-8 py-12 md:py-20">
       <h2 class="text-2xl font-bold">Stay Updated</h2>
       <p class="text-gray-700 mt-2">Join our mailing list and receive webinar invites, resources, and community updates.</p>
-      <div class="mt-4"><a href="https://forms.gle/joTjf3VYW9anCA9MA" target="_blank" rel="noopener" class="inline-block px-5 py-3 rounded bg-dahiPrimary text-white font-semibold">Subscribe / Join</a></div>
+      <div class="mt-4"><a href="https://forms.gle/joTjf3VYW9anCA9MA" target="_blank" rel="noopener" class="inline-block w-full md:w-auto px-5 py-3 rounded bg-dahiPrimary text-white font-semibold transition">Subscribe / Join</a></div>
     </section>
 
     <!-- Community -->
-    <section id="community" class="py-8">
+    <section id="community" class="w-full max-w-6xl mx-auto px-4 md:px-8 py-12 md:py-20">
       <div class="grid md:grid-cols-2 gap-6 items-center">
         <figure class="mx-auto">
           <picture>
@@ -351,9 +351,9 @@
             <li>Supportive community discussions</li>
           </ul>
 
-          <div class="mt-4 flex flex-col sm:flex-row gap-3">
-            <a href="https://forms.gle/25oKDJoDAC4w7VBfA" target="_blank" rel="noopener" class="px-5 py-3 rounded bg-dahiPrimary text-white font-bold shadow">Join the Community</a>
-            <a href="https://whatsapp.com/channel/0029VbBdF4hLI8YZRabyWF0j" target="_blank" rel="noopener" class="px-5 py-3 rounded border-2 border-gray-200 text-gray-700">Join WhatsApp Community</a>
+          <div class="mt-4 flex flex-col md:flex-row gap-4">
+            <a href="https://forms.gle/25oKDJoDAC4w7VBfA" target="_blank" rel="noopener" class="w-full md:w-auto px-5 py-3 rounded bg-dahiPrimary text-white font-bold shadow transition">Join the Community</a>
+            <a href="https://whatsapp.com/channel/0029VbBdF4hLI8YZRabyWF0j" target="_blank" rel="noopener" class="w-full md:w-auto px-5 py-3 rounded border-2 border-gray-200 text-gray-700 transition">Join WhatsApp Community</a>
           </div>
         </div>
       </div>
@@ -363,7 +363,7 @@
 
   <!-- Footer -->
   <footer class="bg-gray-900 text-white mt-10">
-    <div class="max-w-5xl mx-auto px-4 py-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="w-full max-w-6xl mx-auto px-4 md:px-8 py-8 grid grid-cols-1 md:grid-cols-3 gap-6">
       <div>
         <a href="#home" class="flex items-center gap-3">
           <img src="logo.jpeg" alt="DAHI logo" loading="lazy" class="h-10 w-auto rounded-sm">
@@ -380,20 +380,20 @@
       <div>
         <h3 class="font-semibold">Follow Us</h3>
         <ul class="mt-3 space-y-3">
-          <li><a class="flex items-center gap-3 text-gray-100 hover:text-dahiAccent" href="https://www.facebook.com/share/1A8VVfnJyr" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-facebook-f text-lg"></i><span>Doc Adi Health Initiative</span></a></li>
-          <li><a class="flex items-center gap-3 text-gray-100 hover:text-dahiAccent" href="https://www.instagram.com/docadihealthintiative_?igsh=YmtnbW1hZnp6MWFz" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-instagram text-lg"></i><span>@docadihealthintiative_</span></a></li>
-          <li><a class="flex items-center gap-3 text-gray-100 hover:text-dahiAccent" href="https://youtube.com/@dahi-01?si=b54Rt5TiEc5Yvb7q" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-youtube text-lg"></i><span>DAHI</span></a></li>
-          <li><a class="flex items-center gap-3 text-gray-100 hover:text-dahiAccent" href="https://substack.com/@womenshealthwithdocadi" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-newspaper text-lg"></i><span>Women's Health with Doc Adi</span></a></li>
-          <li><a class="flex items-center gap-3 text-gray-100 hover:text-dahiAccent" href="https://whatsapp.com/channel/YOUR-CHANNEL-LINK" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-whatsapp text-lg"></i><span>Join Our Community</span></a></li>
+          <li><a class="flex items-center gap-3 text-gray-100 hover:text-dahiAccent" href="https://www.facebook.com/share/1A8VVfnJyr" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-facebook-f w-5 h-5 md:w-8 md:h-8 text-sm md:text-xl"></i><span>Doc Adi Health Initiative</span></a></li>
+          <li><a class="flex items-center gap-3 text-gray-100 hover:text-dahiAccent" href="https://www.instagram.com/docadihealthintiative_?igsh=YmtnbW1hZnp6MWFz" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-instagram w-5 h-5 md:w-8 md:h-8 text-sm md:text-xl"></i><span>@docadihealthintiative_</span></a></li>
+          <li><a class="flex items-center gap-3 text-gray-100 hover:text-dahiAccent" href="https://youtube.com/@dahi-01?si=b54Rt5TiEc5Yvb7q" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-youtube w-5 h-5 md:w-8 md:h-8 text-sm md:text-xl"></i><span>DAHI</span></a></li>
+          <li><a class="flex items-center gap-3 text-gray-100 hover:text-dahiAccent" href="https://substack.com/@womenshealthwithdocadi" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-newspaper w-5 h-5 md:w-8 md:h-8 text-sm md:text-xl"></i><span>Women's Health with Doc Adi</span></a></li>
+          <li><a class="flex items-center gap-3 text-gray-100 hover:text-dahiAccent" href="https://whatsapp.com/channel/YOUR-CHANNEL-LINK" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-whatsapp w-5 h-5 md:w-8 md:h-8 text-sm md:text-xl"></i><span>Join Our Community</span></a></li>
         </ul>
       </div>
     </div>
 
-    <div class="max-w-5xl mx-auto px-4 py-4 text-center text-gray-300 text-sm">© 2026 Doc Adi Health Initiative (DAHI). All Rights Reserved.</div>
+    <div class="w-full max-w-6xl mx-auto px-4 md:px-8 py-4 text-center text-gray-300 text-sm">© 2026 Doc Adi Health Initiative (DAHI). All Rights Reserved.</div>
   </footer>
 
   <!-- Sticky register button -->
-  <a id="sticky-register" href="https://selar.com/112eyd273c" target="_blank" rel="noopener" class="fixed right-5 bottom-7 bg-dahiPrimary text-white px-4 py-2 rounded-full shadow-lg hidden md:inline-block">Register for Webinar</a>
+  <a id="sticky-register" href="https://selar.com/112eyd273c" target="_blank" rel="noopener" class="fixed right-5 bottom-7 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-full shadow-lg hidden md:inline-block">Register for Webinar</a>
 
 </body>
 </html>
