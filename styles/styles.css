@@ -8,7 +8,7 @@
   --text:#333333;
 }
 html{scroll-behavior:smooth}
-*{box-sizing:border-box}
+html, *, *::before, *::after { box-sizing: border-box }
 /* Global image rule: ensure images never overflow their container */
 img { max-width:100%; height:auto; display:block; }
 picture, video { max-width:100%; height:auto; display:block; }
@@ -302,6 +302,43 @@ main > section{transition:background-color 200ms ease}
   .ebook-card img { height: auto; max-height:220px; object-fit:cover }
 
   .resource-card, .ebook-card, .webinar-card { margin-bottom: 14px }
+}
+
+/* Webinar images: ensure centered cropping */
+.webinar-media img,
+.previous-grid .webinar-media img {
+  object-position: center center;
+  margin: 0 auto;
+}
+
+/* Prevent text from overflowing on small screens */
+body, p, h1, h2, h3, h4, h5, .webinar-summary, .social-item .social-text {
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+/* Stronger contrast for webinar CTA buttons */
+.webinar-feature .btn.primary,
+.webinar-card .btn.primary,
+.card-footer .btn.primary,
+.upcoming-ctas .btn.primary {
+  color: #ffffff !important;
+  background: linear-gradient(90deg, #6b1a4d, var(--primary)) !important;
+  box-shadow: 0 10px 30px rgba(107,26,77,0.18);
+}
+
+/* Ensure contact and social text in footer is high-contrast white */
+.site-footer, .site-footer a, .footer-contact, .footer-contact a, .social-list, .social-item, .footer-desc, .footer-socials a {
+  color: rgba(255,255,255,0.96) !important;
+}
+
+/* Reduce icon sizes on small screens */
+@media(max-width:719px){
+  .footer-social-icon svg{width:14px;height:14px}
+  .footer-social-btn i{font-size:18px}
+  .social-item i{font-size:16px}
+  .expert-grid .card .icon svg{width:20px;height:20px}
+  .impact-icon svg{width:18px;height:18px}
 }
 
 /* Accessibility focus */
