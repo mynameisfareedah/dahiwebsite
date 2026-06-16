@@ -1,563 +1,505 @@
-        <article class="card">
-          <div class="icon">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 21s-6-4.5-6-9a6 6 0 0112 0c0 4.5-6 9-6 9z"/></svg>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>DAHI — Empowering Women Through Health, Education & Community</title>
+  <meta name="description" content="DAHI (Doc Adi Health Initiative) empowers women with trusted health education, preventive care awareness, and supportive communities.">
+  <meta property="og:title" content="DAHI — Empowering Women Through Health, Education & Community">
+  <meta property="og:description" content="Join thousands of women learning, growing, and thriving through trusted health education and supportive wellness programs.">
+  <meta property="og:image" content="header-hijabs.jpg">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./debug.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script defer src="./scripts/main.js"></script>
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "DAHI (Doc Adi Health Initiative)",
+    "url": "https://example.com",
+    "description": "Empowering women with trusted health education, preventive care awareness, and supportive communities.",
+    "logo": "header-hijabs.jpg"
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header" role="banner">
+    <div class="container header-inner">
+      <a class="brand" href="#home">
+        <img src="logo.jpeg" alt="DAHI logo" class="brand-logo small" loading="lazy">
+      </a>
+      <nav id="nav" class="main-nav" aria-label="Primary">
+        <ul>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#previous">Webinars</a></li>
+          <li><a href="#resources">Resources</a></li>
+          <li><a href="#community">Community</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+      <button class="menu-toggle" aria-expanded="false" aria-controls="nav" aria-label="Toggle navigation">☰</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO: first visible content inside <main> -->
+    <section id="home" class="hero container" aria-label="Hero">
+      <div class="hero-copy">
+        <h1>Empowering Women Through Health, Education & Faith-Based Wellness</h1>
+        <p class="sub">Trusted medical education, guided conversations, and supportive wellness resources for Muslim women.</p>
+        <div class="ctas">
+          <a class="btn primary" href="https://forms.gle/joTjf3VYW9anCA9MA" target="_blank" rel="noopener">Join the Community</a>
+          <a class="btn outline" href="#previous">See Webinars</a>
+        </div>
+      </div>
+      <figure class="hero-image" aria-hidden="true">
+        <img src="header-hijabs.jpg" alt="Diverse group of women" loading="lazy">
+      </figure>
+    </section>
+
+    <!-- Trust / Value Highlights -->
+    <section id="trust" class="container trust">
+      <div class="card-grid highlights">
+        <article class="card highlight" tabindex="0">
+          <img class="highlight-icon" src="./ebook.svg" alt="Education icon" loading="lazy">
+          <h3>Women's health education</h3>
+          <p>Practical, faith-conscious learning resources and guides.</p>
+        </article>
+
+        <article class="card highlight" tabindex="0">
+          <img class="highlight-icon" src="./ebook1.svg" alt="Webinars icon" loading="lazy">
+          <h3>Live webinars</h3>
+          <p>Regular interactive sessions with experts and Q&amp;A.</p>
+        </article>
+
+        <article class="card highlight" tabindex="0">
+          <img class="highlight-icon" src="./founder.svg" alt="Community icon" loading="lazy">
+          <h3>Community support</h3>
+          <p>Peer groups, WhatsApp channels, and ongoing engagement.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- About / Mission (moved above Impact & Webinar) -->
+    <section id="about" class="container about" aria-labelledby="about-heading">
+      <div class="about-inner">
+        <header class="about-header">
+          <h2 id="about-heading">About DAHI</h2>
+          <p class="about-hook">Many women and young girls grow up without clear, reliable education about their own bodies. Questions about menstrual health, fertility, pregnancy, menopause, and emotional wellbeing are often left unanswered or surrounded by confusion and stigma. DAHI exists to change that.</p>
+          <p class="about-sub">The Doc Adi Health Initiative (DAHI) was created to bridge this gap through education, awareness, and community support that empowers women to understand and take control of their health.</p>
+        </header>
+
+        <div class="about-grid">
+          <div class="about-content">
+            <section class="who-we-are" aria-labelledby="who-heading">
+              <h3 id="who-heading">Who We Are</h3>
+              <p>DAHI (Doc Adi Health Initiative) is a women’s health education and empowerment initiative focused on providing accessible, clear, and supportive health information to women and young girls.</p>
+              <ul class="who-list">
+                <li>We operate with a simple belief: when women are informed, they are empowered — physically, emotionally, and socially.</li>
+                <li>We are based in Aberdeen and work with a growing global community.</li>
+              </ul>
+            </section>
+
+            <section class="mission" aria-labelledby="mission-heading">
+              <h3 id="mission-heading">Our Mission</h3>
+              <p class="mission-quote">“To educate, empower, and support women and young girls by providing accessible and trustworthy health knowledge across all stages of life.”</p>
+            </section>
+
+            <hr class="divider">
+
+            <section class="problem" aria-labelledby="problem-heading">
+              <h3 id="problem-heading">The Problem We Address</h3>
+              <ul class="problem-list">
+                <li>Lack of access to reliable women’s health education</li>
+                <li>Cultural stigma around discussing reproductive health</li>
+                <li>Widespread misinformation online and offline</li>
+                <li>Emotional isolation around health experiences</li>
+                <li>Limited support systems for young girls entering puberty and women transitioning through life stages</li>
+              </ul>
+            </section>
+
+            <hr class="divider">
+
+            <section class="focus" aria-labelledby="focus-heading">
+              <h3 id="focus-heading">What We Focus On</h3>
+              <div class="focus-cards">
+                <article class="focus-card">
+                  <img src="./ebook.svg" alt="Menstrual health icon" class="focus-icon" loading="lazy">
+                  <h4>Menstrual Health Education</h4>
+                  <p>Understanding cycles, symptoms, and body awareness.</p>
+                </article>
+
+                <article class="focus-card">
+                  <img src="./ebook1.svg" alt="Fertility icon" class="focus-icon" loading="lazy">
+                  <h4>Fertility Awareness</h4>
+                  <p>Supporting informed reproductive choices and knowledge.</p>
+                </article>
+
+                <article class="focus-card">
+                  <img src="./founder.svg" alt="Pregnancy icon" class="focus-icon" loading="lazy">
+                  <h4>Pregnancy Support</h4>
+                  <p>Guidance and reassurance through pregnancy stages.</p>
+                </article>
+
+                <article class="focus-card">
+                  <img src="./founder.svg" alt="Menopause icon" class="focus-icon" loading="lazy">
+                  <h4>Menopause Education</h4>
+                  <p>Helping women understand and navigate life transitions.</p>
+                </article>
+
+                <article class="focus-card">
+                  <img src="./ebook.svg" alt="Emotional wellbeing icon" class="focus-icon" loading="lazy">
+                  <h4>Emotional Wellbeing</h4>
+                  <p>Supporting mental and emotional health connected to hormonal changes.</p>
+                </article>
+              </div>
+            </section>
+
           </div>
-          <div>
-            <h3>Sexual & Reproductive Health</h3>
+
+          <aside class="about-aside">
+            <div class="founder-box">
+              <img src="./founder.svg" alt="Doc Adi portrait" class="founder-photo" loading="lazy">
+              <div class="founder-bio">
+                <h3>Founder</h3>
+                <h4>Doc Adi — General Practitioner & Public Health Advocate</h4>
+                <p>Doc Adi is a General Practitioner with almost 20 years of clinical experience, holding an MPH (International, University of Birmingham), a Diploma of the Royal College of Obstetricians & Gynaecologists, and a Diploma in Sexual & Reproductive Health. She is a member of the British Society of Lifestyle Medicine (BSLM).</p>
+
+                <ul class="founder-highlights">
+                  <li><strong>Founder & Coach</strong> – Co-founded Bloom Women (Aug 2024 – Feb 2025), coaching women on gut health and lifestyle transformation.</li>
+                  <li><strong>Writer & Educator</strong> – Creator of <em>Gist with Doc Adi</em>; authoring a book guiding Muslim women through puberty and reproductive health.</li>
+                  <li><strong>Public Health Advocate</strong> – Led community health awareness programmes on prevention and lifestyle change.</li>
+                  <li><strong>Community Speaker & Instructor</strong> – Delivered talks in local mosques and trained community members in Basic Life Support with BIMA.</li>
+                </ul>
+
+                <p class="founder-vision">She envisions a safe, faith-aligned space where Muslim women can learn, grow, and thrive—physically, emotionally, and spiritually.</p>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- DAHI Impact -->
+    <section id="impact" class="container impact" aria-labelledby="impact-heading">
+      <header class="impact-header">
+        <h2 id="impact-heading">Our Impact</h2>
+        <p class="impact-sub">Real conversations. Real education. Real change in women’s health awareness since inception in November 2025.</p>
+      </header>
+
+      <div class="impact-grid">
+        <article class="impact-card">
+          <img src="./ebook.svg" alt="Women reached icon" class="impact-icon" loading="lazy">
+          <div class="impact-body">
+            <div class="impact-value">500+ Women Reached</div>
+            <div class="impact-desc">Through webinars, community engagement, and health education initiatives</div>
           </div>
         </article>
 
-        <article class="card">
-          <div class="icon">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2l7 4v5c0 5-3.5 9-7 11-3.5-2-7-6-7-11V6l7-4z"/></svg>
+        <article class="impact-card">
+          <img src="./ebook1.svg" alt="Webinars hosted icon" class="impact-icon" loading="lazy">
+          <div class="impact-body">
+            <div class="impact-value">4 Webinars Hosted</div>
+            <div class="impact-desc">Interactive sessions focused on women’s health, hormones, and wellbeing</div>
           </div>
-          <div>
-            <h3>Preventive Healthcare</h3>
+        </article>
+
+        <article class="impact-card">
+          <img src="./founder.svg" alt="Ebooks published icon" class="impact-icon" loading="lazy">
+          <div class="impact-body">
+            <div class="impact-value">3 Ebooks Published</div>
+            <div class="impact-desc">Educational resources designed to support women at every stage of life</div>
+          </div>
+        </article>
+
+        <article class="impact-card">
+          <img src="./logo.jpeg" alt="Active since icon" class="impact-icon" loading="lazy">
+          <div class="impact-body">
+            <div class="impact-value">Active Since November 2025</div>
+            <div class="impact-desc">Building a growing global women’s health education community</div>
           </div>
         </article>
       </div>
     </section>
 
-    <section id="what-we-do" class="container cards">
-      <h2>What We Do</h2>
-      <div class="card-grid">
-        <article class="card"> <h3>Women's Health Education</h3><p>Workshops and resources to build health literacy.</p></article>
-        <article class="card"> <h3>Community Support</h3><p>Peer groups and local meetups for shared learning.</p></article>
-        <article class="card"> <h3>Health Webinars</h3><p>Regular webinars on preventive care and lifestyle medicine.</p></article>
-        <article class="card"> <h3>Lifestyle Medicine</h3><p>Practical guidance for sustainable wellbeing.</p></article>
-        <article class="card"> <h3>Preventive Health Awareness</h3><p>Screenings, tips and preventive strategies.</p></article>
-        <article class="card"> <h3>Faith-Based Wellness Coaching</h3><p>Faith-centered approaches to holistic health.</p></article>
+    <!-- Upcoming Webinar -->
+    <section id="upcoming" class="container upcoming" aria-labelledby="upcoming-heading">
+      <!-- Urgency banner -->
+      <div class="urgency-banner" role="status" aria-live="polite">
+        <div class="urgency-inner">Limited Spots Available — Registration Closes Soon</div>
+      </div>
+
+      <div class="upcoming-header" style="text-align:center;">
+        <h2 id="upcoming-heading">Women’s Health &amp; Q&amp;A Webinar</h2>
+        <p class="upcoming-sub">A safe, evidence-based Q&amp;A session guided by your questions.</p>
+      </div>
+
+      <!-- Removed long intro; registration countdown will be inside the right column for higher urgency -->
+
+      <div class="upcoming-card high-convert">
+        <figure class="upcoming-media">
+          <img src="doc adi webinar.jpeg" alt="Doc Adi webinar poster" loading="lazy">
+        </figure>
+        <div class="upcoming-details">
+          <h3 class="accent-title">Women’s Health &amp; Q&amp;A Webinar</h3>
+          <p class="upcoming-desc">Join a safe, evidence-based Q&amp;A session where your questions about periods, hormones, fertility, pregnancy, menopause, and emotional wellbeing are answered by trusted health professionals.</p>
+
+          <ul class="key-topics">
+            <li>Menstrual health</li>
+            <li>Hormones &amp; emotional wellbeing</li>
+            <li>Fertility, pregnancy &amp; menopause</li>
+          </ul>
+
+          <!-- Registration countdown removed -->
+
+          <!-- Question submission (secondary) countdown + event details -->
+          <div class="event-card">
+            <ul class="event-meta">
+              <li><strong>Date:</strong> Sunday, June 28th</li>
+              <li><strong>Time:</strong> 10:00 AM GMT</li>
+              <li><strong>Question Submission Deadline:</strong> June 18th, 2026</li>
+            </ul>
+          </div>
+
+          <p class="important-note"><strong>Selected questions will be answered live.</strong> Similar questions may be grouped together. No question is too small.</p>
+
+          <div class="upcoming-ctas">
+            <a id="primary-register" class="btn primary large" href="https://selar.com/112eyd273c" target="_blank" rel="noopener">Register for Webinar</a>
+            <a class="btn outline" href="https://forms.gle/25oKDJoDAC4w7VBfA" target="_blank" rel="noopener">Submit Your Questions</a>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Trust & About moved above; original removed -->
+
+    <!-- Services / Focus Areas -->
+    <section id="services" class="container services">
+      <h2>Our Focus Areas</h2>
+      <div class="expert-grid">
+        <article class="card"><div class="icon"></div><h3>Menstrual Health</h3><p>Understand cycles, pain management, and practical self-care.</p></article>
+        <article class="card"><div class="icon"></div><h3>Fertility & Pregnancy</h3><p>Fertility awareness, conception guidance, and prenatal care topics.</p></article>
+        <article class="card"><div class="icon"></div><h3>Contraception & Family Planning</h3><p>Options, myths, and faith-conscious decision-making.</p></article>
+        <article class="card"><div class="icon"></div><h3>Menopause & Ageing</h3><p>Symptom support, treatments, and healthy ageing strategies.</p></article>
+        <article class="card"><div class="icon"></div><h3>Emotional Wellbeing</h3><p>Mental health, stress, and lifestyle medicine for resilience.</p></article>
+      </div>
+    </section>
+
+    <!-- Previous Webinars (card grid) -->
+    <section id="previous" class="container previous-webinars" aria-labelledby="previous-heading">
+      <h2 id="previous-heading">Previous Webinars</h2>
+      <div class="resource-grid webinars-grid">
+        <article class="resource-card webinar-card">
+          <figure class="card-media">
+            <img src="Hormones and health illustration.jpg" alt="Hormones & health webinar" loading="lazy">
+          </figure>
+          <div class="card-body">
+            <h3>Hormones & Health: Conception & Contraception</h3>
+            <p class="card-summary">A faith-conscious, evidence-based webinar helping Muslim women understand hormones, fertility, conception, and contraception.</p>
+          </div>
+          <div class="card-meta">
+            <time datetime="2026-01-25">25 January 2026</time>
+          </div>
+        </article>
+
+        <article class="resource-card webinar-card">
+          <figure class="card-media">
+            <img src="CONTRACEPTION.jpg" alt="Contraception webinar" loading="lazy">
+          </figure>
+          <div class="card-body">
+            <h3>Contraception & Family Planning for Muslim Women</h3>
+            <p class="card-summary">An interactive discussion helping women understand contraception options and make informed decisions.</p>
+          </div>
+          <div class="card-meta">
+            <time datetime="2026-04-04">4 April 2026</time>
+          </div>
+        </article>
+
+        <article class="resource-card webinar-card">
+          <figure class="card-media">
+            <img src="MENOPAUSE.jpg" alt="Menopause webinar" loading="lazy">
+          </figure>
+          <div class="card-body">
+            <h3>Menopause Webinar</h3>
+            <p class="card-summary">Exploring menopause symptoms, management, and lifestyle strategies.</p>
+          </div>
+          <div class="card-meta">
+            <time datetime="2026-04-26">26 April 2026</time>
+          </div>
+        </article>
+
+        <article class="resource-card webinar-card">
+          <figure class="card-media">
+            <img src="MENSTRUAL HEALTH.jpg" alt="Menstrual health masterclass" loading="lazy">
+          </figure>
+          <div class="card-body">
+            <h3>Menstrual Health Masterclass</h3>
+            <p class="card-summary">A practical masterclass on understanding the menstrual cycle and related wellbeing.</p>
+          </div>
+          <div class="card-meta">
+            <time datetime="2025-11-20">20 November 2025</time>
+          </div>
+        </article>
       </div>
     </section>
 
     
 
-    <section id="upcoming" class="container webinars">
-      <h2>Upcoming Webinar</h2>
-      <div class="webinar-feature">
-        <div class="webinar-media">
-          <img src="doc adi webinar.jpeg" alt="Dr Adiyat webinar" loading="lazy">
-        </div>
-        <div class="webinar-content">
-          <h3>💜 Women's Health Q&amp;A Webinar</h3>
-          <p>Have questions about your period, hormones, fertility, pregnancy, menopause, or emotional wellbeing?</p>
+    
 
-          <p>You're not alone.</p>
+    <!-- Resources / Ebooks (card grid) -->
+    <section id="resources" class="container ebooks" aria-labelledby="resources-heading">
+      <h2 id="resources-heading">Resources</h2>
+      <div class="resource-grid ebooks-grid">
+        <article class="resource-card ebook-card">
+          <figure class="card-media">
+            <img src="sunnah-reset-a-7-day-meno-selar.com-6a0c3775671cd.png" alt="Sunnah Reset cover" loading="lazy">
+          </figure>
+          <div class="card-body">
+            <h3>Sunnah Reset – 7 Day Menopause Reset Guide</h3>
+            <p class="card-summary">Faith-conscious 7-day menopause reset.</p>
+          </div>
+          <div class="card-meta">
+            <div class="card-cta"><a class="btn primary" href="https://selar.com/66566z1k7x" target="_blank" rel="noopener">Download</a></div>
+          </div>
+        </article>
 
-          <p>Many women carry important health questions for years without getting clear answers. This interactive webinar provides a safe, respectful, and judgment-free space where you can ask questions openly—or anonymously—and receive evidence-based guidance from trusted health professionals.</p>
+        <article class="resource-card ebook-card">
+          <figure class="card-media">
+            <img src="comprehensive-menstrual-h-selar.com-690cc0d476a89.jpg" alt="Comprehensive Menstrual Health cover" loading="lazy">
+          </figure>
+          <div class="card-body">
+            <h3>Comprehensive Menstrual Health Guide</h3>
+            <p class="card-summary">Practical menstrual health and management.</p>
+          </div>
+          <div class="card-meta">
+            <div class="card-cta"><a class="btn primary" href="https://selar.com/p346083214" target="_blank" rel="noopener">Download</a></div>
+          </div>
+        </article>
 
-          <p class="meta"><strong>📅 Date:</strong> Sunday, June 28th</p>
-          <p class="meta"><strong>🕙 Time:</strong> 10:00 AM GMT</p>
-          <p class="meta"><strong>📌 Question Submission Deadline:</strong> <span class="urgent">June 18th</span></p>
+        <article class="resource-card ebook-card">
+          <figure class="card-media">
+            <img src="8-weeks-to-understanding--selar.com-6903a8099f4b8.jpg" alt="8 Weeks to Understanding Your Cycle cover" loading="lazy">
+          </figure>
+          <div class="card-body">
+            <h3>8 Weeks to Understanding Your Cycle – Islamic Approach</h3>
+            <p class="card-summary">Structured program to understand menstrual cycles.</p>
+          </div>
+          <div class="card-meta">
+            <div class="card-cta"><a class="btn primary" href="https://selar.com/d661vie336" target="_blank" rel="noopener">Download</a></div>
+          </div>
+        </article>
+      </div>
+    </section>
 
-          <p>No question is too small. No concern is insignificant.</p>
+    <!-- Call to Action / Newsletter -->
+    <section id="newsletter" class="container newsletter">
+      <h2>Stay Updated</h2>
+      <p>Join our mailing list and receive webinar invites, resources, and community updates.</p>
+      <div class="newsletter-cta">
+        <a class="btn primary" href="https://forms.gle/joTjf3VYW9anCA9MA" target="_blank" rel="noopener">Subscribe / Join</a>
+      </div>
+    </section>
 
-          <p><strong>Register today</strong> and get the answers you've been looking for.</p>
-
-          <div class="ctas">
-            <a class="btn primary" href="https://selar.com/112eyd273c" target="_blank" rel="noopener">Register Webinar</a>
-            <a class="btn outline" href="https://forms.gle/25oKDJoDAC4w7VBfA" target="_blank" rel="noopener">Submit Questions</a>
+    <!-- Community (placed just before footer) -->
+    <section id="community" class="container community" aria-labelledby="community-heading">
+      <div class="community-grid">
+        <figure class="community-image" aria-hidden="false">
+          <picture>
+            <source type="image/webp" srcset="community-480.webp 480w, community-768.webp 768w, community-1200.webp 1200w" sizes="(max-width:720px) 100vw, (max-width:1024px) 520px, 640px">
+              <img src="community-768.jpg" srcset="community-480.jpg 480w, community-768.jpg 768w, community-1200.jpg 1200w" sizes="(max-width:720px) 100vw, (max-width:1024px) 520px, 640px" alt="DAHI community members in discussion" loading="lazy" decoding="async">
+          </picture>
+        </figure>
+        <div class="community-content">
+          <h2 id="community-heading">Join the DAHI Community</h2>
+          <p class="subheadline">Connect with women committed to learning, healing, and thriving through trusted health education.</p>
+          <ul class="benefits">
+            <li>Webinar invitations and reminders</li>
+            <li>Access to free resources and guides</li>
+            <li>Supportive community discussions</li>
+          </ul>
+          <div class="community-cta" role="region" aria-label="Community call to action">
+            <a class="btn primary large" href="https://forms.gle/25oKDJoDAC4w7VBfA" target="_blank" rel="noopener noreferrer" aria-label="Join the Community via Google Form">Join the Community</a>
+            <a class="btn secondary large" href="https://whatsapp.com/channel/0029VbBdF4hLI8YZRabyWF0j" target="_blank" rel="noopener noreferrer" aria-label="Join WhatsApp Community">Join WhatsApp Community</a>
           </div>
         </div>
       </div>
     </section>
 
-    <section id="ebooks" class="container ebooks">
-      <h2>Ebooks</h2>
-      <div class="ebook-grid">
-        <article class="ebook-card">
-          <img src="sunnah-reset-a-7-day-meno-selar.com-6a0c3775671cd.png" alt="Sunnah Reset cover">
-          <h3>Sunnah Reset – 7 Day Menopause Reset Guide</h3>
-          <p>Faith-conscious 7-day menopause reset.</p>
-          <p class="price">$5</p>
-          <a class="btn primary" href="https://selar.com/66566z1k7x" target="_blank" rel="noopener">Get Guide</a>
-        </article>
+  </main>
 
-        <!doctype html>
-        <html lang="en">
-        <head>
-          <meta charset="utf-8">
-          <meta name="viewport" content="width=device-width,initial-scale=1">
-          <title>DAHI — Empowering Women Through Health, Education & Community</title>
-          <meta name="description" content="DAHI (Doc Adi Health Initiative) empowers women with trusted health education, preventive care awareness, and supportive communities.">
-          <meta property="og:title" content="DAHI — Empowering Women Through Health, Education & Community">
-          <meta property="og:description" content="Join thousands of women learning, growing, and thriving through trusted health education and supportive wellness programs.">
-          <meta property="og:image" content="header-hijabs.jpg">
-          <meta property="og:type" content="website">
-          <meta name="twitter:card" content="summary_large_image">
+  <footer class="site-footer" role="contentinfo">
+    <div class="container footer-grid">
+      <div class="footer-col footer-dahi">
+        <a class="brand" href="#home">
+          <img src="logo.jpeg" alt="DAHI logo" class="brand-logo small" loading="lazy">
+        </a>
+        <p class="footer-desc">Empowering women and girls through trusted health education, community, and evidence-based resources.</p>
+      </div>
 
-          <link rel="stylesheet" href="./styles.css">
-          <!-- Debug stylesheet: remove after verification -->
-          <link rel="stylesheet" href="./debug.css">
-          <script defer src="./scripts/main.js"></script>
-          <link rel="manifest" href="./manifest.json">
-          <link rel="icon" href="./assets/favicon.svg">
-          <script type="application/ld+json">
-          {
-            "@context": "https://schema.org",
-            "@type": "Organization",
-            "name": "DAHI (Doc Adi Health Initiative)",
-            "url": "https://example.com",
-            "description": "Empowering women with trusted health education, preventive care awareness, and supportive communities.",
-            "logo": "header-hijabs.jpg"
-          }
-          </script>
-          <script type="application/ld+json">
-          {
-            "@context": "https://schema.org",
-            "@type": "Event",
-            "name": "Women's Health Q&A Webinar",
-            "description": "Have questions about your period, hormones, fertility, pregnancy, menopause, or emotional wellbeing? This interactive webinar provides a safe, respectful, and judgment-free space to ask questions and receive evidence-based guidance.",
-            "startDate": "2026-06-28T10:00:00Z",
-            "endDate": "2026-06-28T11:00:00Z",
-            "url": "https://selar.com/112eyd273c",
-            "eventStatus": "https://schema.org/EventScheduled",
-            "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",
-            "location": {
-              "@type": "VirtualLocation",
-              "url": "https://selar.com/112eyd273c"
-            },
-            "organizer": {
-              "@type": "Organization",
-              "name": "Doc Adi Health Initiative (DAHI)",
-              "url": "https://example.com"
-            }
-          }
-          </script>
-        </head>
-          <body>
-          <header class="site-header" role="banner">
-            <div class="container header-inner">
-              <a class="brand" href="#home">
-                <img src="logo.jpeg" alt="DAHI logo" class="brand-logo small" loading="lazy">
-              </a>
-              <nav id="nav" class="main-nav" aria-label="Primary">
-                <ul>
-                  <li><a href="#home">Home</a></li>
-                  <li><a href="#about">About</a></li>
-                  <li><a href="#founder">Founder</a></li>
-                  <li><a href="#upcoming">Webinars</a></li>
-                  <li><a href="#ebooks">Resources</a></li>
-                  <li><a href="#community">Community</a></li>
-                  <li><a href="#contact">Contact</a></li>
-                </ul>
-        
-              </nav>
-              <button class="menu-toggle" aria-expanded="false" aria-controls="nav" aria-label="Toggle navigation">☰</button>
-            </div>
-            <div id="home" class="hero container">
-              <div class="hero-copy">
-                <h1>Empowering Women Through Health, Education & Faith-Based Wellness</h1>
-                <p class="sub">Join a growing community of women receiving trusted medical education, guided conversations, and supportive wellness resources.</p>
-                <div class="ctas">
-                  <a class="btn primary" href="https://forms.gle/joTjf3VYW9anCA9MA" target="_blank" rel="noopener">Join the Community</a>
-                </div>
-              </div>
-              <figure class="hero-image" aria-hidden="true">
-                <img src="header-hijabs.jpg" alt="Diverse group of women" loading="lazy">
-              </figure>
-            </div>
-          </header>
+      <div class="footer-col footer-contact">
+        <h3>Contact</h3>
+        <p><a href="mailto:docadi.healthintiative@gmail.com">docadi.healthintiative@gmail.com</a></p>
+      </div>
 
-          <main>
-            <section id="about" class="container about">
-              <h2>About DAHI</h2>
-              <h3>Every Woman Deserves Trusted Health Information</h3>
-              <p>Too many women spend years living with unanswered questions about their health.</p>
+      <div class="footer-col footer-follow">
+        <h3>Follow Us</h3>
+        <ul class="social-list" role="list">
+          <li>
+            <a class="social-item" href="https://www.facebook.com/share/1A8VVfnJyr" target="_blank" rel="noopener noreferrer" aria-label="DAHI on Facebook">
+              <i class="fa-brands fa-facebook-f" aria-hidden="true"></i>
+              <span class="social-text">Doc Adi Health Initiative</span>
+            </a>
+          </li>
 
-              <p>Questions about periods, fertility, pregnancy, menopause, hormones, emotional wellbeing, and the changes happening in their bodies often go unanswered—or are met with myths, misinformation, judgment, or silence.</p>
+          <li>
+            <a class="social-item" href="https://www.instagram.com/docadihealthintiative_?igsh=YmtnbW1hZnp6MWFz" target="_blank" rel="noopener noreferrer" aria-label="DAHI on Instagram">
+              <i class="fa-brands fa-instagram" aria-hidden="true"></i>
+              <span class="social-text">@docadihealthintiative_</span>
+            </a>
+          </li>
 
-              <p>At DAHI (Doc Adi Health Initiative), we believe women deserve better.</p>
+          <li>
+            <a class="social-item" href="https://youtube.com/@dahi-01?si=b54Rt5TiEc5Yvb7q" target="_blank" rel="noopener noreferrer" aria-label="DAHI on YouTube">
+              <i class="fa-brands fa-youtube" aria-hidden="true"></i>
+              <span class="social-text">DAHI</span>
+            </a>
+          </li>
 
-              <p>Founded by Dr. Adiyat Olamide Dele-Salawu, DAHI was created to provide a safe, supportive, and evidence-based space where women can access reliable health education, ask important questions, and make informed decisions about their wellbeing with confidence.</p>
+          <li>
+            <a class="social-item" href="https://substack.com/@womenshealthwithdocadi" target="_blank" rel="noopener noreferrer" aria-label="DAHI on Substack">
+              <i class="fa-solid fa-newspaper" aria-hidden="true"></i>
+              <span class="social-text">Women's Health with Doc Adi</span>
+            </a>
+          </li>
 
-              <p>We are committed to bridging the gap between medical knowledge and everyday life by delivering practical health education that is accessible, culturally sensitive, and rooted in compassion.</p>
+          <li>
+            <a class="social-item" href="https://whatsapp.com/channel/YOUR-CHANNEL-LINK" target="_blank" rel="noopener noreferrer" aria-label="DAHI WhatsApp Channel">
+              <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+              <span class="social-text">Join Our Community</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
 
-              <p>Through webinars, community discussions, educational resources, and wellness initiatives, we empower women to better understand their bodies, advocate for their health, and navigate every stage of life—from adolescence and reproductive years to menopause and beyond.</p>
-            </section>
+    <div class="container copyright">© 2026 Doc Adi Health Initiative (DAHI). All Rights Reserved.</div>
+  </footer>
 
-            <section id="founder" class="container founder">
-              <h2>Founder</h2>
-              <div class="founder-grid">
-                <img src="assets/founder.svg" alt="Dr. Adiyat Olamide D." loading="lazy">
-                <div>
-                  <h3>Dr. Adiyat Olamide D.</h3>
-                  <p>General Practitioner | Women's Health Advocate | Public Health Professional | Lifestyle Medicine Practitioner</p>
-                  <p>Dr. Adiyat Olamide D. is a healthcare professional with nearly 20 years of clinical experience. Through DAHI, she is committed to empowering women through education, advocacy, community engagement, and evidence-based healthcare information.</p>
-                  <p><strong>Qualifications:</strong> MBBS · MRCGP · MPH · DRCOG · Diploma in Sexual & Reproductive Health</p>
-                </div>
-              </div>
+  <!-- Sticky register button (appears after scrolling) -->
+  <a id="sticky-register" class="sticky-register" href="https://selar.com/112eyd273c" target="_blank" rel="noopener" aria-hidden="true">Register for Webinar</a>
 
-      
-            </section>
-
-            <section id="expertise" class="container expertise">
-              <h2>Areas of Expertise</h2>
-              <div class="expert-grid">
-                <article class="card">
-                  <div class="icon">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="6" r="4"/><path d="M12 10v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                  </div>
-                  <div>
-                    <h3>Women's Health</h3>
-                  </div>
-                </article>
-
-                <article class="card">
-                  <div class="icon">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.4" fill="none"/><path d="M2 12h20M12 2v20" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
-                  </div>
-                  <div>
-                    <h3>Public Health</h3>
-                  </div>
-                </article>
-
-                <article class="card">
-                  <div class="icon">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 20c4-6 8-8 12-12 0 0-2 4-6 8-4 4-6 4-6 4z"/></svg>
-                  </div>
-                  <div>
-                    <h3>Lifestyle Medicine</h3>
-                  </div>
-                </article>
-
-                <article class="card">
-                  <div class="icon">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 21s-6-4.5-6-9a6 6 0 0112 0c0 4.5-6 9-6 9z"/></svg>
-                  </div>
-                  <div>
-                    <h3>Sexual & Reproductive Health</h3>
-                  </div>
-                </article>
-
-                <article class="card">
-                  <div class="icon">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2l7 4v5c0 5-3.5 9-7 11-3.5-2-7-6-7-11V6l7-4z"/></svg>
-                  </div>
-                  <div>
-                    <h3>Preventive Healthcare</h3>
-                  </div>
-                </article>
-              </div>
-            </section>
-
-            <section id="what-we-do" class="container cards">
-              <h2>What We Do</h2>
-              <div class="card-grid">
-                <article class="card"> <h3>Women's Health Education</h3><p>Workshops and resources to build health literacy.</p></article>
-                <article class="card"> <h3>Community Support</h3><p>Peer groups and local meetups for shared learning.</p></article>
-                <article class="card"> <h3>Health Webinars</h3><p>Regular webinars on preventive care and lifestyle medicine.</p></article>
-                <article class="card"> <h3>Lifestyle Medicine</h3><p>Practical guidance for sustainable wellbeing.</p></article>
-                <article class="card"> <h3>Preventive Health Awareness</h3><p>Screenings, tips and preventive strategies.</p></article>
-                <article class="card"> <h3>Faith-Based Wellness Coaching</h3><p>Faith-centered approaches to holistic health.</p></article>
-              </div>
-            </section>
-
-            <section id="upcoming" class="container webinars">
-              <h2>Upcoming Webinar</h2>
-              <div class="webinar-feature">
-                <div class="webinar-media">
-                  <img src="doc adi webinar.jpeg" alt="Dr Adiyat webinar" loading="lazy">
-                </div>
-                <div class="webinar-content">
-                  <h3>💜 Women's Health Q&amp;A Webinar</h3>
-                  <p>Have questions about your period, hormones, fertility, pregnancy, menopause, or emotional wellbeing?</p>
-
-                  <p>You're not alone.</p>
-
-                  <p>Many women carry important health questions for years without getting clear answers. This interactive webinar provides a safe, respectful, and judgment-free space where you can ask questions openly—or anonymously—and receive evidence-based guidance from trusted health professionals.</p>
-
-                  <p class="meta"><strong>📅 Date:</strong> Sunday, June 28th</p>
-                  <p class="meta"><strong>🕙 Time:</strong> 10:00 AM GMT</p>
-                  <p class="meta"><strong>📌 Question Submission Deadline:</strong> <span class="urgent">June 18th</span></p>
-
-                  <p>No question is too small. No concern is insignificant.</p>
-
-                  <p><strong>Register today</strong> and get the answers you've been looking for.</p>
-
-                  <div class="ctas">
-                    <a class="btn primary" href="https://selar.com/112eyd273c" target="_blank" rel="noopener">Register Webinar</a>
-                    <a class="btn outline" href="https://forms.gle/25oKDJoDAC4w7VBfA" target="_blank" rel="noopener">Submit Questions</a>
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            <section id="ebooks" class="container ebooks">
-              <h2>Ebooks</h2>
-              <div class="ebook-grid">
-                <article class="ebook-card">
-                  <img src="sunnah-reset-a-7-day-meno-selar.com-6a0c3775671cd.png" alt="Sunnah Reset cover">
-                  <h3>Sunnah Reset – 7 Day Menopause Reset Guide</h3>
-                  <p>Faith-conscious 7-day menopause reset.</p>
-                  <p class="price">$5</p>
-                  <a class="btn primary" href="https://selar.com/66566z1k7x" target="_blank" rel="noopener">Get Guide</a>
-                </article>
-
-                <article class="ebook-card">
-                  <img src="comprehensive-menstrual-h-selar.com-690cc0d476a89.jpg" alt="Comprehensive Menstrual Health cover">
-                  <h3>Comprehensive Menstrual Health Guide</h3>
-                  <p>Practical menstrual health and management.</p>
-                  <p class="price">$3</p>
-                  <a class="btn primary" href="https://selar.com/p346083214" target="_blank" rel="noopener">Get Guide</a>
-                </article>
-
-                <article class="ebook-card">
-                  <img src="8-weeks-to-understanding--selar.com-6903a8099f4b8.jpg" alt="8 Weeks to Understanding Your Cycle cover">
-                  <h3>8 Weeks to Understanding Your Cycle – Islamic Approach</h3>
-                  <p>Structured program to understand menstrual cycles.</p>
-                  <p class="price">Free</p>
-                  <a class="btn primary" href="https://selar.com/d661vie336" target="_blank" rel="noopener">Download</a>
-                </article>
-              </div>
-            </section>
-
-            <section id="previous" class="container previous-webinars">
-              <h2>Previous Webinars</h2>
-              <div class="previous-grid">
-                <article class="webinar-card">
-                  <figure class="webinar-media" role="img">
-                    <img src="Hormones and health illustration.jpg" alt="Women's health webinar discussing hormones and fertility" loading="lazy" onerror="this.style.display='none';this.parentNode.querySelector('.placeholder').style.display='flex';">
-                    <div class="placeholder" aria-hidden="true" style="display:none">
-                      <span>Hormones & Health: Conception & Contraception</span>
-                    </div>
-                  </figure>
-                  <div class="webinar-card-body">
-                    <h3>Hormones & Health: Conception & Contraception</h3>
-                    <p class="webinar-summary">A faith-conscious, evidence-based webinar helping Muslim women understand hormones, fertility, conception, and contraception while aligning health decisions with Islamic values.</p>
-                    <p class="webinar-date"><strong>Date:</strong> 25 January 2026</p>
-                    <ul class="webinar-topics">
-                      <li>Hormones & fertility</li>
-                      <li>Ovulation</li>
-                    <li>Family planning</li>
-                      <li>Contraception options</li>
-                      <li>Q&amp;A session</li>
-                    </ul>
-                    <div class="card-footer">
-                      <a class="btn outline" href="#community">Learn More</a>
-                    </div>
-                  </div>
-                </article>
-
-                <article class="webinar-card">
-                  <figure class="webinar-media" role="img">
-                    <img src="CONTRACEPTION.jpg" alt="Family planning educational webinar for Muslim women" loading="lazy" onerror="this.style.display='none';this.parentNode.querySelector('.placeholder').style.display='flex';">
-                    <div class="placeholder" aria-hidden="true" style="display:none">
-                      <span>Contraception & Family Planning for Muslim Women</span>
-                    </div>
-                  </figure>
-                  <div class="webinar-card-body">
-                    <h3>Contraception & Family Planning for Muslim Women</h3>
-                    <p class="webinar-summary">An interactive two-day discussion helping women understand contraception options, dispel myths, and make informed family planning decisions.</p>
-                    <p class="webinar-date"><strong>Date:</strong> 4 April 2026</p>
-                    <ul class="webinar-topics">
-                      <li>Common myths</li>
-                      <li>Islamic perspectives</li>
-                      <li>Medical guidance</li>
-                      <li>Family planning</li>
-                      <li>Anonymous questions</li>
-                    </ul>
-                    <div class="card-footer">
-                      <a class="btn outline" href="#community">Learn More</a>
-                    </div>
-                  </div>
-                </article>
-
-                <article class="webinar-card">
-                  <figure class="webinar-media" role="img">
-                    <img src="MENOPAUSE.jpg" alt="Menopause wellness and healthy ageing webinar" loading="lazy" onerror="this.style.display='none';this.parentNode.querySelector('.placeholder').style.display='flex';">
-                    <div class="placeholder" aria-hidden="true" style="display:none">
-                      <span>Menopause Webinar</span>
-                    </div>
-                  </figure>
-                  <div class="webinar-card-body">
-                    <h3>Menopause Webinar</h3>
-                    <p class="webinar-summary">A practical and medically grounded session exploring menopause, hormonal changes, symptoms, treatment options, and healthy lifestyle strategies.</p>
-                    <p class="webinar-date"><strong>Date:</strong> 26 April 2026</p>
-                    <ul class="webinar-topics">
-                      <li>Menopause stages</li>
-                      <li>Symptoms</li>
-                      <li>Hormonal changes</li>
-                      <li>Lifestyle management</li>
-                      <li>Treatment options</li>
-                    </ul>
-                    <div class="card-footer">
-                      <a class="btn outline" href="#community">Learn More</a>
-                    </div>
-                  </div>
-                </article>
-              </div>
-            </section>
-
-            <section id="community" class="container community">
-              <div class="community-grid">
-                <figure class="community-image" aria-hidden="false">
-                  <picture>
-                    <source type="image/webp" srcset="community-480.webp 480w, community-768.webp 768w, community-1200.webp 1200w, community-1600.webp 1600w" sizes="(max-width:720px) 100vw, (max-width:1024px) 520px, 640px">
-                    <img src="community-768.jpg" srcset="community-480.jpg 480w, community-768.jpg 768w, community-1200.jpg 1200w, community-1600.jpg 1600w" sizes="(max-width:720px) 100vw, (max-width:1024px) 520px, 640px" alt="DAHI community members in discussion" loading="lazy" decoding="async">
-                  </picture>
-                </figure>
-                <div class="community-content">
-                  <h2>Join the DAHI Community</h2>
-                  <p class="subheadline">Connect with a growing community of women committed to learning, healing, and thriving through trusted health education and meaningful conversations.</p>
-
-                  <p>At DAHI, we believe that no woman should navigate her health journey alone. Our community provides a supportive space where women can access evidence-based health information, receive updates on upcoming webinars, discover practical wellness resources, and connect with others who share similar experiences.</p>
-
-                  <ul class="benefits">
-                    <li>Women's health education updates</li>
-                    <li>Webinar invitations and reminders</li>
-                    <li>Access to free resources and guides</li>
-                    <li>Wellness tips and practical health advice</li>
-                    <li>Supportive community discussions</li>
-                    <li>Faith-conscious health conversations</li>
-                  </ul>
-
-                  <div class="impact-badge" aria-hidden="true">Empowering women through trusted health education since <strong>November 2025</strong>.</div>
-                  <div class="community-stats" aria-hidden="false">
-                    <article class="impact-card">
-                      <div class="impact-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2a5 5 0 00-5 5v1a5 5 0 0010 0V7a5 5 0 00-5-5z" fill="currentColor"/></svg></div>
-                      <div class="impact-body"><div class="impact-title">Women Reached</div><div class="impact-value">500+</div></div>
-                    </article>
-                    <article class="impact-card">
-                      <div class="impact-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="4" width="18" height="14" rx="2" fill="currentColor"/></svg></div>
-                      <div class="impact-body"><div class="impact-title">Health Resources</div><div class="impact-value">3</div></div>
-                    </article>
-                    <article class="impact-card">
-                      <div class="impact-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 7h18v2H3zM6 11h12v9H6z" fill="currentColor"/></svg></div>
-                      <div class="impact-body"><div class="impact-title">Educational Webinars</div><div class="impact-value">4</div></div>
-                    </article>
-                    <article class="impact-card">
-                      <div class="impact-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="4" width="18" height="18" rx="2" fill="currentColor"/><path d="M7 3v4M16 2v4" stroke="#fff" stroke-width="1.2"/></svg></div>
-                      <div class="impact-body"><div class="impact-title">Founded</div><div class="impact-value">November 2025</div></div>
-                    </article>
-                  </div>
-
-                  <p class="community-cta">
-                    <a class="btn primary large" href="https://whatsapp.com/channel/0029VbBdF4hLI8YZRabyWF0j" target="_blank" rel="noopener">Join Our WhatsApp Channel</a>
-                  </p>
-                </div>
-              </div>
-            </section>
-
-            <section id="newsletter" class="container newsletter">
-              <h2>Stay Updated</h2>
-              <p>Join our mailing list for webinar invites, resources, and community updates.</p>
-              <div class="newsletter-cta">
-                <a class="btn primary" href="https://forms.gle/joTjf3VYW9anCA9MA" target="_blank" rel="noopener">Subscribe / Join</a>
-              </div>
-            </section>
-
-            <section id="social" class="container social-section">
-              <div class="social-grid">
-                <div class="social-intro">
-                  <img src="logo.jpeg" alt="DAHI logo" class="brand-logo" loading="lazy">
-                  <h3>Follow DAHI</h3>
-                  <p class="quote">"Knowledge is the first prescription for a healthier life."</p>
-                  <p>Follow us for ongoing women's health education, webinar alerts, and supportive community updates.</p>
-                  <p class="quick-links">
-                    <a href="#about">About</a> · <a href="#upcoming">Webinars</a> · <a href="#ebooks">Ebooks</a> · <a href="#community">Community</a>
-                  </p>
-                </div>
-
-                <div class="social-cards">
-                  <article class="social-card">
-                    <div class="icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22 12C22 6.477 17.523 2 12 2S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.99H7.898v-2.888h2.54V9.845c0-2.507 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.774-1.63 1.566v1.884h2.773l-.443 2.888h-2.33v6.99C18.343 21.128 22 16.991 22 12z" fill="currentColor"/></svg></div>
-                    <div class="info">
-                      <h4><a href="https://www.facebook.com/share/1A8VVfnJyr" target="_blank" rel="noopener">Facebook</a></h4>
-                      <p>Join our Facebook community for conversations, events, and updates.</p>
-                    </div>
-                  </article>
-
-                  <article class="social-card">
-                    <div class="icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 2h10a5 5 0 015 5v10a5 5 0 01-5 5H7a5 5 0 01-5-5V7a5 5 0 015-5z" stroke="currentColor" stroke-width="1.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-                    <div class="info">
-                      <h4><a href="https://www.instagram.com/docadihealthintiative_?igsh=YmtnbW1hZnp6MWFz" target="_blank" rel="noopener">Instagram</a></h4>
-                      <p>Follow our Instagram for resources, reels, and event highlights.</p>
-                    </div>
-                  </article>
-
-                  <article class="social-card">
-                    <div class="icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M23 7s-1.53-2.09-4.24-2.96C16.87 3 12 3 12 3s-4.87 0-6.76 1.04C3.53 4.91 2 7 2 7s-1 2.37-1 4.74V12c0 2.37 1 4.74 1 4.74s1.53 2.09 4.24 2.96C7.13 22 12 22 12 22s4.87 0 6.76-1.04C20.47 19.09 22 17 22 17s1-2.37 1-4.74V12c0-2.37-1-4.74-1-4.74z" fill="currentColor"/></svg></div>
-                    <div class="info">
-                      <h4><a href="https://youtube.com/@dahi-01?si=b54Rt5TiEc5Yvb7q" target="_blank" rel="noopener">YouTube</a></h4>
-                      <p>Watch our webinars and educational videos on YouTube.</p>
-                    </div>
-                  </article>
-
-                  <article class="social-card">
-                    <div class="icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.2" fill="none"/></svg></div>
-                    <div class="info">
-                      <h4><a href="https://substack.com/@womenshealthwithdocadi" target="_blank" rel="noopener">Substack</a></h4>
-                      <p>Subscribe to our newsletter on Substack for longer-form articles and guides.</p>
-                    </div>
-                  </article>
-                </div>
-              </div>
-            </section>
-          </main>
-
-          <footer class="site-footer">
-              <div class="container footer-grid">
-              <div>
-                <h3>About DAHI</h3>
-                <p>Empowering women with health education and community support.</p>
-              </div>
-              <div>
-                <h3>Contact</h3>
-                <p><a href="mailto:docadi.healthintiative@gmail.com">docadi.healthintiative@gmail.com</a></p>
-              </div>
-              <div>
-                <h3>Follow</h3>
-                <p class="socials footer-socials">
-                  <a href="https://www.facebook.com/share/1A8VVfnJyr" aria-label="DAHI on Facebook" target="_blank" rel="noopener">
-                    <span class="footer-social-icon" aria-hidden="true">
-                      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M22.675 0H1.325C.593 0 0 .593 0 1.326v21.348C0 23.407.593 24 1.325 24H12.82v-9.294H9.692v-2.888h3.128V9.413c0-3.1 1.893-4.788 4.658-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.31h3.587l-.467 3.396h-3.12V24h6.116C23.407 24 24 23.407 24 22.674V1.326C24 .593 23.407 0 22.675 0z"/>
-                      </svg>
-                    </span>
-                    <span>Facebook</span>
-                  </a>
-                  <a href="https://www.instagram.com/docadihealthintiative_?igsh=YmtnbW1hZnp6MWFz" aria-label="DAHI on Instagram" target="_blank" rel="noopener">
-                    <span class="footer-social-icon" aria-hidden="true">
-                      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="3" y="3" width="18" height="18" rx="5"/>
-                        <circle cx="12" cy="12" r="3"/>
-                        <circle cx="17.5" cy="6.5" r="1.2"/>
-                      </svg>
-                    </span>
-                    <span>Instagram</span>
-                  </a>
-                  <a href="https://youtube.com/@dahi-01?si=b54Rt5TiEc5Yvb7q" aria-label="DAHI on YouTube" target="_blank" rel="noopener">
-                    <span class="footer-social-icon" aria-hidden="true">
-                      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="2" y="6" width="20" height="12" rx="3"/>
-                        <path d="M10 9l6 3-6 3z" fill="#fff"/>
-                      </svg>
-                    </span>
-                    <span>YouTube</span>
-                  </a>
-                  <a href="https://substack.com/@womenshealthwithdocadi" aria-label="DAHI on Substack" target="_blank" rel="noopener">
-                    <span class="footer-social-icon" aria-hidden="true">
-                      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="3" y="3" width="18" height="18" rx="3"/>
-                        <path d="M7 8h10v1H7zM7 11h10v1H7zM7 14h6v1H7z"/>
-                      </svg>
-                    </span>
-                    <span>Substack</span>
-                  </a>
-                  <a href="https://whatsapp.com/channel/0029VbBdF4hLI8YZRabyWF0j" aria-label="DAHI on WhatsApp" target="_blank" rel="noopener">
-                    <span class="footer-social-icon" aria-hidden="true">
-                      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M20.52 3.48A11.85 11.85 0 0012 0C5.373 0 .02 5.353.02 12c0 2.116.55 4.177 1.596 6.003L0 24l6.183-1.592A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12 0-3.206-1.25-6.214-3.48-8.52zM12 21.5c-1.2 0-2.38-.32-3.4-.92l-.24-.14-3.67.95.98-3.56-.16-.26A8.5 8.5 0 013.5 12.02c0-4.69 3.81-8.5 8.5-8.5 4.69 0 8.5 3.81 8.5 8.5s-3.81 8.48-8.5 8.48z"/>
-                        <path d="M17.2 14.6c-.29-.15-1.7-.84-1.96-.94-.26-.1-.45-.15-.64.15s-.73.94-.9 1.14c-.17.19-.34.21-.63.07-.29-.15-1.22-.45-2.32-1.43-.86-.78-1.44-1.75-1.61-2.04-.17-.29-.02-.45.13-.6.13-.13.29-.34.44-.5.14-.16.19-.29.29-.48.10-.19.05-.36-.03-.5-.08-.14-.64-1.54-.88-2.11-.23-.55-.46-.48-.64-.49l-.55-.01c-.19 0-.5.07-.76.36-.26.29-1 1-1 2.44 0 1.44 1.03 2.84 1.17 3.04.14.19 2.02 3.08 4.9 4.32 2.88 1.24 2.88.83 3.4.78.52-.05 1.7-.69 1.94-1.36.24-.68.24-1.26.17-1.37-.07-.11-.26-.17-.54-.31z"/>
-                      </svg>
-                    </span>
-                    <span>WhatsApp</span>
-                  </a>
-                </p>
-              </div>
-            </div>
-            <div class="container copyright">© 2026 Doc Adi Health Initiative (DAHI). All Rights Reserved.</div>
-          </footer>
-        </body>
-        </html>
+</body>
+</html>

@@ -71,6 +71,36 @@ document.addEventListener('click', (e)=>{
   }
 });
 
+// Registration countdown removed (was initWebinarCountdown)
+
+// Sticky register button visibility
+function initStickyRegister(){
+  const sticky = document.getElementById('sticky-register');
+  const hero = document.getElementById('home');
+  if(!sticky || !hero) return;
+
+  function onScroll(){
+    const heroBottom = hero.getBoundingClientRect().bottom + window.scrollY;
+    if(window.scrollY > heroBottom){
+      sticky.setAttribute('aria-hidden','false');
+      sticky.classList.add('visible');
+    } else {
+      sticky.setAttribute('aria-hidden','true');
+      sticky.classList.remove('visible');
+    }
+  }
+
+  onScroll();
+  window.addEventListener('scroll', onScroll);
+}
+
+// Initialize optional features after DOM ready
+document.addEventListener('DOMContentLoaded', ()=>{
+  try{ initStickyRegister(); }catch(e){}
+});
+
+// Question submission countdown removed (was initQuestionCountdown)
+
 function handleNewsletterSubmit(e){
   e.preventDefault();
   const form=document.getElementById('newsletter-form');
