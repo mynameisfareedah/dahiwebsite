@@ -271,6 +271,39 @@ main > section{transition:background-color 200ms ease}
   .community-image img, .community img { max-height:320px; }
 }
 
+/* Mobile card layout fixes: force single-column stacks and remove fixed heights */
+@media (max-width: 768px) {
+  .card-grid,
+  .resource-grid,
+  .impact-grid,
+  .focus-cards,
+  .expert-grid,
+  .previous-grid,
+  .ebook-grid,
+  .previous-grid,
+  .webinar-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Ensure cards size naturally and don't stretch vertically */
+  .card,
+  .resource-card,
+  .impact-card,
+  .focus-card,
+  .webinar-card,
+  .ebook-card {
+    height: auto !important;
+    min-height: 0 !important;
+    display:block !important;
+  }
+
+  .webinar-media img,
+  .card-media img,
+  .ebook-card img { height: auto; max-height:220px; object-fit:cover }
+
+  .resource-card, .ebook-card, .webinar-card { margin-bottom: 14px }
+}
+
 /* Accessibility focus */
 a:focus,button:focus,input:focus{outline:3px solid rgba(159,28,103,0.25);outline-offset:2px}
 
