@@ -2,546 +2,554 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>DAHI — Empowering Women Through Health Education & Community</title>
-  <meta name="description" content="DAHI (Doc Adi Health Initiative) empowers women with trusted health education, preventive care awareness, and supportive communities." />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DAHI — Empowering Muslim Women Through Trusted Health Education</title>
+  <meta name="description" content="DAHI (Doc Adi Health Initiative) empowers Muslim women with trusted health education, practical resources, and supportive community programs." />
 
-  <!-- Tailwind CDN (production-friendly minimal build recommended for production) -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            dahiPrimary: '#9F1C67',
-            dahiSecondary: '#C72266',
-            dahiAccent: '#D433A7'
+            dahiPrimary: '#6D2E7C',
+            dahiSecondary: '#1F7A7A',
+            dahiAccent: '#D8A63A'
           }
         }
       }
     }
   </script>
 
-  <!-- Font Awesome for icons (kept for parity) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="shortcut icon" href="/favicon.ico">
 
   <style>
-    html{scroll-behavior:smooth}
+    :root {
+      --dahi-primary: #6D2E7C;
+      --dahi-secondary: #1F7A7A;
+      --dahi-accent: #D8A63A;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif; }
+    .section-shell { padding: 5rem 1.5rem; }
+    .section-title { font-size: clamp(1.6rem, 2.3vw, 2.2rem); font-weight: 700; color: var(--dahi-primary); }
+    .eyebrow { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.45rem 0.8rem; border-radius: 999px; background: rgba(109,46,124,0.08); color: var(--dahi-primary); font-size: 0.85rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+    .soft-card { background: white; border: 1px solid rgba(17,24,39,0.06); border-radius: 1.25rem; box-shadow: 0 20px 45px rgba(15, 23, 42, 0.06); }
+    .soft-card:hover { transform: translateY(-4px); box-shadow: 0 24px 50px rgba(15, 23, 42, 0.10); }
+    .stat-card { transition: transform 220ms ease, box-shadow 220ms ease; }
+    .stat-card:hover { transform: translateY(-3px); box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12); }
+    .team-card { transition: transform 220ms ease, box-shadow 220ms ease; }
+    .team-card:hover { transform: translateY(-4px); box-shadow: 0 20px 45px rgba(15, 23, 42, 0.12); }
+    .nav-link { position: relative; }
+    .nav-link::after { content: ""; position: absolute; left: 0; bottom: -0.2rem; width: 100%; height: 2px; background: var(--dahi-primary); transform: scaleX(0); transform-origin: left; transition: transform 180ms ease; }
+    .nav-link:hover::after, .nav-link:focus::after { transform: scaleX(1); }
+    .hero-glow { background: linear-gradient(135deg, rgba(109,46,124,0.96), rgba(31,122,122,0.94)); }
   </style>
 
   <script defer src="./scripts/main.js"></script>
-  <link rel="shortcut icon" href="/favicon.ico">
 </head>
-<body class="pt-20 md:pt-24 antialiased text-gray-800 bg-white overflow-x-hidden break-words">
+<body class="antialiased text-slate-700 bg-slate-50 overflow-x-hidden">
+  <header class="fixed top-0 left-0 right-0 z-50 border-b border-slate-200/80 bg-white/90 backdrop-blur">
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+      <a href="#hero" class="flex items-center gap-3">
+        <img src="logo.jpeg" alt="DAHI logo" loading="lazy" class="h-12 w-auto rounded-lg" />
+        <div class="leading-tight">
+          <div class="text-xl font-black text-dahiPrimary">DAHI</div>
+          <div class="text-xs font-medium text-slate-500">Doc Adi Health Initiative</div>
+        </div>
+      </a>
 
-  <!-- Navbar (fixed) -->
-  <header class="fixed top-0 w-full bg-white/90 backdrop-blur shadow-sm z-50">
-    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <a href="#hero" class="flex items-center gap-3">
-          <img src="logo.jpeg" alt="DAHI logo" loading="lazy" class="h-9 w-auto rounded-sm">
-          <div class="leading-tight">
-            <div class="font-semibold text-dahiPrimary">DAHI</div>
-            <div class="text-xs text-gray-500">Doc Adi Health Initiative</div>
-          </div>
-        </a>
-      </div>
-
-      <nav class="hidden md:flex md:items-center md:gap-6" aria-label="Primary navigation">
-        <a href="#hero" class="text-gray-700 hover:text-gray-900 transition">Home</a>
-        <a href="#about" class="text-gray-700 hover:text-gray-900 transition">About</a>
-        <a href="#what-we-do" class="text-gray-700 hover:text-gray-900 transition">What We Do</a>
-        <a href="#impact" class="text-gray-700 hover:text-gray-900 transition">Impact</a>
-        <a href="#webinar" class="text-gray-700 hover:text-gray-900 transition">Webinar</a>
-        <a href="#resources" class="text-gray-700 hover:text-gray-900 transition">Resources</a>
-        <a href="#contact" class="text-gray-700 hover:text-gray-900 transition">Contact</a>
+      <nav class="hidden items-center gap-6 md:flex" aria-label="Primary navigation">
+        <a href="#hero" class="nav-link text-sm font-semibold text-slate-700 transition hover:text-dahiPrimary">Home</a>
+        <a href="#about" class="nav-link text-sm font-semibold text-slate-700 transition hover:text-dahiPrimary">About</a>
+        <a href="#our-focus-areas" class="nav-link text-sm font-semibold text-slate-700 transition hover:text-dahiPrimary">Our Focus Areas</a>
+        <a href="#our-impact" class="nav-link text-sm font-semibold text-slate-700 transition hover:text-dahiPrimary">Our Impact</a>
+        <a href="#events" class="nav-link text-sm font-semibold text-slate-700 transition hover:text-dahiPrimary">Events &amp; Activities</a>
+        <a href="#resources" class="nav-link text-sm font-semibold text-slate-700 transition hover:text-dahiPrimary">Resources</a>
+        <a href="#meet-the-team" class="nav-link text-sm font-semibold text-slate-700 transition hover:text-dahiPrimary">Meet the Team</a>
+        <a href="#contact" class="nav-link text-sm font-semibold text-slate-700 transition hover:text-dahiPrimary">Contact</a>
       </nav>
 
       <div class="hidden md:block">
-        <a href="https://forms.gle/joTjf3VYW9anCA9MA" target="_blank" rel="noopener" class="inline-flex items-center justify-center text-center font-semibold whitespace-nowrap px-6 py-3 rounded-lg bg-dahiPrimary text-white hover:scale-105 transform transition">Join Community</a>
+        <a href="https://forms.gle/joTjf3VYW9anCA9MA" target="_blank" rel="noopener" class="inline-flex items-center justify-center rounded-full bg-dahiPrimary px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-dahiSecondary">Join Our Community</a>
       </div>
 
-      <!-- Mobile: hamburger -->
-      <div class="md:hidden">
-        <button id="nav-toggle" aria-expanded="false" aria-controls="mobile-menu" class="p-2 rounded bg-gray-100" aria-label="Open menu">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
-      </div>
+      <button id="nav-toggle" class="rounded-full border border-slate-200 p-2 text-slate-700 md:hidden" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu">
+        <i class="fa-solid fa-bars text-lg"></i>
+      </button>
     </div>
 
-    <!-- Mobile menu -->
-    <div id="mobile-menu" class="hidden md:hidden bg-white/95 backdrop-blur border-t border-gray-100">
-      <div class="max-w-6xl mx-auto px-6 py-4 space-y-3">
-        <div class="flex items-center justify-between">
-          <div class="font-semibold">Menu</div>
-          <button id="nav-close" class="p-2 rounded bg-gray-100" aria-label="Close menu">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 011.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
-            </svg>
-          </button>
-        </div>
-
-        <a href="#hero" class="block text-gray-700 py-2">Home</a>
-        <a href="#about" class="block text-gray-700 py-2">About</a>
-        <a href="#what-we-do" class="block text-gray-700 py-2">What We Do</a>
-        <a href="#impact" class="block text-gray-700 py-2">Impact</a>
-        <a href="#webinar" class="block text-gray-700 py-2">Webinar</a>
-        <a href="#resources" class="block text-gray-700 py-2">Resources</a>
-        <a href="#contact" class="block text-gray-700 py-2">Contact</a>
-
-        <div class="pt-3">
-          <a href="https://forms.gle/joTjf3VYW9anCA9MA" target="_blank" rel="noopener" class="inline-flex w-full items-center justify-center text-center font-semibold whitespace-nowrap px-6 py-3 rounded-lg bg-dahiPrimary text-white">Join Community</a>
-        </div>
+    <div id="mobile-menu" class="hidden border-t border-slate-200 bg-white/95 md:hidden">
+      <div class="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-4 sm:px-6">
+        <a href="#hero" class="rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Home</a>
+        <a href="#about" class="rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">About</a>
+        <a href="#our-focus-areas" class="rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Our Focus Areas</a>
+        <a href="#our-impact" class="rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Our Impact</a>
+        <a href="#events" class="rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Events &amp; Activities</a>
+        <a href="#resources" class="rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Resources</a>
+        <a href="#meet-the-team" class="rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Meet the Team</a>
+        <a href="#contact" class="rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Contact</a>
+        <a href="https://forms.gle/joTjf3VYW9anCA9MA" target="_blank" rel="noopener" class="mt-2 inline-flex items-center justify-center rounded-full bg-dahiPrimary px-5 py-2.5 text-sm font-semibold text-white">Join Our Community</a>
       </div>
     </div>
   </header>
 
-  <main class="w-full overflow-x-hidden break-words">
+  <main class="pt-24">
+    <section id="hero" class="mx-auto max-w-7xl px-4 pb-12 pt-6 sm:px-6 lg:px-8 lg:pb-20">
+      <div class="hero-glow overflow-hidden rounded-[2rem] px-6 py-10 shadow-2xl sm:px-8 lg:px-12 lg:py-14">
+        <div class="grid items-center gap-10 lg:grid-cols-[1.1fr_0.9fr]">
+          <div class="text-white">
+            <span class="eyebrow bg-white/15 text-white">Trusted health education for Muslim women</span>
+            <h1 class="mt-5 text-3xl font-black leading-tight sm:text-4xl lg:text-5xl">Empowering Muslim Women Through Trusted Health Education</h1>
+            <p class="mt-5 max-w-2xl text-lg leading-8 text-white/90">DAHI is dedicated to providing evidence-based health education, practical resources, and a supportive community that empowers women to make informed decisions about their health and well-being.</p>
+            <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+              <a href="https://forms.gle/joTjf3VYW9anCA9MA" target="_blank" rel="noopener" class="inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-semibold text-dahiPrimary transition hover:-translate-y-0.5">Join Our Community</a>
+              <a href="#resources" class="inline-flex items-center justify-center rounded-full border border-white/70 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10">Explore Resources</a>
+            </div>
 
-    <!-- HERO -->
-    <section id="hero" class="w-full max-w-6xl mx-auto px-6 md:px-8 py-12 md:py-20 grid gap-6 items-center">
-      <div>
-        <h1 class="text-2xl md:text-4xl font-extrabold text-white bg-gradient-to-r from-dahiPrimary to-dahiAccent inline-block px-3 py-2 rounded">Empowering Women Through Health Education & Faith-Based Wellness</h1>
-
-        <!-- Community image immediately after heading as requested -->
-        <figure class="mt-4 overflow-hidden rounded-lg">
-          <img src="community-768.jpg" alt="DAHI community members in discussion" loading="lazy" class="w-full h-48 md:h-64 object-cover object-center">
-        </figure>
-
-        <p class="mt-4 text-gray-700">Trusted medical education, guided conversations, and supportive wellness resources for Muslim women.</p>
-
-        <div class="mt-6 flex flex-col md:flex-row gap-4">
-          <a href="https://forms.gle/joTjf3VYW9anCA9MA" target="_blank" rel="noopener" class="w-full md:w-auto inline-flex items-center justify-center text-center font-semibold whitespace-nowrap px-6 py-3 rounded-lg bg-dahiPrimary text-white shadow transition">Join the Community</a>
-        </div>
-      </div>
-
-      <!-- Right-side hero visual removed to avoid duplicate images; single hero image kept under heading -->
-    </section>
-
-    <!-- About -->
-    <section id="about" class="w-full max-w-6xl mx-auto px-6 md:px-8 py-12 md:py-20">
-      <div class="grid md:grid-cols-3 gap-6">
-        <div class="md:col-span-2 space-y-4">
-          <h2 class="text-2xl font-bold">About DAHI</h2>
-          <p class="text-gray-700">Many women and young girls grow up without clear, reliable education about their own bodies. Questions about menstrual health, fertility, pregnancy, menopause, and emotional wellbeing are often left unanswered or surrounded by confusion and stigma. DAHI exists to change that.</p>
-
-          <h3 class="font-semibold">Who We Are</h3>
-          <p class="text-gray-700">DAHI is a women’s health education and empowerment initiative focused on providing accessible, clear, and supportive health information to women and young girls.</p>
-
-          <h3 class="font-semibold">Our Mission</h3>
-            <p class="text-gray-700 italic">“To educate, empower, and support women and young girls by providing accessible and trustworthy health knowledge across all stages of life.”</p>
-            <!-- What We Do -->
-            <section id="what-we-do" class="mt-6">
-              <h3 class="text-xl font-semibold text-gray-900">What We Do</h3>
-              <p class="text-gray-600 leading-relaxed mt-2">DAHI is committed to empowering women and young girls with the knowledge and support they need to understand their bodies, make informed health decisions, and navigate every stage of life with confidence. Through education, engagement, and community support, we make women’s health information simple, accessible, and trustworthy.</p>
-
-              <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-                <article class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg hover:scale-105 transition-transform duration-300">
-                  <h4 class="text-xl font-semibold text-gray-900">Women’s Health Education</h4>
-                  <p class="text-gray-600 mt-2 leading-relaxed">Practical, faith-conscious learning resources and guides.</p>
-                </article>
-
-                <article class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg hover:scale-105 transition-transform duration-300">
-                  <h4 class="text-xl font-semibold text-gray-900">Live Webinars</h4>
-                  <p class="text-gray-600 mt-2 leading-relaxed">Regular interactive sessions with experts and Q&amp;A.</p>
-                </article>
-
-                <article class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg hover:scale-105 transition-transform duration-300">
-                  <h4 class="text-xl font-semibold text-gray-900">Community Support</h4>
-                  <p class="text-gray-600 mt-2 leading-relaxed">Peer groups, WhatsApp channels, and ongoing engagement.</p>
-                </article>
+            <div class="mt-8 grid gap-3 sm:grid-cols-3">
+              <div class="rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur">
+                <div class="text-2xl font-black">500+</div>
+                <div class="mt-1 text-sm text-white/80">Women reached</div>
               </div>
-            </section>
+              <div class="rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur">
+                <div class="text-2xl font-black">5</div>
+                <div class="mt-1 text-sm text-white/80">Webinars hosted</div>
+              </div>
+              <div class="rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur">
+                <div class="text-2xl font-black">3</div>
+                <div class="mt-1 text-sm text-white/80">Resources published</div>
+              </div>
+            </div>
+          </div>
 
-            <!-- Founder / About the Founder (card-style, centered) -->
-            <div id="doctor" class="mt-8 flex justify-center">
-              <div class="w-full max-w-4xl bg-white rounded-2xl shadow-md border border-gray-100 p-6 md:p-10 hover:shadow-xl transition duration-300">
-                <div class="text-center">
-                  <img src="./docadi.jpeg" alt="Dr Adiyat Olamide" class="mx-auto rounded-full w-24 h-24 object-cover mb-3">
-                  <h3 class="text-2xl md:text-3xl font-bold text-gray-900">Meet Doc Adi</h3>
-                </div>
-
-                <div class="mt-4 text-gray-700 leading-relaxed">
-                  <p>Adiyat Olamide D. (Doc Adi) is a General Practitioner with nearly 20 years of clinical experience, holding a Master of Public Health (University of Birmingham), Diplomas in Obstetrics &amp; Gynaecology and Sexual &amp; Reproductive Health, and membership in the British Society of Lifestyle Medicine.</p>
-
-                  <p class="mt-3">She is passionate about empowering women through a blend of evidence-based medicine, Islamic principles, and holistic health education. Her work focuses on supporting women through menstruation, hormonal health, fertility, pregnancy, menopause, and emotional wellbeing.</p>
-
-                  <p class="mt-3">Through clinical practice, community outreach, writing, and education, she has contributed to women’s health awareness, lifestyle medicine, and preventive care. She is also a co-founder of Bloom Women, creator of <em>Gist with Doc Adi</em>, and an active community health educator and speaker.</p>
-
-                  <p class="mt-3">Her vision is to create a safe, faith-aligned space where women can learn, grow, and take control of their health with confidence and clarity.</p>
+          <div class="rounded-[1.5rem] border border-white/20 bg-white/10 p-4 backdrop-blur">
+            <img src="community-768.jpg" alt="DAHI community members in discussion" loading="lazy" class="h-[320px] w-full rounded-[1.2rem] object-cover sm:h-[420px]" />
+            <div class="mt-4 rounded-[1rem] bg-white/95 p-4 text-slate-700">
+              <div class="flex items-center gap-3">
+                <div class="flex h-10 w-10 items-center justify-center rounded-full bg-dahiAccent/20 text-lg text-dahiPrimary"><i class="fa-solid fa-heart-pulse"></i></div>
+                <div>
+                  <div class="font-semibold">Evidence-based support</div>
+                  <div class="text-sm text-slate-500">Trusted guidance for every stage of life</div>
                 </div>
               </div>
             </div>
           </div>
-        </section>
+        </div>
+      </div>
+    </section>
 
-    <!-- Impact -->
-    <section id="impact" class="w-full max-w-6xl mx-auto px-4 md:px-8 py-12 md:py-20">
-      <h2 class="text-2xl font-bold">Our Impact</h2>
-      <p class="text-gray-700 mt-2">Real conversations. Real education. Real change in women’s health awareness since inception in November 2025.</p>
+    <section id="about" class="section-shell mx-auto max-w-7xl">
+      <div class="grid gap-8 lg:grid-cols-[1.15fr_0.85fr]">
+        <div class="soft-card p-8 sm:p-10">
+          <h2 class="section-title">About DAHI</h2>
+          <p class="mt-4 text-lg leading-8 text-slate-600">Many women and young girls grow up without clear, reliable education about their own bodies. Questions about menstrual health, fertility, pregnancy, menopause, and emotional wellbeing are often left unanswered or surrounded by confusion and stigma. DAHI exists to change that.</p>
+          <p class="mt-4 text-lg leading-8 text-slate-600">DAHI is a women’s health education and empowerment initiative focused on providing accessible, clear, and supportive health information to women and young girls.</p>
+        </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-        <div class="bg-white shadow rounded-lg p-4 flex items-center gap-4">
-          <img src="./ebook.svg" alt="Women reached icon" loading="lazy" class="w-12 h-12 rounded-md">
+        <div class="soft-card p-8 sm:p-10">
+          <div class="eyebrow">Mission &amp; Vision</div>
+          <h3 class="mt-4 text-2xl font-bold text-slate-900">Mission</h3>
+          <p class="mt-3 text-lg italic text-slate-600">“To educate, empower, and support women and young girls by providing accessible and trustworthy health knowledge across all stages of life.”</p>
+          <h3 class="mt-6 text-2xl font-bold text-slate-900">Vision</h3>
+          <p class="mt-3 text-lg leading-8 text-slate-600">To create a safe, informed, and supportive space where Muslim women can confidently make health decisions rooted in evidence, compassion, and faith.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="our-focus-areas" class="section-shell mx-auto max-w-7xl">
+      <div class="mb-8 max-w-3xl">
+        <span class="eyebrow">Our Focus Areas</span>
+        <h2 class="mt-4 section-title">Our Focus Areas</h2>
+        <p class="mt-4 text-lg leading-8 text-slate-600">DAHI helps women and young girls understand their bodies, make informed health decisions, and navigate every stage of life with confidence through trusted education and community engagement.</p>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        <article class="soft-card p-7">
+          <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-dahiPrimary/10 text-xl text-dahiPrimary"><i class="fa-solid fa-venus"></i></div>
+          <h3 class="mt-5 text-xl font-semibold text-slate-900">Menstrual Health</h3>
+          <p class="mt-3 text-slate-600">Support for understanding cycles, menstrual wellbeing, common concerns, and practical self-care.</p>
+        </article>
+        <article class="soft-card p-7">
+          <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-dahiSecondary/10 text-xl text-dahiSecondary"><i class="fa-solid fa-baby"></i></div>
+          <h3 class="mt-5 text-xl font-semibold text-slate-900">Fertility &amp; Pregnancy</h3>
+          <p class="mt-3 text-slate-600">Clear information on fertility awareness, conception, pregnancy health, and informed decision-making.</p>
+        </article>
+        <article class="soft-card p-7">
+          <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-dahiAccent/20 text-xl text-dahiAccent"><i class="fa-solid fa-heart-pulse"></i></div>
+          <h3 class="mt-5 text-xl font-semibold text-slate-900">Contraception &amp; Family Planning</h3>
+          <p class="mt-3 text-slate-600">Reliable, evidence-based education on contraception options and faith-conscious family planning.</p>
+        </article>
+        <article class="soft-card p-7">
+          <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-dahiPrimary/10 text-xl text-dahiPrimary"><i class="fa-solid fa-person-cane"></i></div>
+          <h3 class="mt-5 text-xl font-semibold text-slate-900">Menopause &amp; Ageing</h3>
+          <p class="mt-3 text-slate-600">Practical guidance on symptoms, healthy ageing, and support across later life stages.</p>
+        </article>
+        <article class="soft-card p-7 md:col-span-2 xl:col-span-1">
+          <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-dahiSecondary/10 text-xl text-dahiSecondary"><i class="fa-solid fa-brain"></i></div>
+          <h3 class="mt-5 text-xl font-semibold text-slate-900">Emotional Wellbeing</h3>
+          <p class="mt-3 text-slate-600">Support for mental wellbeing, stress, hormones, and healthy habits that strengthen overall resilience.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="doctor" class="section-shell mx-auto max-w-7xl">
+      <div class="soft-card overflow-hidden p-8 sm:p-10">
+        <div class="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
+          <div class="flex justify-center lg:justify-start">
+            <img src="./docadi.jpeg" alt="Dr Adiyat Olamide" class="h-40 w-40 rounded-full object-cover shadow-lg" />
+          </div>
           <div>
-            <div class="font-bold text-dahiPrimary">500+ Women Reached</div>
-            <div class="text-sm text-gray-600">Through webinars, community engagement, and health education initiatives</div>
-          </div>
-        </div>
-
-        <div class="bg-white shadow rounded-lg p-4 flex items-center gap-4">
-          <img src="./ebook1.svg" alt="Webinars hosted icon" loading="lazy" class="w-12 h-12 rounded-md">
-          <div>
-            <div class="font-bold text-dahiPrimary">4 Webinars Hosted</div>
-            <div class="text-sm text-gray-600">Interactive sessions focused on women’s health</div>
-          </div>
-        </div>
-
-        <div class="bg-white shadow rounded-lg p-4 flex items-center gap-4">
-          <img src="./founder.svg" alt="Ebooks published icon" loading="lazy" class="w-12 h-12 rounded-md">
-          <div>
-            <div class="font-bold text-dahiPrimary">3 Ebooks Published</div>
-            <div class="text-sm text-gray-600">Educational resources designed to support women</div>
-          </div>
-        </div>
-
-        <div class="bg-white shadow rounded-lg p-4 flex items-center gap-4">
-          <img src="./logo.jpeg" alt="Active since icon" loading="lazy" class="w-12 h-12 rounded-md">
-          <div>
-            <div class="font-bold text-dahiPrimary">Active Since Nov 2025</div>
-            <div class="text-sm text-gray-600">Building a growing global community</div>
+            <span class="eyebrow">Meet Doc Adi</span>
+            <h2 class="mt-4 text-3xl font-black text-slate-900">Meet Doc Adi</h2>
+            <p class="mt-4 text-lg leading-8 text-slate-600">Adiyat Olamide D. (Doc Adi) is a General Practitioner with nearly 20 years of clinical experience, holding a Master of Public Health (University of Birmingham), Diplomas in Obstetrics &amp; Gynaecology and Sexual &amp; Reproductive Health, and membership in the British Society of Lifestyle Medicine.</p>
+            <p class="mt-4 text-lg leading-8 text-slate-600">She is passionate about empowering women through evidence-based medicine, Islamic principles, and holistic health education. Her work focuses on supporting women through menstruation, hormonal health, fertility, pregnancy, menopause, and emotional wellbeing.</p>
+            <p class="mt-4 text-lg leading-8 text-slate-600">Through clinical practice, community outreach, writing, and education, she has contributed to women’s health awareness, lifestyle medicine, and preventive care. She is also a co-founder of Bloom Women, creator of <em>Gist with Doc Adi</em>, and an active community health educator and speaker.</p>
+            <p class="mt-4 text-lg leading-8 text-slate-600">Her vision is to create a safe, faith-aligned space where women can learn, grow, and take control of their health with confidence and clarity.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Upcoming events -->
-    <section id="upcoming" class="w-full max-w-6xl mx-auto px-4 md:px-8 py-12 md:py-20">
-      <h2 class="text-2xl font-bold mb-3">Upcoming Events</h2>
-      <div class="bg-gradient-to-r from-white to-white rounded-lg p-4 shadow">
-        <div class="text-center mb-4 text-sm font-semibold text-red-700">Limited Spots Available — Registration Closes Soon</div>
-        <div class="grid md:grid-cols-2 gap-6 items-start">
-          <figure class="overflow-hidden rounded-lg flex items-center justify-center">
-            <img src="doc adi webinar.jpeg" alt="Doc Adi webinar poster" loading="lazy" class="w-full h-auto object-contain rounded-lg mx-auto">
-          </figure>
-
-          <div class="space-y-3">
-            <h3 class="text-xl font-bold text-dahiPrimary">Women’s Health &amp; Q&amp;A Webinar</h3>
-            <p class="text-gray-700">Join a safe, evidence-based Q&amp;A session where your questions about periods, hormones, fertility, pregnancy, menopause, and emotional wellbeing are answered by trusted health professionals.</p>
-
-            <ul class="list-disc list-inside text-gray-700">
-              <li>Menstrual health</li>
-              <li>Hormones &amp; emotional wellbeing</li>
-              <li>Fertility, pregnancy &amp; menopause</li>
-            </ul>
-
-            <div class="mt-4">
-              <div class="rounded-lg bg-white p-3 border border-gray-100">
-                <ul class="text-sm font-semibold">
-                  <li><strong>Date:</strong> Sunday, June 28th</li>
-                  <li><strong>Time:</strong> 10:00 AM GMT</li>
-                  <li><strong>Question Submission Deadline:</strong> June 18th, 2026</li>
-                </ul>
-              </div>
-            </div>
-
-            <div class="mt-4 flex flex-col md:flex-row gap-4">
-              <a id="primary-register" href="https://selar.com/112eyd273c" target="_blank" rel="noopener" class="w-full md:w-auto inline-flex items-center justify-center text-center font-semibold whitespace-nowrap px-6 py-3 rounded-lg bg-red-600 hover:bg-red-700 text-white transition shadow-lg">Register for Webinar</a>
-            </div>
-          </div>
-        </div>
+    <section id="our-impact" class="section-shell mx-auto max-w-7xl">
+      <div class="mb-8 max-w-3xl">
+        <span class="eyebrow">Our Impact</span>
+        <h2 class="mt-4 section-title">Growing a strong, informed community of Muslim women</h2>
       </div>
-    </section>
 
-    <!-- Services -->
-    <section id="services" class="w-full max-w-6xl mx-auto px-4 md:px-8 py-12 md:py-20">
-      <h2 class="text-2xl font-bold">Our Focus Areas</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-        <article class="bg-white rounded-lg shadow p-4">
-          <h3 class="font-semibold">Menstrual Health</h3>
-          <p class="text-sm text-gray-600">Understand cycles, pain management, and practical self-care.</p>
+      <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        <article class="stat-card soft-card p-7">
+          <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-dahiPrimary/10 text-2xl text-dahiPrimary"><i class="fa-solid fa-users"></i></div>
+          <h3 class="mt-5 text-3xl font-black text-dahiPrimary">500+</h3>
+          <p class="mt-2 text-lg font-semibold text-slate-900">Women Reached</p>
+          <p class="mt-2 text-slate-600">Through webinars, community engagement, and educational outreach.</p>
         </article>
-
-        <article class="bg-white rounded-lg shadow p-4">
-          <h3 class="font-semibold">Fertility & Pregnancy</h3>
-          <p class="text-sm text-gray-600">Fertility awareness, conception guidance, and prenatal care topics.</p>
+        <article class="stat-card soft-card p-7">
+          <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-dahiSecondary/10 text-2xl text-dahiSecondary"><i class="fa-solid fa-chalkboard-user"></i></div>
+          <h3 class="mt-5 text-3xl font-black text-dahiPrimary">5</h3>
+          <p class="mt-2 text-lg font-semibold text-slate-900">Educational Webinars Conducted</p>
+          <p class="mt-2 text-slate-600">Delivered with practical, evidence-based information for women across different life stages.</p>
         </article>
-
-        <article class="bg-white rounded-lg shadow p-4">
-          <h3 class="font-semibold">Contraception & Family Planning</h3>
-          <p class="text-sm text-gray-600">Options, myths, and faith-conscious decision-making.</p>
+        <article class="stat-card soft-card p-7">
+          <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-dahiAccent/20 text-2xl text-dahiAccent"><i class="fa-solid fa-trophy"></i></div>
+          <h3 class="mt-5 text-3xl font-black text-dahiPrimary">2</h3>
+          <p class="mt-2 text-lg font-semibold text-slate-900">Community Quiz Competitions Hosted</p>
+          <p class="mt-2 text-slate-600">Creating engaging spaces for learning, participation, and connection.</p>
         </article>
-
-        <article class="bg-white rounded-lg shadow p-4">
-          <h3 class="font-semibold">Menopause & Ageing</h3>
-          <p class="text-sm text-gray-600">Symptom support, treatments, and healthy ageing strategies.</p>
+        <article class="stat-card soft-card p-7">
+          <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-dahiPrimary/10 text-2xl text-dahiPrimary"><i class="fa-solid fa-file-lines"></i></div>
+          <h3 class="mt-5 text-3xl font-black text-dahiPrimary">3</h3>
+          <p class="mt-2 text-lg font-semibold text-slate-900">Educational Resources Published</p>
+          <p class="mt-2 text-slate-600">Supporting women with clear and accessible health guidance.</p>
         </article>
-
-        <article class="bg-white rounded-lg shadow p-4">
-          <h3 class="font-semibold">Emotional Wellbeing</h3>
-          <p class="text-sm text-gray-600">Mental health, stress, and lifestyle medicine for resilience.</p>
+        <article class="stat-card soft-card p-7 md:col-span-2 xl:col-span-1">
+          <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-dahiSecondary/10 text-2xl text-dahiSecondary"><i class="fa-solid fa-heart"></i></div>
+          <h3 class="mt-5 text-3xl font-black text-dahiPrimary">Growing</h3>
+          <p class="mt-2 text-lg font-semibold text-slate-900">Community of Muslim Women</p>
+          <p class="mt-2 text-slate-600">A trusted space for learning, support, and informed health conversations.</p>
         </article>
       </div>
+
+      <p class="mt-8 max-w-4xl text-lg leading-8 text-slate-600">Through educational webinars, interactive Q&amp;A sessions, community quizzes, and digital health resources, DAHI continues to equip women with practical, evidence-based knowledge while fostering a supportive learning community.</p>
     </section>
 
-    <!-- Previous Webinars -->
-    <section id="previous" class="w-full max-w-6xl mx-auto px-4 md:px-8 py-12 md:py-20">
-      <h2 class="text-2xl font-bold">Previous Webinars</h2>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-        <!-- Card -->
-        <article class="bg-white rounded-lg shadow overflow-hidden flex flex-col">
-          <figure class="w-full h-44 sm:h-48 md:h-56 lg:h-48 overflow-hidden flex items-center justify-center">
-            <img src="Hormones and health illustration.jpg" alt="Hormones & health webinar" loading="lazy" class="w-full h-full object-cover object-center mx-auto">
-          </figure>
-          <div class="p-4 flex-1 flex flex-col">
-            <h3 class="font-semibold text-dahiPrimary">Hormones & Health: Conception & Contraception</h3>
-            <p class="text-gray-700 mt-2 flex-1">A faith-conscious, evidence-based webinar helping Muslim women understand hormones, fertility, conception, and contraception.</p>
-            <time class="text-sm text-gray-500 mt-3">25 January 2026</time>
-          </div>
-        </article>
-
-        <article class="bg-white rounded-lg shadow overflow-hidden flex flex-col">
-            <figure class="w-full h-44 sm:h-48 md:h-56 lg:h-48 overflow-hidden flex items-center justify-center">
-              <img src="CONTRACEPTION.jpg" alt="Contraception webinar" loading="lazy" class="w-full h-full object-cover object-center mx-auto">
-            </figure>
-          <div class="p-4 flex-1 flex flex-col">
-            <h3 class="font-semibold text-dahiPrimary">Contraception & Family Planning for Muslim Women</h3>
-            <p class="text-gray-700 mt-2 flex-1">An interactive discussion helping women understand contraception options and make informed decisions.</p>
-            <time class="text-sm text-gray-500 mt-3">4 April 2026</time>
-          </div>
-        </article>
-
-        <article class="bg-white rounded-lg shadow overflow-hidden flex flex-col">
-          <figure class="w-full h-44 sm:h-48 md:h-56 lg:h-48 overflow-hidden flex items-center justify-center">
-            <img src="MENOPAUSE.jpg" alt="Menopause webinar" loading="lazy" class="w-full h-full object-cover object-center mx-auto">
-          </figure>
-          <div class="p-4 flex-1 flex flex-col">
-            <h3 class="font-semibold text-dahiPrimary">Menopause Webinar</h3>
-            <p class="text-gray-700 mt-2 flex-1">Exploring menopause symptoms, management, and lifestyle strategies.</p>
-            <time class="text-sm text-gray-500 mt-3">26 April 2026</time>
-          </div>
-        </article>
-
-        <article class="bg-white rounded-lg shadow overflow-hidden flex flex-col">
-          <figure class="w-full h-44 sm:h-48 md:h-56 lg:h-48 overflow-hidden flex items-center justify-center">
-            <img src="MENSTRUAL HEALTH.jpg" alt="Menstrual health masterclass" loading="lazy" class="w-full h-full object-cover object-center mx-auto">
-          </figure>
-          <div class="p-4 flex-1 flex flex-col">
-            <h3 class="font-semibold text-dahiPrimary">Menstrual Health Masterclass</h3>
-            <p class="text-gray-700 mt-2 flex-1">A practical masterclass on understanding the menstrual cycle and related wellbeing.</p>
-            <time class="text-sm text-gray-500 mt-3">20 November 2025</time>
-          </div>
-        </article>
+    <section id="events" class="section-shell mx-auto max-w-7xl">
+      <div class="mb-8 max-w-3xl">
+        <span class="eyebrow">Events &amp; Activities</span>
+        <h2 class="mt-4 section-title">Connecting women through education, conversation, and community</h2>
+        <p class="mt-4 text-lg leading-8 text-slate-600">We regularly organize educational webinars, interactive Q&amp;A sessions, quiz competitions, and awareness campaigns to provide reliable health education and encourage meaningful community engagement.</p>
       </div>
-    </section>
 
-    <!-- Resources -->
-    <section id="resources" class="w-full max-w-6xl mx-auto px-4 md:px-8 py-12 md:py-20">
-      <h2 class="text-2xl font-bold">Resources</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-        <article class="bg-white rounded-lg shadow overflow-hidden flex flex-col h-full">
-          <figure class="w-full h-40 overflow-hidden">
-            <img src="sunnah-reset-a-7-day-meno-selar.com-6a0c3775671cd.png" alt="Sunnah Reset cover" loading="lazy" class="w-full h-full object-cover object-center">
-          </figure>
-          <div class="p-4 flex-1 flex flex-col justify-between">
-            <div>
-              <h3 class="font-semibold">Sunnah Reset – 7 Day Menopause Reset Guide</h3>
-              <p class="text-gray-700 mt-2">Faith-conscious 7-day menopause reset.</p>
-            </div>
-
-            <div class="mt-4">
-              <div class="text-xl font-bold text-dahiPrimary">Price: $5.00</div>
-              <div class="mt-3"><a href="https://selar.com/66566z1k7x" target="_blank" rel="noopener" class="inline-flex w-full md:w-auto items-center justify-center text-center font-semibold whitespace-nowrap px-6 py-3 rounded-lg bg-dahiPrimary text-white transition">Buy Now</a></div>
-            </div>
+      <div class="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
+        <div class="soft-card p-7">
+          <div class="flex flex-wrap gap-2">
+            <span class="rounded-full bg-dahiPrimary/10 px-3 py-1 text-sm font-semibold text-dahiPrimary">Webinar</span>
+            <span class="rounded-full bg-dahiSecondary/10 px-3 py-1 text-sm font-semibold text-dahiSecondary">Community Event</span>
           </div>
-        </article>
-
-        <article class="bg-white rounded-lg shadow overflow-hidden flex flex-col h-full">
-          <figure class="w-full h-40 overflow-hidden">
-            <img src="comprehensive-menstrual-h-selar.com-690cc0d476a89.jpg" alt="Comprehensive Menstrual Health cover" loading="lazy" class="w-full h-full object-cover object-center">
-          </figure>
-          <div class="p-4 flex-1 flex flex-col justify-between">
-            <div>
-              <h3 class="font-semibold">Comprehensive Menstrual Health Guide</h3>
-              <p class="text-gray-700 mt-2">Practical menstrual health and management.</p>
-            </div>
-
-            <div class="mt-4">
-              <div class="text-xl font-bold text-dahiPrimary">Price: $3.00</div>
-              <div class="mt-3"><a href="https://selar.com/p346083214" target="_blank" rel="noopener" class="inline-flex w-full md:w-auto items-center justify-center text-center font-semibold whitespace-nowrap px-6 py-3 rounded-lg bg-dahiPrimary text-white transition">Buy Now</a></div>
-            </div>
-          </div>
-        </article>
-
-        <article class="bg-white rounded-lg shadow overflow-hidden flex flex-col h-full">
-          <figure class="w-full h-40 overflow-hidden">
-            <img src="8-weeks-to-understanding--selar.com-6903a8099f4b8.jpg" alt="8 Weeks to Understanding Your Cycle cover" loading="lazy" class="w-full h-full object-cover object-center">
-          </figure>
-          <div class="p-4 flex-1 flex flex-col justify-between">
-            <div>
-              <h3 class="font-semibold">8 Weeks to Understanding Your Cycle – Islamic Approach</h3>
-              <p class="text-gray-700 mt-2">Structured program to understand menstrual cycles.</p>
-            </div>
-
-            <div class="mt-4">
-              <div class="mt-2"><span class="inline-block bg-green-100 text-green-800 font-semibold px-3 py-1 rounded-full">FREE</span></div>
-              <div class="mt-3"><a href="https://selar.com/d661vie336" target="_blank" rel="noopener" class="inline-flex w-full md:w-auto items-center justify-center text-center font-semibold whitespace-nowrap px-6 py-3 rounded-lg bg-dahiPrimary text-white transition">Download Free</a></div>
-            </div>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <!-- Newsletter CTA -->
-    <section id="newsletter" class="w-full max-w-6xl mx-auto px-4 md:px-8 py-12 md:py-20">
-      <h2 class="text-2xl font-bold">Stay Updated</h2>
-      <p class="text-gray-700 mt-2">Join our mailing list and receive webinar invites, resources, and community updates.</p>
-      <div class="mt-4"><a href="https://forms.gle/joTjf3VYW9anCA9MA" target="_blank" rel="noopener" class="inline-flex w-full md:w-auto items-center justify-center text-center font-semibold whitespace-nowrap px-6 py-3 rounded-lg bg-dahiPrimary text-white transition">Subscribe / Join</a></div>
-    </section>
-
-    <!-- Community -->
-    <section id="community" class="w-full max-w-6xl mx-auto px-4 md:px-8 py-12 md:py-20">
-      <div class="grid md:grid-cols-2 gap-6 items-center">
-        <figure class="mx-auto">
-          <picture>
-            <source type="image/webp" srcset="community-480.webp 480w, community-768.webp 768w, community-1200.webp 1200w" sizes="(max-width:720px) 100vw, (max-width:1024px) 520px, 640px">
-            <img src="community-768.jpg" alt="DAHI community members in discussion" loading="lazy" decoding="async" class="w-full max-w-md h-auto object-cover rounded-lg">
-          </picture>
-        </figure>
-
-        <div>
-          <h2 class="text-2xl font-bold">Join the DAHI Community</h2>
-          <p class="text-gray-700 mt-2">Connect with women committed to learning, healing, and thriving through trusted health education.</p>
-          <ul class="list-disc list-inside mt-3 text-gray-700">
-            <li>Webinar invitations and reminders</li>
-            <li>Access to free resources and guides</li>
-            <li>Supportive community discussions</li>
+          <h3 class="mt-4 text-2xl font-bold text-slate-900">Educational Webinars</h3>
+          <ul class="mt-4 space-y-3 text-slate-600">
+            <li class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">Contraception &amp; Family Planning for Muslim Women</li>
+            <li class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">Menopause Webinar</li>
+            <li class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">Menstrual Health Masterclass</li>
+            <li class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">Joint Webinar for Muslim Women and Women of Faith</li>
+            <li class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">Women's Health Q&amp;A Webinar</li>
           </ul>
+        </div>
 
-          <div class="mt-4 flex flex-col md:flex-row gap-4">
-            <a href="https://forms.gle/25oKDJoDAC4w7VBfA" target="_blank" rel="noopener" class="w-full md:w-auto inline-flex items-center justify-center text-center font-semibold whitespace-nowrap px-6 py-3 rounded-lg bg-dahiPrimary text-white shadow transition">Join the Community</a>
-            <a href="https://whatsapp.com/channel/0029VbBdF4hLI8YZRabyWF0j" target="_blank" rel="noopener" class="w-full md:w-auto inline-flex items-center justify-center text-center font-semibold whitespace-nowrap px-6 py-3 rounded-lg border-2 border-gray-200 text-gray-700 transition">Join WhatsApp Community</a>
+        <div class="soft-card p-7">
+          <div class="flex flex-wrap gap-2">
+            <span class="rounded-full bg-dahiAccent/20 px-3 py-1 text-sm font-semibold text-dahiAccent">Quiz</span>
+            <span class="rounded-full bg-dahiSecondary/10 px-3 py-1 text-sm font-semibold text-dahiSecondary">Community Event</span>
+          </div>
+          <h3 class="mt-4 text-2xl font-bold text-slate-900">Community Engagement</h3>
+          <div class="mt-5 space-y-4">
+            <div class="rounded-2xl border border-slate-200 p-4">
+              <h4 class="font-semibold text-slate-900">DAHI Ramadan Quiz (DRQ)</h4>
+              <p class="mt-2 text-slate-600">A fun and educational quiz designed to build awareness and engagement during Ramadan.</p>
+            </div>
+            <div class="rounded-2xl border border-slate-200 p-4">
+              <h4 class="font-semibold text-slate-900">DAHI Online Quiz (DOQ)</h4>
+              <p class="mt-2 text-slate-600">Interactive online quizzes that make learning accessible and enjoyable for participants.</p>
+            </div>
+            <div class="rounded-2xl border border-slate-200 p-4">
+              <h4 class="font-semibold text-slate-900">Live Q&amp;A Sessions</h4>
+              <p class="mt-2 text-slate-600">Open conversations that allow women to ask questions and gain informed guidance.</p>
+            </div>
+            <div class="rounded-2xl border border-slate-200 p-4">
+              <h4 class="font-semibold text-slate-900">Community Awareness Campaigns</h4>
+              <p class="mt-2 text-slate-600">Outreach initiatives that promote health literacy and encourage balanced conversations.</p>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
+    <section id="resources" class="section-shell mx-auto max-w-7xl">
+      <div class="mb-8 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+        <div class="max-w-3xl">
+          <span class="eyebrow">Resources</span>
+          <h2 class="mt-4 section-title">Practical health resources for every stage of life</h2>
+          <p class="mt-4 text-lg leading-8 text-slate-600">Explore free and paid resources created to support women with trustworthy health education and easy-to-follow guidance.</p>
+        </div>
+        <a href="https://selar.com/d661vie336" target="_blank" rel="noopener" class="inline-flex items-center justify-center rounded-full bg-dahiPrimary px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-dahiSecondary">Browse Free Resources</a>
+      </div>
+
+      <div class="grid gap-6 lg:grid-cols-3">
+        <article class="soft-card overflow-hidden">
+          <img src="sunnah-reset-a-7-day-meno-selar.com-6a0c3775671cd.png" alt="Sunnah Reset guide cover" loading="lazy" class="h-56 w-full object-cover" />
+          <div class="p-6">
+            <h3 class="text-xl font-semibold text-slate-900">Sunnah Reset – 7 Day Menopause Reset Guide</h3>
+            <p class="mt-3 text-slate-600">A faith-conscious 7-day guide designed to support women through menopause with clarity and confidence.</p>
+            <div class="mt-6 flex items-center justify-between">
+              <span class="text-lg font-black text-dahiPrimary">$5.00</span>
+              <a href="https://selar.com/66566z1k7x" target="_blank" rel="noopener" class="rounded-full bg-dahiPrimary px-4 py-2 text-sm font-semibold text-white transition hover:bg-dahiSecondary">Buy Now</a>
+            </div>
+          </div>
+        </article>
+        <article class="soft-card overflow-hidden">
+          <img src="comprehensive-menstrual-h-selar.com-690cc0d476a89.jpg" alt="Comprehensive Menstrual Health guide cover" loading="lazy" class="h-56 w-full object-cover" />
+          <div class="p-6">
+            <h3 class="text-xl font-semibold text-slate-900">Comprehensive Menstrual Health Guide</h3>
+            <p class="mt-3 text-slate-600">A practical guide covering menstrual health, common questions, and reliable self-care strategies.</p>
+            <div class="mt-6 flex items-center justify-between">
+              <span class="text-lg font-black text-dahiPrimary">$3.00</span>
+              <a href="https://selar.com/p346083214" target="_blank" rel="noopener" class="rounded-full bg-dahiPrimary px-4 py-2 text-sm font-semibold text-white transition hover:bg-dahiSecondary">Buy Now</a>
+            </div>
+          </div>
+        </article>
+        <article class="soft-card overflow-hidden">
+          <img src="8-weeks-to-understanding--selar.com-6903a8099f4b8.jpg" alt="8 Weeks to Understanding Your Cycle guide cover" loading="lazy" class="h-56 w-full object-cover" />
+          <div class="p-6">
+            <h3 class="text-xl font-semibold text-slate-900">8 Weeks to Understanding Your Cycle</h3>
+            <p class="mt-3 text-slate-600">A structured resource that helps women understand their cycle in a supportive, accessible way.</p>
+            <div class="mt-6 flex items-center justify-between">
+              <span class="rounded-full bg-emerald-100 px-3 py-1 text-sm font-semibold text-emerald-700">FREE</span>
+              <a href="https://selar.com/d661vie336" target="_blank" rel="noopener" class="rounded-full bg-dahiPrimary px-4 py-2 text-sm font-semibold text-white transition hover:bg-dahiSecondary">Download Free</a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="meet-the-team" class="section-shell mx-auto max-w-7xl">
+      <div class="mb-8 max-w-3xl">
+        <span class="eyebrow">Meet the Team</span>
+        <h2 class="mt-4 section-title">A multidisciplinary team committed to women’s health education</h2>
+        <p class="mt-4 text-lg leading-8 text-slate-600">Behind DAHI is a passionate multidisciplinary team committed to improving women’s health through education, advocacy, and community engagement.</p>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        <article class="team-card soft-card p-7">
+          <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-dahiPrimary/10 text-2xl font-black text-dahiPrimary">DA</div>
+          <h3 class="mt-5 text-xl font-semibold text-slate-900">Dr. Adi</h3>
+          <p class="mt-2 text-sm font-semibold uppercase tracking-[0.2em] text-dahiSecondary">Founder &amp; Medical Lead</p>
+          <p class="mt-4 text-slate-600">Provides strategic leadership and medical oversight, ensuring all educational content is accurate, evidence-based, and aligned with DAHI’s mission.</p>
+        </article>
+        <article class="team-card soft-card p-7">
+          <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-dahiSecondary/10 text-2xl font-black text-dahiSecondary">FH</div>
+          <h3 class="mt-5 text-xl font-semibold text-slate-900">Fareedah Hussain-Yusuf</h3>
+          <p class="mt-2 text-sm font-semibold uppercase tracking-[0.2em] text-dahiSecondary">Operations &amp; Digital Systems Coordinator</p>
+          <p class="mt-4 text-slate-600">Coordinates digital operations, manages webinars and online platforms, and supports the delivery of DAHI’s programs and resources.</p>
+        </article>
+        <article class="team-card soft-card p-7">
+          <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-dahiAccent/20 text-2xl font-black text-dahiAccent">HM</div>
+          <h3 class="mt-5 text-xl font-semibold text-slate-900">Haruna Muhammad</h3>
+          <p class="mt-2 text-sm font-semibold uppercase tracking-[0.2em] text-dahiSecondary">Community Visibility &amp; Public Engagement Lead</p>
+          <p class="mt-4 text-slate-600">Leads public engagement initiatives, strengthens DAHI’s visibility, and builds meaningful connections with the wider community.</p>
+        </article>
+        <article class="team-card soft-card p-7">
+          <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-dahiPrimary/10 text-2xl font-black text-dahiPrimary">FH</div>
+          <h3 class="mt-5 text-xl font-semibold text-slate-900">Faadhilah Hussain</h3>
+          <p class="mt-2 text-sm font-semibold uppercase tracking-[0.2em] text-dahiSecondary">Programs &amp; Outreach Coordinator</p>
+          <p class="mt-4 text-slate-600">Coordinates educational programs and outreach activities while supporting partnerships and community engagement efforts.</p>
+        </article>
+        <article class="team-card soft-card p-7">
+          <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-dahiSecondary/10 text-2xl font-black text-dahiSecondary">HO</div>
+          <h3 class="mt-5 text-xl font-semibold text-slate-900">Hajarat Oyebamiji</h3>
+          <p class="mt-2 text-sm font-semibold uppercase tracking-[0.2em] text-dahiSecondary">Creative &amp; Educational Content Lead</p>
+          <p class="mt-4 text-slate-600">Develops engaging educational content and creative materials that communicate health information clearly and effectively.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section-shell mx-auto max-w-7xl">
+      <div class="mb-8 max-w-3xl">
+        <span class="eyebrow">Testimonials</span>
+        <h2 class="mt-4 section-title">What participants say about DAHI events</h2>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        <article class="soft-card p-7">
+          <div class="text-dahiAccent"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+          <p class="mt-4 text-lg leading-8 text-slate-600">“The webinar was well-structured, and the delivery made every topic easy to understand.”</p>
+          <p class="mt-5 font-semibold text-slate-900">DAHI Webinar Participant</p>
+        </article>
+        <article class="soft-card p-7">
+          <div class="text-dahiAccent"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+          <p class="mt-4 text-lg leading-8 text-slate-600">“I enjoyed every part of the webinar. It was engaging from beginning to end.”</p>
+          <p class="mt-5 font-semibold text-slate-900">DAHI Webinar Participant</p>
+        </article>
+        <article class="soft-card p-7">
+          <div class="text-dahiAccent"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+          <p class="mt-4 text-lg leading-8 text-slate-600">“The information was presented in a way that was easy to understand and apply.”</p>
+          <p class="mt-5 font-semibold text-slate-900">DAHI Webinar Participant</p>
+        </article>
+        <article class="soft-card p-7">
+          <div class="text-dahiAccent"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+          <p class="mt-4 text-lg leading-8 text-slate-600">“Having different experts share their knowledge made the webinar even more insightful.”</p>
+          <p class="mt-5 font-semibold text-slate-900">DAHI Webinar Participant</p>
+        </article>
+        <article class="soft-card p-7 md:col-span-2 xl:col-span-1">
+          <div class="text-dahiAccent"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+          <p class="mt-4 text-lg leading-8 text-slate-600">“I appreciated the collaborative approach—everyone contributed valuable perspectives throughout the session.”</p>
+          <p class="mt-5 font-semibold text-slate-900">DAHI Webinar Participant</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="community" class="section-shell mx-auto max-w-7xl">
+      <div class="soft-card overflow-hidden">
+        <div class="grid gap-8 p-8 sm:p-10 lg:grid-cols-[0.95fr_1.05fr] lg:p-12">
+          <img src="community-768.jpg" alt="DAHI community gathering" loading="lazy" class="h-72 w-full rounded-[1.25rem] object-cover" />
+          <div class="flex flex-col justify-center">
+            <span class="eyebrow">Join the Community</span>
+            <h2 class="mt-4 text-3xl font-black text-slate-900">Become Part of the DAHI Community</h2>
+            <p class="mt-4 text-lg leading-8 text-slate-600">Join a growing community of women committed to learning, supporting one another, and making informed health decisions through trusted education and meaningful conversations.</p>
+            <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+              <a href="https://whatsapp.com/channel/0029VbBdF4hLI8YZRabyWF0j" target="_blank" rel="noopener" class="inline-flex items-center justify-center rounded-full bg-dahiPrimary px-6 py-3 text-sm font-semibold text-white transition hover:bg-dahiSecondary">Join WhatsApp Community</a>
+              <a href="https://forms.gle/joTjf3VYW9anCA9MA" target="_blank" rel="noopener" class="inline-flex items-center justify-center rounded-full border border-slate-300 px-6 py-3 text-sm font-semibold text-slate-700 transition hover:border-dahiPrimary hover:text-dahiPrimary">Subscribe for Updates</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
 
-    <!-- Contact Us -->
-    <section id="contact-us" class="w-full max-w-6xl mx-auto px-4 md:px-8 py-12 md:py-20" role="region" aria-labelledby="contact-us-title">
-      <h2 id="contact-us-title" class="text-2xl font-bold">Contact Us</h2>
-      <p class="text-gray-700 mt-2">Have questions, collaboration ideas, or want to connect with DAHI? Reach out through any of the channels below.</p>
-
-      <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <a href="mailto:docadi.healthintiative@gmail.com" class="block bg-white rounded-xl shadow-md p-5 hover:shadow-lg transition duration-300" aria-label="Email Us: docadi.healthintiative@gmail.com">
-          <div class="flex items-start gap-4">
-            <div class="text-dahiPrimary text-3xl"><i class="fa-solid fa-envelope" aria-hidden="true"></i></div>
-            <div>
-              <div class="font-semibold text-gray-900">Email Us</div>
-              <div class="text-gray-600">docadi.healthintiative@gmail.com</div>
-            </div>
-          </div>
-        </a>
-
-        <a href="https://whatsapp.com/channel/0029VbBdF4hLI8YZRabyWF0j" target="_blank" rel="noopener noreferrer" class="block bg-white rounded-xl shadow-md p-5 hover:shadow-lg transition duration-300" aria-label="Join WhatsApp Community">
-          <div class="flex items-start gap-4">
-            <div class="text-green-500 text-3xl"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i></div>
-            <div>
-              <div class="font-semibold text-gray-900">Join WhatsApp Community</div>
-              <div class="text-gray-600">Instant community access</div>
-            </div>
-          </div>
-        </a>
-
-        <a href="https://www.facebook.com/share/1A8VVfnJyr" target="_blank" rel="noopener noreferrer" class="block bg-gray-50 rounded-xl shadow-md p-5 hover:shadow-lg transition duration-300" aria-label="Facebook">
-          <div class="flex items-start gap-4">
-            <div class="text-blue-600 text-3xl"><i class="fa-brands fa-facebook-f" aria-hidden="true"></i></div>
-            <div>
-              <div class="font-semibold text-gray-900">Facebook</div>
-              <div class="text-gray-600">Doc Adi Health Initiative</div>
-            </div>
-          </div>
-        </a>
-
-        <a href="https://www.instagram.com/docadihealthintiative_?igsh=YmtnbW1hZnp6MWFz" target="_blank" rel="noopener noreferrer" class="block bg-gray-50 rounded-xl shadow-md p-5 hover:shadow-lg transition duration-300" aria-label="Instagram">
-          <div class="flex items-start gap-4">
-            <div class="text-pink-500 text-3xl"><i class="fa-brands fa-instagram" aria-hidden="true"></i></div>
-            <div>
-              <div class="font-semibold text-gray-900">Instagram</div>
-              <div class="text-gray-600">@docadihealthintiative_</div>
-            </div>
-          </div>
-        </a>
-
-        <a href="https://youtube.com/@dahi-01?si=b54Rt5TiEc5Yvb7q" target="_blank" rel="noopener noreferrer" class="block bg-gray-50 rounded-xl shadow-md p-5 hover:shadow-lg transition duration-300" aria-label="YouTube">
-          <div class="flex items-start gap-4">
-            <div class="text-red-600 text-3xl"><i class="fa-brands fa-youtube" aria-hidden="true"></i></div>
-            <div>
-              <div class="font-semibold text-gray-900">YouTube</div>
-              <div class="text-gray-600">DAHI</div>
-            </div>
-          </div>
-        </a>
-
-        <a href="https://substack.com/@womenshealthwithdocadi" target="_blank" rel="noopener noreferrer" class="block bg-gray-50 rounded-xl shadow-md p-5 hover:shadow-lg transition duration-300" aria-label="Substack">
-          <div class="flex items-start gap-4">
-            <div class="text-gray-800 text-3xl"><i class="fa-solid fa-newspaper" aria-hidden="true"></i></div>
-            <div>
-              <div class="font-semibold text-gray-900">Substack</div>
-              <div class="text-gray-600">Women's Health with Doc Adi</div>
-            </div>
-          </div>
-        </a>
-      </div>
-    </section>
-
-    <!-- Footer -->
-  <footer id="contact" class="bg-gray-900 text-white mt-10">
-    <div class="w-full max-w-6xl mx-auto px-4 md:px-8 py-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div>
-        <a href="#home" class="flex items-center gap-3">
-          <img src="logo.jpeg" alt="DAHI logo" loading="lazy" class="h-10 w-auto rounded-sm">
-          <span class="font-semibold">DAHI</span>
-        </a>
-        <p class="mt-3 text-gray-200">Empowering women and girls through trusted health education, community, and evidence-based resources.</p>
-      </div>
-
-      <div>
-        <h3 class="font-semibold">Contact</h3>
-        <p class="mt-2"><a href="mailto:docadi.healthintiative@gmail.com" class="text-gray-100 hover:text-dahiAccent">docadi.healthintiative@gmail.com</a></p>
-      </div>
+  <section id="contact" class="section-shell mx-auto max-w-7xl">
+    <div class="mb-8 max-w-3xl">
+      <span class="eyebrow">Contact</span>
+      <h2 class="mt-4 section-title">Get in touch with DAHI</h2>
+      <p class="mt-4 text-lg leading-8 text-slate-600">Have questions, collaboration ideas, or want to connect with the DAHI team? Reach out through any of the channels below.</p>
     </div>
 
-    <div class="w-full max-w-6xl mx-auto px-4 md:px-8 pt-6 border-t border-gray-200 text-center text-sm text-gray-500"> 
-      <div>© 2026 Doc Adi Health Initiative (DAHI). All rights reserved.</div>
-      <div class="text-xs text-gray-400 mt-1">Empowering women through education, community, and compassionate healthcare.</div>
+    <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+      <a href="mailto:docadi.healthintiative@gmail.com" class="soft-card block p-7">
+        <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-dahiPrimary/10 text-2xl text-dahiPrimary"><i class="fa-solid fa-envelope"></i></div>
+        <h3 class="mt-5 text-xl font-semibold text-slate-900">Email</h3>
+        <p class="mt-2 text-slate-600">docadi.healthintiative@gmail.com</p>
+      </a>
+      <a href="https://whatsapp.com/channel/0029VbBdF4hLI8YZRabyWF0j" target="_blank" rel="noopener" class="soft-card block p-7">
+        <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-100 text-2xl text-emerald-600"><i class="fa-brands fa-whatsapp"></i></div>
+        <h3 class="mt-5 text-xl font-semibold text-slate-900">WhatsApp</h3>
+        <p class="mt-2 text-slate-600">Join the community channel</p>
+      </a>
+      <a href="https://www.facebook.com/share/1A8VVfnJyr" target="_blank" rel="noopener" class="soft-card block p-7">
+        <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-100 text-2xl text-blue-600"><i class="fa-brands fa-facebook-f"></i></div>
+        <h3 class="mt-5 text-xl font-semibold text-slate-900">Facebook</h3>
+        <p class="mt-2 text-slate-600">Doc Adi Health Initiative</p>
+      </a>
+      <a href="https://www.instagram.com/docadihealthintiative_?igsh=YmtnbW1hZnp6MWFz" target="_blank" rel="noopener" class="soft-card block p-7">
+        <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-pink-100 text-2xl text-pink-600"><i class="fa-brands fa-instagram"></i></div>
+        <h3 class="mt-5 text-xl font-semibold text-slate-900">Instagram</h3>
+        <p class="mt-2 text-slate-600">@docadihealthintiative_</p>
+      </a>
+      <a href="https://youtube.com/@dahi-01?si=b54Rt5TiEc5Yvb7q" target="_blank" rel="noopener" class="soft-card block p-7">
+        <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-100 text-2xl text-red-600"><i class="fa-brands fa-youtube"></i></div>
+        <h3 class="mt-5 text-xl font-semibold text-slate-900">YouTube</h3>
+        <p class="mt-2 text-slate-600">DAHI channel</p>
+      </a>
+    </div>
+  </section>
+
+  <section id="privacy-policy" class="section-shell mx-auto max-w-7xl">
+    <div class="mb-8 max-w-3xl">
+      <span class="eyebrow">Privacy Policy</span>
+      <h2 class="mt-4 section-title">Privacy Policy</h2>
+      <p class="mt-4 text-lg leading-8 text-slate-600">At Doc Adi Health Initiative (DAHI), we respect your privacy and are committed to protecting the personal information of our community members, website visitors, and participants.</p>
+    </div>
+
+    <div class="soft-card p-6 sm:p-8">
+      <div class="space-y-3">
+        <details class="group rounded-2xl border border-slate-200 bg-slate-50 p-4">
+          <summary class="cursor-pointer list-none text-lg font-semibold text-slate-900">Information We Collect</summary>
+          <p class="mt-3 text-slate-600">DAHI may collect information that you voluntarily provide when you interact with our page, register for webinars, join our community, request resources, or submit feedback. This may include your name, email address, phone number or WhatsApp contact, webinar registration information, feedback responses, and resource requests.</p>
+        </details>
+
+        <details class="group rounded-2xl border border-slate-200 bg-slate-50 p-4">
+          <summary class="cursor-pointer list-none text-lg font-semibold text-slate-900">How We Use Your Information</summary>
+          <p class="mt-3 text-slate-600">We use collected information to communicate DAHI updates, provide educational resources, manage events, improve our programs, and better support our community.</p>
+        </details>
+
+        <details class="group rounded-2xl border border-slate-200 bg-slate-50 p-4">
+          <summary class="cursor-pointer list-none text-lg font-semibold text-slate-900">Health Education Disclaimer</summary>
+          <p class="mt-3 text-slate-600">DAHI provides health education and awareness information for educational purposes only. Our content does not replace professional medical advice, diagnosis, or treatment.</p>
+        </details>
+
+        <details class="group rounded-2xl border border-slate-200 bg-slate-50 p-4">
+          <summary class="cursor-pointer list-none text-lg font-semibold text-slate-900">Data Protection</summary>
+          <p class="mt-3 text-slate-600">DAHI takes reasonable measures to protect personal information and does not sell, rent, or misuse user data.</p>
+        </details>
+
+        <details class="group rounded-2xl border border-slate-200 bg-slate-50 p-4">
+          <summary class="cursor-pointer list-none text-lg font-semibold text-slate-900">Third-Party Services</summary>
+          <p class="mt-3 text-slate-600">DAHI may use trusted third-party platforms such as Google Forms, Google Workspace, email platforms, WhatsApp, website hosting providers, and analytics tools to support our activities.</p>
+        </details>
+
+        <details class="group rounded-2xl border border-slate-200 bg-slate-50 p-4">
+          <summary class="cursor-pointer list-none text-lg font-semibold text-slate-900">Your Rights</summary>
+          <p class="mt-3 text-slate-600">Community members may request access, correction, or removal of their personal information where applicable.</p>
+        </details>
+
+        <details class="group rounded-2xl border border-slate-200 bg-slate-50 p-4">
+          <summary class="cursor-pointer list-none text-lg font-semibold text-slate-900">Contact</summary>
+          <p class="mt-3 text-slate-600">For privacy-related questions, please contact DAHI through the official contact channels provided on this page.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <footer class="mt-12 border-t border-slate-200 bg-slate-900 py-10 text-slate-300">
+    <div class="mx-auto flex max-w-7xl flex-col gap-8 px-4 sm:px-6 lg:flex-row lg:justify-between lg:px-8">
+      <div class="max-w-xl">
+        <a href="#hero" class="flex items-center gap-3">
+          <img src="logo.jpeg" alt="DAHI logo" loading="lazy" class="h-10 w-auto rounded-lg" />
+          <span class="text-lg font-semibold text-white">DAHI</span>
+        </a>
+        <p class="mt-4 text-slate-400">Empowering Muslim women through trusted health education, community, and evidence-based resources.</p>
+      </div>
+      <div class="space-y-3">
+        <div class="font-semibold text-white">Connect with us</div>
+        <div class="flex flex-wrap gap-3">
+          <a href="mailto:docadi.healthintiative@gmail.com" class="text-slate-300 transition hover:text-white">Email</a>
+          <a href="https://whatsapp.com/channel/0029VbBdF4hLI8YZRabyWF0j" target="_blank" rel="noopener" class="text-slate-300 transition hover:text-white">WhatsApp</a>
+          <a href="https://www.facebook.com/share/1A8VVfnJyr" target="_blank" rel="noopener" class="text-slate-300 transition hover:text-white">Facebook</a>
+          <a href="https://www.instagram.com/docadihealthintiative_?igsh=YmtnbW1hZnp6MWFz" target="_blank" rel="noopener" class="text-slate-300 transition hover:text-white">Instagram</a>
+          <a href="https://youtube.com/@dahi-01?si=b54Rt5TiEc5Yvb7q" target="_blank" rel="noopener" class="text-slate-300 transition hover:text-white">YouTube</a>
+          <a href="#privacy-policy" class="text-slate-300 transition hover:text-white">Privacy Policy</a>
+        </div>
+        <p class="text-sm text-slate-500">© 2026 Doc Adi Health Initiative. All rights reserved.</p>
+      </div>
     </div>
   </footer>
 
-  <!-- Sticky register button -->
-  <a id="sticky-register" href="https://selar.com/112eyd273c" target="_blank" rel="noopener" class="fixed right-5 bottom-7 inline-flex items-center justify-center text-center font-semibold whitespace-nowrap px-6 py-3 rounded-lg bg-red-600 hover:bg-red-700 text-white shadow-lg hidden md:inline-flex">Register for Webinar</a>
-
-  <script>
-    // Mobile menu toggle
-    const navToggle = document.getElementById('nav-toggle');
-    const navClose = document.getElementById('nav-close');
-    const mobileMenu = document.getElementById('mobile-menu');
-    if(navToggle){
-      navToggle.addEventListener('click', ()=>{
-        const expanded = navToggle.getAttribute('aria-expanded') === 'true';
-        navToggle.setAttribute('aria-expanded', String(!expanded));
-        mobileMenu.classList.toggle('hidden');
-      })
-    }
-    if(navClose){
-      navClose.addEventListener('click', ()=> mobileMenu.classList.add('hidden'))
-    }
-    // Close menu on link click
-    document.querySelectorAll('#mobile-menu a').forEach(a=> a.addEventListener('click', ()=> mobileMenu.classList.add('hidden')));
-  </script>
-</body>
-</html>
