@@ -1,0 +1,100 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --dahi-primary: #6D2E7C;
+  --dahi-secondary: #1F7A7A;
+  --dahi-accent: #D8A63A;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: Inter, 'Segoe UI', Roboto, Arial, sans-serif;
+  background-color: #f8fafc;
+  color: #334155;
+  overflow-x: hidden;
+}
+
+.section-shell {
+  padding: 5rem 1.5rem;
+}
+
+.section-title {
+  font-size: clamp(1.6rem, 2.3vw, 2.2rem);
+  font-weight: 700;
+  color: var(--dahi-primary);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  background: rgba(109, 46, 124, 0.08);
+  color: var(--dahi-primary);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.soft-card {
+  background: white;
+  border: 1px solid rgba(17, 24, 39, 0.06);
+  border-radius: 1.25rem;
+  box-shadow: 0 20px 45px rgba(15, 23, 42, 0.06);
+}
+
+.soft-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 24px 50px rgba(15, 23, 42, 0.10);
+}
+
+.stat-card {
+  transition: transform 220ms ease, box-shadow 220ms ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+}
+
+.team-card {
+  transition: transform 220ms ease, box-shadow 220ms ease;
+}
+
+.team-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 45px rgba(15, 23, 42, 0.12);
+}
+
+.nav-link {
+  position: relative;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -0.2rem;
+  width: 100%;
+  height: 2px;
+  background: var(--dahi-primary);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 180ms ease;
+}
+
+.nav-link:hover::after,
+.nav-link:focus::after {
+  transform: scaleX(1);
+}
+
+.hero-glow {
+  background: linear-gradient(135deg, rgba(109, 46, 124, 0.96), rgba(31, 122, 122, 0.94));
+}

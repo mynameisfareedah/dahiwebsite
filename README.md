@@ -1,71 +1,35 @@
-<<<<<<< HEAD
-# DAHI — Doc Adi Health Initiative
+# DAHI Website
 
-Static landing page for DAHI built for Netlify.
+DAHI is a React + Vite website for the Doc Adi Health Initiative. It includes public content pages, responsive layouts, and a demo-ready admin experience while preserving the existing DAHI branding.
 
-Setup
+## Local development
 
-1. Install: None required (static site). If using Netlify functions, ensure `RESEND_API_KEY` and optionally `RESEND_FROM` are set in Netlify environment variables.
+1. Install dependencies: `npm install`
+2. Start the dev server: `npm run dev`
+3. Open the local Vite URL.
 
-Environment variables
+## Environment variables
 
+Create a `.env` file with:
 
-Deploy
+```env
+VITE_SUPABASE_URL=
+VITE_SUPABASE_ANON_KEY=
+VITE_GA_ID=
+VITE_CLARITY_ID=
+```
 
-1. Push to a Git repo and connect to Netlify.
-2. Set build settings (none needed for static site). Netlify will publish root and use `functions/` for serverless functions.
+## Production build
 
- Netlify function
+Run:
 
- Endpoint: `/.netlify/functions/send-welcome-email` — accepts POST JSON { firstName, email } and sends a welcome email using Resend.
+```bash
+npm run build
+```
 
- Notes
+## Deployment notes
 
-- Navigation is sticky and mobile-first with smooth scrolling.
-- Testimonials were removed to respect consent.
-- Add `RESEND_API_KEY` in Netlify site settings before deploying functions.
+- Netlify SPA redirects are handled by `netlify.toml`.
+- PWA support is enabled through `manifest.json` and `public/sw.js`.
+- SEO files include `public/robots.txt` and `public/sitemap.xml`.
 
- Local testing
-
- You can serve the static files locally with a simple server, for example using Python:
-
- ```bash
- python -m http.server 8000
- ```
-
-=======
-# DAHI — Doc Adi Health Initiative
-
-Static landing page for DAHI built for Netlify.
-
-Setup
-
-1. Install: None required (static site). If using Netlify functions, ensure `RESEND_API_KEY` and optionally `RESEND_FROM` are set in Netlify environment variables.
-
-Environment variables
-
-
-Deploy
-
-1. Push to a Git repo and connect to Netlify.
-2. Set build settings (none needed for static site). Netlify will publish root and use `functions/` for serverless functions.
-
- Netlify function
-
- Endpoint: `/.netlify/functions/send-welcome-email` — accepts POST JSON { firstName, email } and sends a welcome email using Resend.
-
- Notes
-
-- Navigation is sticky and mobile-first with smooth scrolling.
-- Testimonials were removed to respect consent.
-- Add `RESEND_API_KEY` in Netlify site settings before deploying functions.
-
- Local testing
-
- You can serve the static files locally with a simple server, for example using Python:
-
- ```bash
- python -m http.server 8000
- ```
-
->>>>>>> fb6e75e28af5ae3749cffa9d8a0f147d26a0b8bb
