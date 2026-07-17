@@ -32,7 +32,7 @@ function DonationSection({ donationImpact }) {
 
     const observer = new IntersectionObserver(
       (entries) => {
-        const [entry] = entries[0];
+        const entry = entries[0];
         if (entry?.isIntersecting) {
           setIsHighlighted(true);
           section.focus({ preventScroll: true });

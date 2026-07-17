@@ -76,17 +76,8 @@ export function AdminAuthProvider({ children }) {
   }, []);
 
   const signIn = async (email, password) => {
-    const isPlaceholder = !isSupabaseConfigured;
-
-    if (isPlaceholder) {
-      const demoUser = email === 'admin@dahi.org' && password === 'Dahi2024!';
-      if (!demoUser) {
-        throw new Error('Use demo credentials: admin@dahi.org / Dahi2024!');
-      }
-      const demoSession = { user: { id: 'demo-admin', email, role: 'Super Admin' } };
-      setSession(demoSession);
-      persistSession(demoSession);
-      return demoSession;
+    if (!isSupabaseConfigured || !supabase) {
+      throw new Error('Supabase authentication is not configured. Please set up VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env.local');
     }
 
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
@@ -100,8 +91,8 @@ export function AdminAuthProvider({ children }) {
     if (isSupabaseConfigured && supabase) {
       try {
         await supabase.auth.signOut();
-      } catch {
-        // Ignore signout errors in demo mode.
+      } catch (err) {
+        console.error('Error during signout:', err);
       }
     }
     setSession(null);
@@ -109,8 +100,8 @@ export function AdminAuthProvider({ children }) {
   };
 
   const resetPassword = async (email) => {
-    if (!isSupabaseConfigured) {
-      return { message: 'Password reset is simulated in demo mode. Use the demo credentials.' };
+    if (!isSupabaseConfigured || !supabase) {
+      throw new Error('Password reset requires Supabase to be configured.');
     }
     const { error } = await supabase.auth.resetPasswordForEmail(email);
     if (error) throw error;

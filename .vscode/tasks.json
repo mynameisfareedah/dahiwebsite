@@ -4,7 +4,7 @@
 		{
 			"label": "build-site",
 			"type": "shell",
-			"command": "npm run build",
+			"command": "C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\node\\node-v20.20.2-win-x64\\npm.cmd run build",
 			"problemMatcher": [
 				"$tsc"
 			],

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 const skillOptions = [
   'Healthcare Professional',
@@ -12,7 +12,7 @@ const skillOptions = [
   'General Volunteer',
 ];
 
-function VolunteerForm({ onSuccess, onCancel }) {
+function VolunteerForm({ onSuccess, onCancel, autoFocus = false }) {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -65,12 +65,21 @@ function VolunteerForm({ onSuccess, onCancel }) {
     }, 800);
   };
 
+  // autofocus the first input when requested
+  const nameRef = useRef(null);
+  useEffect(() => {
+    if (autoFocus && nameRef.current) {
+      try { nameRef.current.focus(); } catch (e) {}
+    }
+  }, [autoFocus]);
+
   return (
     <form className="space-y-5" onSubmit={handleSubmit} noValidate>
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="block text-sm font-medium text-slate-700">
           <span className="mb-2 block">Full Name</span>
           <input
+            ref={nameRef}
             name="name"
             value={formData.name}
             onChange={handleChange}

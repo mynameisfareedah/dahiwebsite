@@ -6,8 +6,8 @@ import { upcomingOutreach } from '../../data/siteContent';
 function UpcomingOutreachSection() {
   return (
     <section className="section-shell mx-auto max-w-7xl space-y-8">
-      <div className="flex flex-row items-center gap-8 rounded-[1.5rem] border border-slate-200 bg-white p-4 shadow-sm sm:p-6 md:p-8">
-        <div className="relative w-[48%] min-w-0 shrink-0 overflow-hidden rounded-[1.25rem] border border-dahiPrimary/20 bg-slate-50 p-2 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-md">
+      <div className="flex flex-col gap-6 rounded-[1.5rem] border border-slate-200 bg-white p-4 shadow-sm sm:p-6 sm:flex-row sm:items-stretch sm:gap-8 sm:p-8">
+        <div className="relative min-h-[280px] w-full shrink-0 overflow-hidden rounded-[1.25rem] border border-dahiPrimary/20 bg-slate-50 p-2 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-md sm:w-[48%] sm:min-h-[360px]">
           <img
             src={upcomingOutreach.bannerImage}
             alt="August Community Health Outreach"
@@ -20,14 +20,13 @@ function UpcomingOutreachSection() {
           </div>
         </div>
 
-        <div className="w-[52%] min-w-0 space-y-6">
+        <div className="flex w-full min-w-0 flex-col justify-between space-y-6 sm:w-[52%]">
           <SectionHeading
             eyebrow="Coming This August"
             title="Upcoming Community Outreach"
-            description="This August, DAHI will be bringing women together for a community-focused health outreach designed to improve health awareness and encourage preventive healthcare through education and community engagement."
           />
 
-          <div className="space-y-4 rounded-[1.25rem] border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+          <div className="flex-1 space-y-4 rounded-[1.25rem] border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
             <div className="flex items-center gap-3">
               <Sparkles className="h-5 w-5 flex-shrink-0 text-dahiPrimary" />
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-dahiSecondary">{upcomingOutreach.theme}</p>
@@ -52,7 +51,7 @@ function UpcomingOutreachSection() {
 
             <div className="flex flex-col gap-3 sm:flex-row">
               <Link
-                to="/events"
+                to="/outreach"
                 className="inline-flex items-center justify-center rounded-full bg-dahiPrimary px-6 py-3 text-sm font-semibold text-white transition hover:bg-dahiSecondary"
               >
                 Learn More

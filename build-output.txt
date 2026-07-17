@@ -1,0 +1,62 @@
+
+> dahi-website@1.0.0 build
+> vite build
+
+[36mvite v5.4.21 [32mbuilding for production...[36m[39m
+transforming...
+[32m✓[39m 1997 modules transformed.
+rendering chunks...
+computing gzip size...
+[2mdist/[22m[32massets/manifest-BooNAiGw.json           [39m[1m[2m  0.40 kB[22m[1m[22m[2m │ gzip:   0.23 kB[22m
+[2mdist/[22m[32massets/favicon-BwdAfDqk.ico             [39m[1m[2m  0.48 kB[22m[1m[22m
+[2mdist/[22m[32mindex.html                              [39m[1m[2m  2.01 kB[22m[1m[22m[2m │ gzip:   0.72 kB[22m
+[2mdist/[22m[32massets/apple-touch-icon-DShd2nAG.png    [39m[1m[2m 17.50 kB[22m[1m[22m
+[2mdist/[22m[35massets/index-CO0wXnHg.css               [39m[1m[2m 48.42 kB[22m[1m[22m[2m │ gzip:   8.77 kB[22m
+[2mdist/[22m[36massets/chevron-down-BV_nQPRa.js         [39m[1m[2m  0.30 kB[22m[1m[22m[2m │ gzip:   0.25 kB[22m
+[2mdist/[22m[36massets/trending-up-QiyLCJTX.js          [39m[1m[2m  0.35 kB[22m[1m[22m[2m │ gzip:   0.27 kB[22m
+[2mdist/[22m[36massets/mail-d9geDXJF.js                 [39m[1m[2m  0.39 kB[22m[1m[22m[2m │ gzip:   0.30 kB[22m
+[2mdist/[22m[36massets/message-square-C_DZDtzh.js       [39m[1m[2m  0.41 kB[22m[1m[22m[2m │ gzip:   0.30 kB[22m
+[2mdist/[22m[36massets/calendar-DWXwJvXa.js             [39m[1m[2m  0.43 kB[22m[1m[22m[2m │ gzip:   0.30 kB[22m
+[2mdist/[22m[36massets/heart-gIQvYEJd.js                [39m[1m[2m  0.43 kB[22m[1m[22m[2m │ gzip:   0.32 kB[22m
+[2mdist/[22m[36massets/map-pin-BWDxuLnC.js              [39m[1m[2m  0.43 kB[22m[1m[22m[2m │ gzip:   0.33 kB[22m
+[2mdist/[22m[36massets/SectionHeading-CbYgcfOF.js       [39m[1m[2m  0.44 kB[22m[1m[22m[2m │ gzip:   0.29 kB[22m
+[2mdist/[22m[36massets/book-open-Cu7oROSK.js            [39m[1m[2m  0.45 kB[22m[1m[22m[2m │ gzip:   0.31 kB[22m
+[2mdist/[22m[36massets/users-CYJDmFS2.js                [39m[1m[2m  0.48 kB[22m[1m[22m[2m │ gzip:   0.33 kB[22m
+[2mdist/[22m[36massets/NotFoundPage-Dapj17JG.js         [39m[1m[2m  0.49 kB[22m[1m[22m[2m │ gzip:   0.30 kB[22m
+[2mdist/[22m[36massets/gift-C7CXUNS0.js                 [39m[1m[2m  0.52 kB[22m[1m[22m[2m │ gzip:   0.36 kB[22m
+[2mdist/[22m[36massets/forms-fKM1k4Kj.js                [39m[1m[2m  0.53 kB[22m[1m[22m[2m │ gzip:   0.23 kB[22m
+[2mdist/[22m[36massets/loader-circle-CAWbsMAt.js        [39m[1m[2m  0.69 kB[22m[1m[22m[2m │ gzip:   0.36 kB[22m
+[2mdist/[22m[36massets/FormElements-DyaZnCN4.js         [39m[1m[2m  0.74 kB[22m[1m[22m[2m │ gzip:   0.44 kB[22m
+[2mdist/[22m[36massets/CTASection-DZmX8dRN.js           [39m[1m[2m  0.90 kB[22m[1m[22m[2m │ gzip:   0.49 kB[22m
+[2mdist/[22m[36massets/Modal-C-5vB05X.js                [39m[1m[2m  0.91 kB[22m[1m[22m[2m │ gzip:   0.51 kB[22m
+[2mdist/[22m[36massets/SEO-a9q70qaN.js                  [39m[1m[2m  1.16 kB[22m[1m[22m[2m │ gzip:   0.46 kB[22m
+[2mdist/[22m[36massets/ConfirmDeleteModal-H6ShVwuj.js   [39m[1m[2m  1.28 kB[22m[1m[22m[2m │ gzip:   0.56 kB[22m
+[2mdist/[22m[36massets/PageHero-KizrUYow.js             [39m[1m[2m  1.50 kB[22m[1m[22m[2m │ gzip:   0.68 kB[22m
+[2mdist/[22m[36massets/TableComponents-Df-ftAbZ.js      [39m[1m[2m  2.36 kB[22m[1m[22m[2m │ gzip:   1.23 kB[22m
+[2mdist/[22m[36massets/PrivacyPage-DXEb4bfT.js          [39m[1m[2m  2.37 kB[22m[1m[22m[2m │ gzip:   0.95 kB[22m
+[2mdist/[22m[36massets/validation-CPbCtjpM.js           [39m[1m[2m  2.92 kB[22m[1m[22m[2m │ gzip:   1.03 kB[22m
+[2mdist/[22m[36massets/Pagination-BmgUi2lW.js           [39m[1m[2m  3.56 kB[22m[1m[22m[2m │ gzip:   1.29 kB[22m
+[2mdist/[22m[36massets/AdminMessages-D_67HH9n.js        [39m[1m[2m  4.84 kB[22m[1m[22m[2m │ gzip:   1.81 kB[22m
+[2mdist/[22m[36massets/DonatePage-BZdfbqo8.js           [39m[1m[2m  4.98 kB[22m[1m[22m[2m │ gzip:   1.79 kB[22m
+[2mdist/[22m[36massets/AdminCommunity-nJCgCDlY.js       [39m[1m[2m  5.12 kB[22m[1m[22m[2m │ gzip:   1.71 kB[22m
+[2mdist/[22m[36massets/AdminDashboard-Chefvfz-.js       [39m[1m[2m  5.27 kB[22m[1m[22m[2m │ gzip:   1.83 kB[22m
+[2mdist/[22m[36massets/AdminSettings-0w0gkP01.js        [39m[1m[2m  5.84 kB[22m[1m[22m[2m │ gzip:   2.10 kB[22m
+[2mdist/[22m[36massets/AdminTeam-34gABtAl.js            [39m[1m[2m  6.92 kB[22m[1m[22m[2m │ gzip:   2.41 kB[22m
+[2mdist/[22m[36massets/BlogPage-DJwnHafJ.js             [39m[1m[2m  7.37 kB[22m[1m[22m[2m │ gzip:   2.58 kB[22m
+[2mdist/[22m[36massets/AdminVolunteers-CTz3r3H4.js      [39m[1m[2m  7.38 kB[22m[1m[22m[2m │ gzip:   2.44 kB[22m
+[2mdist/[22m[36massets/AdminSponsors-cktEfzNY.js        [39m[1m[2m  7.45 kB[22m[1m[22m[2m │ gzip:   2.56 kB[22m
+[2mdist/[22m[36massets/AdminLayout-B6BLmi_p.js          [39m[1m[2m  8.24 kB[22m[1m[22m[2m │ gzip:   2.71 kB[22m
+[2mdist/[22m[36massets/VolunteerPage-DI2W6b9y.js        [39m[1m[2m  9.46 kB[22m[1m[22m[2m │ gzip:   2.82 kB[22m
+[2mdist/[22m[36massets/AdminResources-CxXPmkVc.js       [39m[1m[2m 10.59 kB[22m[1m[22m[2m │ gzip:   3.57 kB[22m
+[2mdist/[22m[36massets/ResourcesPage-CwEdQLzP.js        [39m[1m[2m 10.70 kB[22m[1m[22m[2m │ gzip:   3.25 kB[22m
+[2mdist/[22m[36massets/AdminLoginPage-dd2Ki0Kw.js       [39m[1m[2m 11.88 kB[22m[1m[22m[2m │ gzip:   3.30 kB[22m
+[2mdist/[22m[36massets/AdminEvents-Bdc7FGr6.js          [39m[1m[2m 12.54 kB[22m[1m[22m[2m │ gzip:   3.95 kB[22m
+[2mdist/[22m[36massets/siteContent-m_O7ZRbF.js          [39m[1m[2m 13.55 kB[22m[1m[22m[2m │ gzip:   4.76 kB[22m
+[2mdist/[22m[36massets/ProgramsPage-DGnf0Iva.js         [39m[1m[2m 16.19 kB[22m[1m[22m[2m │ gzip:   4.46 kB[22m
+[2mdist/[22m[36massets/EventsPage-BY4VLN4L.js           [39m[1m[2m 18.75 kB[22m[1m[22m[2m │ gzip:   4.88 kB[22m
+[2mdist/[22m[36massets/AboutPage-Cu5bkGbc.js            [39m[1m[2m 19.70 kB[22m[1m[22m[2m │ gzip:   4.91 kB[22m
+[2mdist/[22m[36massets/ContactPage-CwxgkmZw.js          [39m[1m[2m 34.92 kB[22m[1m[22m[2m │ gzip:   9.14 kB[22m
+[2mdist/[22m[36massets/OutreachDetailsPage-CNtt2FcW.js  [39m[1m[2m 36.06 kB[22m[1m[22m[2m │ gzip:   8.82 kB[22m
+[2mdist/[22m[36massets/HomePage-D3OCSHGH.js             [39m[1m[2m 36.78 kB[22m[1m[22m[2m │ gzip:  10.26 kB[22m
+[2mdist/[22m[36massets/index-Da3SS3m2.js                [39m[1m[2m447.01 kB[22m[1m[22m[2m │ gzip: 130.61 kB[22m
+[32m✓ built in 14.86s[39m

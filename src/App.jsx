@@ -3,8 +3,8 @@ import { Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import MainLayout from './layouts/MainLayout';
 import LoadingState from './components/common/LoadingState';
-import { AdminAuthProvider } from './contexts/AdminAuthContext';
-import ProtectedRoute from './components/admin/ProtectedRoute';
+import { AdminAuthProvider, adminRoutes } from './admin';
+import { ToastProvider } from './admin/contexts/ToastContext';
 
 const HomePage = lazy(() => import('./pages/Home/HomePage'));
 const AboutPage = lazy(() => import('./pages/About/AboutPage'));
@@ -18,42 +18,37 @@ const VolunteerPage = lazy(() => import('./pages/Volunteer/VolunteerPage'));
 const ContactPage = lazy(() => import('./pages/Contact/ContactPage'));
 const PrivacyPage = lazy(() => import('./pages/Privacy/PrivacyPage'));
 const NotFoundPage = lazy(() => import('./pages/NotFound/NotFoundPage'));
-const AdminLoginPage = lazy(() => import('./pages/Admin/AdminLoginPage'));
-const AdminLayout = lazy(() => import('./pages/Admin/AdminLayout'));
-const AdminDashboardPage = lazy(() => import('./pages/Admin/AdminDashboardPage'));
-const AdminSettingsPage = lazy(() => import('./pages/Admin/AdminSettingsPage'));
 
 function App() {
   return (
     <AdminAuthProvider>
-      <Toaster position="top-right" />
-      <Suspense fallback={<LoadingState message="Loading page..." />}>
-        <Routes>
-          <Route element={<MainLayout />}>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/programs" element={<ProgramsPage />} />
-            <Route path="/events" element={<EventsPage />} />
-            <Route path="/outreach" element={<OutreachDetailsPage />} />
-            <Route path="/resources" element={<ResourcesPage />} />
-            <Route path="/blog" element={<BlogPage />} />
-            <Route path="/donate" element={<DonatePage />} />
-            <Route path="/volunteer" element={<VolunteerPage />} />
-            <Route path="/contact" element={<ContactPage />} />
-            <Route path="/privacy" element={<PrivacyPage />} />
-          </Route>
-
-          <Route path="/admin/login" element={<AdminLoginPage />} />
-          <Route element={<ProtectedRoute />}>
-            <Route element={<AdminLayout />}>
-              <Route path="/admin" element={<AdminDashboardPage />} />
-              <Route path="/admin/settings" element={<AdminSettingsPage />} />
+      <ToastProvider>
+        <Toaster position="top-right" />
+        <Suspense fallback={<LoadingState message="Loading page..." />}>
+          <Routes>
+            {/* Public website routes */}
+            <Route element={<MainLayout />}>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/about" element={<AboutPage />} />
+              <Route path="/programs" element={<ProgramsPage />} />
+              <Route path="/events" element={<EventsPage />} />
+              <Route path="/outreach" element={<OutreachDetailsPage />} />
+              <Route path="/resources" element={<ResourcesPage />} />
+              <Route path="/blog" element={<BlogPage />} />
+              <Route path="/donate" element={<DonatePage />} />
+              <Route path="/volunteer" element={<VolunteerPage />} />
+              <Route path="/contact" element={<ContactPage />} />
+              <Route path="/privacy" element={<PrivacyPage />} />
             </Route>
-          </Route>
 
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
-      </Suspense>
+            {/* Admin routes */}
+            {adminRoutes}
+
+            {/* 404 - Must be last */}
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </Suspense>
+      </ToastProvider>
     </AdminAuthProvider>
   );
 }
