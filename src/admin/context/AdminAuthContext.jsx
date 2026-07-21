@@ -129,21 +129,30 @@ export function AdminAuthProvider({ children }) {
     initializeAuth();
 
     // Subscribe to auth state changes
-    const unsubscribe = authService.onAuthStateChange(async (_event, newSession) => {
+    const unsubscribe = authService.onAuthStateChange(async (event, newSession) => {
       if (!isMounted) return;
 
+      console.log("========== AUTH STATE CHANGE ==========");
+      console.log("Event:", event);
+      console.log("Session:", newSession);
+      console.log("=======================================");
+
       if (!newSession) {
-        console.warn('Received NULL session from Supabase');
+        console.warn("Received NULL session from Supabase.");
+        console.warn("Event:", event);
+
+        // TEMPORARY: Don't clear auth yet.
         return;
       }
 
       const currentUser = await authService.getUser();
 
       let authorized = false;
+
       try {
         authorized = await authService.verifyAdmin(currentUser?.id);
       } catch (verifyError) {
-        console.error('AdminAuthProvider: auth change verifyAdmin failed', verifyError);
+        console.error("verifyAdmin failed", verifyError);
       }
 
       if (!authorized) {
