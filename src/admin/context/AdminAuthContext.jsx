@@ -133,7 +133,7 @@ export function AdminAuthProvider({ children }) {
       if (!isMounted) return;
 
       if (!newSession) {
-        clearAuthState();
+        console.warn('Received NULL session from Supabase');
         return;
       }
 

@@ -191,11 +191,18 @@ class AuthService {
    * @param {Object} session - Session object
    */
   persistSession(session) {
-    if (typeof window === 'undefined') return;
     try {
-      window.localStorage.setItem(STORAGE_KEYS.AUTH_SESSION, JSON.stringify(session));
+      console.log("Persisting session...", session);
+
+      localStorage.setItem(
+        STORAGE_KEYS.AUTH_SESSION,
+        JSON.stringify(session)
+      );
+
+      console.log("Stored:", localStorage.getItem(STORAGE_KEYS.AUTH_SESSION));
+      console.log("Keys:", Object.keys(localStorage));
     } catch (err) {
-      console.error('Error persisting session:', err);
+      console.error("Persist session failed:", err);
     }
   }
 
