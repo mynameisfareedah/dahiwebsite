@@ -10,7 +10,7 @@ function TimelineSection() {
   ];
 
   return (
-    <section className="section-shell mx-auto max-w-7xl">
+    <section className="section-shell max-w-7xl">
       <div className="soft-card p-8 sm:p-10">
         <SectionHeading eyebrow="Our journey" title="The path behind DAHI" description="DAHI’s story has grown from a clear need for trusted, practical education into a wider movement for women’s health awareness and support." />
         <div className="mt-10 space-y-6">

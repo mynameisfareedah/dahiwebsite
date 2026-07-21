@@ -74,7 +74,7 @@ function DonationSection({ donationImpact }) {
   };
 
   return (
-    <section id="support-section" className="section-shell mx-auto max-w-7xl space-y-8">
+    <section id="support-section" className="section-shell max-w-7xl space-y-8">
       <SectionHeading
         eyebrow="Make an Impact"
         title="Help Us Reach More Women This August"
@@ -97,7 +97,7 @@ function DonationSection({ donationImpact }) {
         className="rounded-[2rem] border border-dahiPrimary/20 bg-gradient-to-br from-[#fff9f0] via-white to-[#f4f5ff] p-8 shadow-[0_20px_60px_-25px_rgba(88,58,154,0.25)] transition duration-300 hover:-translate-y-1 sm:p-10"
         style={{ animation: 'fadeIn 0.6s ease-out both' }}
         role="note"
-        aria-label="Inspirational Qur'anic verse for generosity and charity"
+        aria-label="Inspirational Qur&apos;anic verse for generosity and charity"
       >
         <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
           <div className="mb-4 inline-flex items-center rounded-full border border-dahiPrimary/20 bg-white/70 px-4 py-2 text-sm font-semibold uppercase tracking-[0.2em] text-dahiPrimary">
@@ -108,7 +108,7 @@ function DonationSection({ donationImpact }) {
             Supporting this outreach is more than a financial contribution—it is an investment in healthier communities, empowered women, and lives that may be changed through early detection and health education.
           </p>
           <p className="mb-6 text-base leading-relaxed text-slate-700">
-            For those inspired by the teachings of Islam, the Qur'an reminds us of the immense reward and blessings associated with sincere acts of charity.
+            For those inspired by the teachings of Islam, the Qur&apos;an reminds us of the immense reward and blessings associated with sincere acts of charity.
           </p>
 
           <div className="relative w-full rounded-[1.5rem] border border-white/70 bg-white/70 p-6 shadow-sm sm:p-8">

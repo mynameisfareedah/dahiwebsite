@@ -16,7 +16,7 @@ function SocialLinks({ title = 'Follow DAHI', description = 'Stay connected for 
       <p className="mt-3 text-slate-600">{description}</p>
       <div className="mt-6 grid gap-4 sm:grid-cols-2">
         {socialLinks.map(({ label, href, icon: Icon, description: cardDescription }) => (
-          <a key={label} href={href} target="_blank" rel="noopener" className="group rounded-[1.25rem] border border-slate-200 bg-slate-50 p-5 transition hover:border-dahiPrimary hover:bg-white">
+          <a key={label} href={href} target="_blank" rel="noopener noreferrer" className="group rounded-[1.25rem] border border-slate-200 bg-slate-50 p-5 transition hover:border-dahiPrimary hover:bg-white">
             <div className="flex items-center gap-3">
               <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-dahiPrimary/10 text-dahiPrimary transition group-hover:bg-dahiPrimary group-hover:text-white">
                 <Icon size={18} />

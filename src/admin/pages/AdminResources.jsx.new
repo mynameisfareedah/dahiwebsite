@@ -1,0 +1,178 @@
+import React, { useEffect, useState } from 'react';
+import { FileText, Image as ImageIcon, Edit2, Trash2 } from 'lucide-react';
+import { PageHeader, EmptyState, LoadingSpinner, StatusBadge } from '../components';
+import { resourceService } from '../services/resourceService';
+
+const formatDate = (value) => {
+  if (!value) return '—';
+  try {
+    return new Date(value).toLocaleDateString();
+  } catch {
+    return value;
+  }
+};
+
+export default function AdminResources() {
+  const [resources, setResources] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadResources = async () => {
+      setIsLoading(true);
+      setError('');
+
+      try {
+        const result = await resourceService.getResources();
+        if (!isMounted) return;
+
+        if (result.success) {
+          setResources(result.data || []);
+        } else {
+          setError(result.error?.message || 'Failed to load resources.');
+          setResources([]);
+        }
+      } catch (err) {
+        if (!isMounted) return;
+        setError(err?.message || 'Failed to load resources.');
+        setResources([]);
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    loadResources();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const handleEdit = async (resource) => {
+    if (!resource) return;
+    const result = await resourceService.updateResource(resource.id, {
+      ...resource,
+      title: resource.title,
+      description: resource.description || '',
+      category: resource.category || 'general',
+      resourceType: resource.resourceType || resource.type || 'ebook',
+      externalUrl: resource.externalUrl || '',
+      featured: Boolean(resource.featured),
+      status: resource.status || 'draft',
+    });
+
+    if (!result.success) {
+      setError(result.error?.message || 'Failed to update resource.');
+    } else {
+      setResources((current) => current.map((item) => (item.id === resource.id ? result.data : item)));
+    }
+  };
+
+  const handleDelete = async (resource) => {
+    if (!resource) return;
+    const result = await resourceService.deleteResource(resource.id);
+
+    if (!result.success) {
+      setError(result.error?.message || 'Failed to delete resource.');
+    } else {
+      setResources((current) => current.filter((item) => item.id !== resource.id));
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <PageHeader
+        title="Resources Management"
+        subtitle="Manage external resource links and metadata"
+        action={() => {}}
+        actionLabel="Create Resource"
+      />
+
+      {isLoading ? (
+        <div className="bg-gray-900 border border-gray-800 rounded-lg p-12 flex justify-center">
+          <LoadingSpinner size="lg" text="Loading resources..." />
+        </div>
+      ) : error ? (
+        <div className="bg-red-950 border border-red-800 rounded-lg p-6 text-red-200">
+          <p className="font-medium">Unable to load resources.</p>
+          <p className="text-sm mt-1">{error}</p>
+        </div>
+      ) : resources.length === 0 ? (
+        <EmptyState
+          icon={FileText}
+          title="No resources yet"
+          description="Create your first external resource link to get started"
+          action={() => {}}
+          actionLabel="Create Resource"
+        />
+      ) : (
+        <div className="bg-gray-900 border border-gray-800 rounded-lg overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-700">
+              <thead className="bg-gray-800 border-b border-gray-700">
+                <tr>
+                  <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-300">Cover</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-300">Title</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-300">Category</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-300">Type</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-300">Status</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-300">Featured</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-300">Downloads</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-300">Created At</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-300">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-700">
+                {resources.map((resource) => (
+                  <tr key={resource.id} className="hover:bg-gray-800 transition">
+                    <td className="px-4 py-4">
+                      {resource.coverImage ? (
+                        <img src={resource.coverImage} alt={resource.title} className="h-12 w-16 object-cover rounded border border-gray-700" />
+                      ) : (
+                        <div className="h-12 w-16 rounded border border-gray-700 bg-gray-800 flex items-center justify-center text-gray-500">
+                          <ImageIcon size={16} />
+                        </div>
+                      )}
+                    </td>
+                    <td className="px-4 py-4">
+                      <div className="font-medium text-white">{resource.title}</div>
+                      <div className="text-sm text-gray-400">{resource.author || '—'}</div>
+                    </td>
+                    <td className="px-4 py-4 text-gray-300">{resource.category || 'general'}</td>
+                    <td className="px-4 py-4 text-gray-300">{resource.resourceType || resource.type || 'general'}</td>
+                    <td className="px-4 py-4"><StatusBadge status={resource.status || 'draft'} /></td>
+                    <td className="px-4 py-4 text-gray-300">{resource.featured ? 'Yes' : 'No'}</td>
+                    <td className="px-4 py-4 text-gray-300">{resource.downloads ?? 0}</td>
+                    <td className="px-4 py-4 text-gray-300">{formatDate(resource.createdAt || resource.created_at)}</td>
+                    <td className="px-4 py-4">
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => handleEdit(resource)}
+                          className="p-2 rounded text-amber-400 hover:bg-gray-800"
+                          aria-label={`Edit ${resource.title}`}
+                        >
+                          <Edit2 size={16} />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(resource)}
+                          className="p-2 rounded text-red-400 hover:bg-gray-800"
+                          aria-label={`Delete ${resource.title}`}
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

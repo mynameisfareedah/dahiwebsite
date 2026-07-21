@@ -1,6 +1,6 @@
 function UpcomingEvents() {
   return (
-    <section id="events" className="section-shell mx-auto max-w-7xl">
+    <section id="events" className="section-shell max-w-7xl">
       <div className="mb-8 max-w-3xl">
         <span className="eyebrow">Events &amp; Activities</span>
         <h2 className="mt-4 section-title">Connecting women through education, conversation, and community</h2>

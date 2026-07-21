@@ -1,0 +1,688 @@
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Code coverage report for src/pages/Programs/ProgramsPage.jsx</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../../prettify.css" />
+    <link rel="stylesheet" href="../../../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../../../favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+    
+<body>
+<div class='wrapper'>
+    <div class='pad1'>
+        <h1><a href="../../../index.html">All files</a> / <a href="index.html">src/pages/Programs</a> ProgramsPage.jsx</h1>
+        <div class='clearfix'>
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">0% </span>
+                <span class="quiet">Statements</span>
+                <span class='fraction'>0/15</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">100% </span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>0/0</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">0% </span>
+                <span class="quiet">Functions</span>
+                <span class='fraction'>0/9</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">0% </span>
+                <span class="quiet">Lines</span>
+                <span class='fraction'>0/15</span>
+            </div>
+        
+            
+        </div>
+        <p class="quiet">
+            Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
+        </p>
+        <template id="filterTemplate">
+            <div class="quiet">
+                Filter:
+                <input type="search" id="fileSearch">
+            </div>
+        </template>
+    </div>
+    <div class='status-line low'></div>
+    <pre><table class="coverage">
+<tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
+<a name='L2'></a><a href='#L2'>2</a>
+<a name='L3'></a><a href='#L3'>3</a>
+<a name='L4'></a><a href='#L4'>4</a>
+<a name='L5'></a><a href='#L5'>5</a>
+<a name='L6'></a><a href='#L6'>6</a>
+<a name='L7'></a><a href='#L7'>7</a>
+<a name='L8'></a><a href='#L8'>8</a>
+<a name='L9'></a><a href='#L9'>9</a>
+<a name='L10'></a><a href='#L10'>10</a>
+<a name='L11'></a><a href='#L11'>11</a>
+<a name='L12'></a><a href='#L12'>12</a>
+<a name='L13'></a><a href='#L13'>13</a>
+<a name='L14'></a><a href='#L14'>14</a>
+<a name='L15'></a><a href='#L15'>15</a>
+<a name='L16'></a><a href='#L16'>16</a>
+<a name='L17'></a><a href='#L17'>17</a>
+<a name='L18'></a><a href='#L18'>18</a>
+<a name='L19'></a><a href='#L19'>19</a>
+<a name='L20'></a><a href='#L20'>20</a>
+<a name='L21'></a><a href='#L21'>21</a>
+<a name='L22'></a><a href='#L22'>22</a>
+<a name='L23'></a><a href='#L23'>23</a>
+<a name='L24'></a><a href='#L24'>24</a>
+<a name='L25'></a><a href='#L25'>25</a>
+<a name='L26'></a><a href='#L26'>26</a>
+<a name='L27'></a><a href='#L27'>27</a>
+<a name='L28'></a><a href='#L28'>28</a>
+<a name='L29'></a><a href='#L29'>29</a>
+<a name='L30'></a><a href='#L30'>30</a>
+<a name='L31'></a><a href='#L31'>31</a>
+<a name='L32'></a><a href='#L32'>32</a>
+<a name='L33'></a><a href='#L33'>33</a>
+<a name='L34'></a><a href='#L34'>34</a>
+<a name='L35'></a><a href='#L35'>35</a>
+<a name='L36'></a><a href='#L36'>36</a>
+<a name='L37'></a><a href='#L37'>37</a>
+<a name='L38'></a><a href='#L38'>38</a>
+<a name='L39'></a><a href='#L39'>39</a>
+<a name='L40'></a><a href='#L40'>40</a>
+<a name='L41'></a><a href='#L41'>41</a>
+<a name='L42'></a><a href='#L42'>42</a>
+<a name='L43'></a><a href='#L43'>43</a>
+<a name='L44'></a><a href='#L44'>44</a>
+<a name='L45'></a><a href='#L45'>45</a>
+<a name='L46'></a><a href='#L46'>46</a>
+<a name='L47'></a><a href='#L47'>47</a>
+<a name='L48'></a><a href='#L48'>48</a>
+<a name='L49'></a><a href='#L49'>49</a>
+<a name='L50'></a><a href='#L50'>50</a>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a>
+<a name='L60'></a><a href='#L60'>60</a>
+<a name='L61'></a><a href='#L61'>61</a>
+<a name='L62'></a><a href='#L62'>62</a>
+<a name='L63'></a><a href='#L63'>63</a>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a>
+<a name='L66'></a><a href='#L66'>66</a>
+<a name='L67'></a><a href='#L67'>67</a>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a>
+<a name='L72'></a><a href='#L72'>72</a>
+<a name='L73'></a><a href='#L73'>73</a>
+<a name='L74'></a><a href='#L74'>74</a>
+<a name='L75'></a><a href='#L75'>75</a>
+<a name='L76'></a><a href='#L76'>76</a>
+<a name='L77'></a><a href='#L77'>77</a>
+<a name='L78'></a><a href='#L78'>78</a>
+<a name='L79'></a><a href='#L79'>79</a>
+<a name='L80'></a><a href='#L80'>80</a>
+<a name='L81'></a><a href='#L81'>81</a>
+<a name='L82'></a><a href='#L82'>82</a>
+<a name='L83'></a><a href='#L83'>83</a>
+<a name='L84'></a><a href='#L84'>84</a>
+<a name='L85'></a><a href='#L85'>85</a>
+<a name='L86'></a><a href='#L86'>86</a>
+<a name='L87'></a><a href='#L87'>87</a>
+<a name='L88'></a><a href='#L88'>88</a>
+<a name='L89'></a><a href='#L89'>89</a>
+<a name='L90'></a><a href='#L90'>90</a>
+<a name='L91'></a><a href='#L91'>91</a>
+<a name='L92'></a><a href='#L92'>92</a>
+<a name='L93'></a><a href='#L93'>93</a>
+<a name='L94'></a><a href='#L94'>94</a>
+<a name='L95'></a><a href='#L95'>95</a>
+<a name='L96'></a><a href='#L96'>96</a>
+<a name='L97'></a><a href='#L97'>97</a>
+<a name='L98'></a><a href='#L98'>98</a>
+<a name='L99'></a><a href='#L99'>99</a>
+<a name='L100'></a><a href='#L100'>100</a>
+<a name='L101'></a><a href='#L101'>101</a>
+<a name='L102'></a><a href='#L102'>102</a>
+<a name='L103'></a><a href='#L103'>103</a>
+<a name='L104'></a><a href='#L104'>104</a>
+<a name='L105'></a><a href='#L105'>105</a>
+<a name='L106'></a><a href='#L106'>106</a>
+<a name='L107'></a><a href='#L107'>107</a>
+<a name='L108'></a><a href='#L108'>108</a>
+<a name='L109'></a><a href='#L109'>109</a>
+<a name='L110'></a><a href='#L110'>110</a>
+<a name='L111'></a><a href='#L111'>111</a>
+<a name='L112'></a><a href='#L112'>112</a>
+<a name='L113'></a><a href='#L113'>113</a>
+<a name='L114'></a><a href='#L114'>114</a>
+<a name='L115'></a><a href='#L115'>115</a>
+<a name='L116'></a><a href='#L116'>116</a>
+<a name='L117'></a><a href='#L117'>117</a>
+<a name='L118'></a><a href='#L118'>118</a>
+<a name='L119'></a><a href='#L119'>119</a>
+<a name='L120'></a><a href='#L120'>120</a>
+<a name='L121'></a><a href='#L121'>121</a>
+<a name='L122'></a><a href='#L122'>122</a>
+<a name='L123'></a><a href='#L123'>123</a>
+<a name='L124'></a><a href='#L124'>124</a>
+<a name='L125'></a><a href='#L125'>125</a>
+<a name='L126'></a><a href='#L126'>126</a>
+<a name='L127'></a><a href='#L127'>127</a>
+<a name='L128'></a><a href='#L128'>128</a>
+<a name='L129'></a><a href='#L129'>129</a>
+<a name='L130'></a><a href='#L130'>130</a>
+<a name='L131'></a><a href='#L131'>131</a>
+<a name='L132'></a><a href='#L132'>132</a>
+<a name='L133'></a><a href='#L133'>133</a>
+<a name='L134'></a><a href='#L134'>134</a>
+<a name='L135'></a><a href='#L135'>135</a>
+<a name='L136'></a><a href='#L136'>136</a>
+<a name='L137'></a><a href='#L137'>137</a>
+<a name='L138'></a><a href='#L138'>138</a>
+<a name='L139'></a><a href='#L139'>139</a>
+<a name='L140'></a><a href='#L140'>140</a>
+<a name='L141'></a><a href='#L141'>141</a>
+<a name='L142'></a><a href='#L142'>142</a>
+<a name='L143'></a><a href='#L143'>143</a>
+<a name='L144'></a><a href='#L144'>144</a>
+<a name='L145'></a><a href='#L145'>145</a>
+<a name='L146'></a><a href='#L146'>146</a>
+<a name='L147'></a><a href='#L147'>147</a>
+<a name='L148'></a><a href='#L148'>148</a>
+<a name='L149'></a><a href='#L149'>149</a>
+<a name='L150'></a><a href='#L150'>150</a>
+<a name='L151'></a><a href='#L151'>151</a>
+<a name='L152'></a><a href='#L152'>152</a>
+<a name='L153'></a><a href='#L153'>153</a>
+<a name='L154'></a><a href='#L154'>154</a>
+<a name='L155'></a><a href='#L155'>155</a>
+<a name='L156'></a><a href='#L156'>156</a>
+<a name='L157'></a><a href='#L157'>157</a>
+<a name='L158'></a><a href='#L158'>158</a>
+<a name='L159'></a><a href='#L159'>159</a>
+<a name='L160'></a><a href='#L160'>160</a>
+<a name='L161'></a><a href='#L161'>161</a>
+<a name='L162'></a><a href='#L162'>162</a>
+<a name='L163'></a><a href='#L163'>163</a>
+<a name='L164'></a><a href='#L164'>164</a>
+<a name='L165'></a><a href='#L165'>165</a>
+<a name='L166'></a><a href='#L166'>166</a>
+<a name='L167'></a><a href='#L167'>167</a>
+<a name='L168'></a><a href='#L168'>168</a>
+<a name='L169'></a><a href='#L169'>169</a>
+<a name='L170'></a><a href='#L170'>170</a>
+<a name='L171'></a><a href='#L171'>171</a>
+<a name='L172'></a><a href='#L172'>172</a>
+<a name='L173'></a><a href='#L173'>173</a>
+<a name='L174'></a><a href='#L174'>174</a>
+<a name='L175'></a><a href='#L175'>175</a>
+<a name='L176'></a><a href='#L176'>176</a>
+<a name='L177'></a><a href='#L177'>177</a>
+<a name='L178'></a><a href='#L178'>178</a>
+<a name='L179'></a><a href='#L179'>179</a>
+<a name='L180'></a><a href='#L180'>180</a>
+<a name='L181'></a><a href='#L181'>181</a>
+<a name='L182'></a><a href='#L182'>182</a>
+<a name='L183'></a><a href='#L183'>183</a>
+<a name='L184'></a><a href='#L184'>184</a>
+<a name='L185'></a><a href='#L185'>185</a>
+<a name='L186'></a><a href='#L186'>186</a>
+<a name='L187'></a><a href='#L187'>187</a>
+<a name='L188'></a><a href='#L188'>188</a>
+<a name='L189'></a><a href='#L189'>189</a>
+<a name='L190'></a><a href='#L190'>190</a>
+<a name='L191'></a><a href='#L191'>191</a>
+<a name='L192'></a><a href='#L192'>192</a>
+<a name='L193'></a><a href='#L193'>193</a>
+<a name='L194'></a><a href='#L194'>194</a>
+<a name='L195'></a><a href='#L195'>195</a>
+<a name='L196'></a><a href='#L196'>196</a>
+<a name='L197'></a><a href='#L197'>197</a>
+<a name='L198'></a><a href='#L198'>198</a>
+<a name='L199'></a><a href='#L199'>199</a>
+<a name='L200'></a><a href='#L200'>200</a>
+<a name='L201'></a><a href='#L201'>201</a>
+<a name='L202'></a><a href='#L202'>202</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Link } from 'react-router-dom';
+import SEO from '../../components/common/SEO';
+import PageHero from '../../components/common/PageHero';
+import SectionHeading from '../../components/common/SectionHeading';
+import ProgramCard from '../../components/common/ProgramCard';
+import CTASection from '../../components/common/CTASection';
+import { testimonials } from '../../data/siteContent';
+&nbsp;
+const featuredPrograms = <span class="cstat-no" title="statement not covered" >[</span>
+  { title: 'Women’s Health Education', description: 'Provide accessible educational content that simplifies important women’s health topics and encourages informed decision-making.', objectives: 'Improve health literacy and everyday confidence.', audience: 'Women of all ages', image: '/WOMEN\'S HEALTH.jpg', href: '/resources' },
+  { title: 'Health Education Webinars', description: 'Host expert-led discussions where participants learn from healthcare professionals and engage in meaningful conversations.', objectives: 'Create accessible learning opportunities.', audience: 'Women seeking guidance', image: '/WEBINARS.jpg', href: '/events' },
+  { title: 'Educational Resources', description: 'Develop downloadable guides, pamphlets, and digital materials that women can access anytime, from anywhere.', objectives: 'Expand access to trusted information.', audience: 'Students, professionals, and community groups', image: '/community-768.jpg', href: '/resources' },
+  { title: 'Community Health Outreach', description: 'Support community-based health education initiatives that promote awareness, connection, and preventive healthcare.', objectives: 'Strengthen outreach and community engagement.', audience: 'Community groups and families', image: '/COMMUNITY SUPPORT GROUP.jpg', href: '/events' },
+  { title: 'Health Awareness Campaigns', description: 'Organise awareness campaigns that encourage healthier lifestyles, early recognition of concerns, and informed action.', objectives: 'Increase awareness and healthy habits.', audience: 'General public and partners', image: '/CONTRACEPTION.jpg', href: '/resources' },
+];
+&nbsp;
+const programAreas = <span class="cstat-no" title="statement not covered" >[</span>
+  { title: 'Women’s Health', description: 'Practical education on common health concerns and wellness topics relevant to everyday life.', icon: 'fa-solid fa-female', link: '/resources' },
+  { title: 'Menstrual Health', description: 'Support for understanding cycles, wellbeing, and self-care in a clear and respectful way.', icon: 'fa-solid fa-venus', link: '/resources' },
+  { title: 'Fertility Awareness', description: 'Accessible guidance that helps women make informed decisions about reproductive health.', icon: 'fa-solid fa-seedling', link: '/resources' },
+  { title: 'Pregnancy &amp; Maternal Health', description: 'Trusted information that promotes awareness, confidence, and healthy decision-making.', icon: 'fa-solid fa-baby', link: '/resources' },
+  { title: 'Breast Health', description: 'Educational content that supports awareness of breast health and preventive care.', icon: 'fa-solid fa-heart', link: '/resources' },
+  { title: 'Blood Pressure Awareness', description: 'Simple, practical learning around blood pressure, prevention, and healthy habits.', icon: 'fa-solid fa-heart-pulse', link: '/resources' },
+  { title: 'Diabetes Prevention', description: 'Awareness-focused education that highlights prevention, healthy routines, and informed choices.', icon: 'fa-solid fa-stethoscope', link: '/resources' },
+  { title: 'Nutrition', description: 'Supportive guidance on healthy eating habits and how nutrition affects overall wellbeing.', icon: 'fa-solid fa-carrot', link: '/resources' },
+  { title: 'Mental Well-being', description: 'Content that encourages emotional wellbeing, resilience, and support-seeking behaviours.', icon: 'fa-solid fa-brain', link: '/resources' },
+];
+&nbsp;
+const impactOutcomes = <span class="cstat-no" title="statement not covered" >[</span>
+  { title: 'Improved health awareness', description: 'Participants gain a clearer understanding of health topics that matter to their daily lives.' },
+  { title: 'Greater confidence in health decisions', description: 'Practical education helps women feel more informed and prepared to act.' },
+  { title: 'Better understanding of preventive care', description: 'Our programmes encourage early awareness and healthier habits.' },
+  { title: 'Stronger community engagement', description: 'Learning becomes more meaningful when it is shared in supportive spaces.' },
+];
+&nbsp;
+const programHighlights = <span class="cstat-no" title="statement not covered" >[</span>
+  { title: 'Evidence-Based Learning', description: 'Content is grounded in reliable information and practical guidance.' },
+  { title: 'Interactive Sessions', description: 'Learning experiences encourage discussion, questions, and shared understanding.' },
+  { title: 'Practical Knowledge', description: 'Our programmes focus on information women can apply in everyday life.' },
+  { title: 'Accessible Resources', description: 'Materials are designed to be clear, readable, and easy to engage with.' },
+  { title: 'Supportive Community', description: 'Women are invited to learn in environments that feel welcoming and encouraging.' },
+];
+&nbsp;
+const deliveryPrinciples = <span class="cstat-no" title="statement not covered" >[</span>
+  { title: 'Evidence-Based Education', description: 'We prioritise information that is accurate, responsible, and relevant to women’s health needs.' },
+  { title: 'Practical Learning', description: 'We focus on knowledge that can be understood and applied in everyday life.' },
+  { title: 'Accessible Communication', description: 'We use clear language and approachable formats to make health education more welcoming.' },
+  { title: 'Community Engagement', description: 'We create spaces for dialogue, support, and shared learning experiences.' },
+  { title: 'Continuous Improvement', description: 'We review and refine our programmes so they remain meaningful and responsive.' },
+];
+&nbsp;
+const audienceGroups = <span class="cstat-no" title="statement not covered" >[</span>
+  'Young women',
+  'University students',
+  'Working professionals',
+  'Mothers and caregivers',
+  'Community groups',
+  'Women interested in preventive healthcare',
+  'Anyone seeking reliable women’s health education',
+];
+&nbsp;
+function <span class="fstat-no" title="function not covered" >ProgramsPage() {</span>
+<span class="cstat-no" title="statement not covered" >  return (</span>
+    &lt;&gt;
+      &lt;SEO title="Programs" description="Explore DAHI's programmes in women’s health education, community outreach, awareness campaigns, webinars, and educational resources." /&gt;
+      &lt;PageHero
+        eyebrow="Programs &amp; focus areas"
+        title="Our Programs"
+        description="At Doc Adi Health Initiative (DAHI), our programmes are designed to empower women with practical, evidence-based health education that supports informed decision-making and healthier lives. Through educational resources, interactive learning opportunities, and community engagement, we aim to make reliable health information accessible to women from all walks of life."
+        image="/header-hijabs.jpg"
+        breadcrumbs={[{ label: 'Programs' }]}
+        actions={[
+          &lt;Link key="resources" to="/resources" className="inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-semibold text-dahiPrimary transition hover:-translate-y-0.5"&gt;Explore Resources&lt;/Link&gt;,
+          &lt;Link key="involved" to="/contact" className="inline-flex items-center justify-center rounded-full border border-white/70 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10"&gt;Get Involved&lt;/Link&gt;,
+        ]}
+      /&gt;
+&nbsp;
+      &lt;section className="section-shell mx-auto max-w-7xl space-y-10"&gt;
+        &lt;div className="soft-card p-8 sm:p-10"&gt;
+          &lt;SectionHeading eyebrow="Overview" title="Empowering Women Through Education" description="Health education is one of the most effective tools for improving individual and community well-being." /&gt;
+          &lt;p className="mt-6 text-lg leading-8 text-slate-600"&gt;At DAHI, our programmes are developed to provide women with clear, practical, and reliable health information that can be applied in everyday life. Rather than focusing only on treatment, we emphasise prevention, awareness, and informed decision-making. By combining educational resources, expert-led discussions, and community engagement, we strive to create learning experiences that are accessible, inclusive, and relevant to the needs of women.&lt;/p&gt;
+          &lt;p className="mt-4 text-lg leading-8 text-slate-600"&gt;Whether someone is looking to understand a health condition, adopt healthier habits, or simply gain more confidence in making healthcare decisions, our programmes are designed to provide the knowledge and support they need.&lt;/p&gt;
+        &lt;/div&gt;
+&nbsp;
+        &lt;div className="soft-card p-8 sm:p-10"&gt;
+          &lt;SectionHeading eyebrow="Our program areas" title="Our Program Areas" description="DAHI’s work spans several important areas of women’s health education, guiding the development of our resources, webinars, and community initiatives." /&gt;
+          &lt;div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3"&gt;
+            {programAreas.<span class="fstat-no" title="function not covered" >map((a</span>rea) =&gt; (
+<span class="cstat-no" title="statement not covered" >              &lt;div key={area.title} className="rounded-[1.25rem] border border-slate-200 p-6 transition hover:border-dahiPrimary/40 hover:shadow-md"&gt;</span>
+                &lt;div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-dahiPrimary/10 text-xl text-dahiPrimary"&gt;
+                  &lt;i className={area.icon}&gt;&lt;/i&gt;
+                &lt;/div&gt;
+                &lt;h3 className="mt-5 text-xl font-semibold text-slate-900"&gt;{area.title}&lt;/h3&gt;
+                &lt;p className="mt-3 text-slate-600"&gt;{area.description}&lt;/p&gt;
+                &lt;Link to={area.link} className="mt-5 inline-flex text-sm font-semibold text-dahiPrimary transition hover:text-dahiSecondary"&gt;Explore resources&lt;/Link&gt;
+              &lt;/div&gt;
+            ))}
+          &lt;/div&gt;
+        &lt;/div&gt;
+&nbsp;
+        &lt;div className="space-y-6"&gt;
+          &lt;SectionHeading eyebrow="Featured programs" title="Our Core Programmes" description="Our programmes address key aspects of women's health and well-being through education, awareness, and practical learning opportunities." /&gt;
+          &lt;div className="grid gap-6 lg:grid-cols-2 xl:grid-cols-3"&gt;
+            {featuredPrograms.<span class="fstat-no" title="function not covered" >map((p</span>rogram) =&gt; (
+<span class="cstat-no" title="statement not covered" >              &lt;ProgramCard key={program.title} title={program.title} description={program.description} objectives={program.objectives} audience={program.audience} image={program.image} href={program.href} /&gt;</span>
+            ))}
+          &lt;/div&gt;
+        &lt;/div&gt;
+&nbsp;
+        &lt;div className="soft-card p-8 sm:p-10"&gt;
+          &lt;SectionHeading eyebrow="Impact" title="Creating Lasting Impact Through Health Education" description="The true impact of health education extends far beyond a single webinar or resource." /&gt;
+          &lt;div className="mt-8 grid gap-6 md:grid-cols-2"&gt;
+            {impactOutcomes.<span class="fstat-no" title="function not covered" >map((i</span>tem) =&gt; (
+<span class="cstat-no" title="statement not covered" >              &lt;div key={item.title} className="rounded-[1.25rem] border border-slate-200 p-6"&gt;</span>
+                &lt;h3 className="text-lg font-semibold text-slate-900"&gt;{item.title}&lt;/h3&gt;
+                &lt;p className="mt-3 text-slate-600"&gt;{item.description}&lt;/p&gt;
+              &lt;/div&gt;
+            ))}
+          &lt;/div&gt;
+        &lt;/div&gt;
+&nbsp;
+        &lt;div className="soft-card p-8 sm:p-10"&gt;
+          &lt;SectionHeading eyebrow="What you can expect" title="What You Can Expect" description="Every programme is designed to make learning supportive, practical, and accessible." /&gt;
+          &lt;div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3"&gt;
+            {programHighlights.<span class="fstat-no" title="function not covered" >map((i</span>tem) =&gt; (
+<span class="cstat-no" title="statement not covered" >              &lt;div key={item.title} className="rounded-[1.25rem] border border-slate-200 p-6"&gt;</span>
+                &lt;h3 className="text-lg font-semibold text-slate-900"&gt;{item.title}&lt;/h3&gt;
+                &lt;p className="mt-3 text-slate-600"&gt;{item.description}&lt;/p&gt;
+              &lt;/div&gt;
+            ))}
+          &lt;/div&gt;
+        &lt;/div&gt;
+&nbsp;
+        &lt;div className="soft-card p-8 sm:p-10"&gt;
+          &lt;SectionHeading eyebrow="Who can participate" title="Who Our Programmes Are For" description="Our programmes are designed to be inclusive and accessible to women at different stages of life and from diverse backgrounds." /&gt;
+          &lt;div className="mt-8 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]"&gt;
+            &lt;div className="rounded-[1.25rem] border border-slate-200 p-6"&gt;
+              &lt;ul className="space-y-3 text-slate-600"&gt;
+                {audienceGroups.<span class="fstat-no" title="function not covered" >map((g</span>roup) =&gt; (
+<span class="cstat-no" title="statement not covered" >                  &lt;li key={group} className="flex items-start gap-3"&gt;&lt;span className="mt-1 text-dahiPrimary"&gt;•&lt;/span&gt;&lt;span&gt;{group}&lt;/span&gt;&lt;/li&gt;</span>
+                ))}
+              &lt;/ul&gt;
+            &lt;/div&gt;
+            &lt;div className="rounded-[1.25rem] border border-slate-200 bg-slate-50 p-6 text-lg leading-8 text-slate-600"&gt;
+              No prior medical knowledge is required. Our educational approach is designed to make health information practical, understandable, and accessible to everyone.
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+&nbsp;
+        &lt;div className="soft-card p-8 sm:p-10"&gt;
+          &lt;SectionHeading eyebrow="Our approach" title="How We Deliver Our Programmes" description="DAHI’s guiding principles shape the way we create and share learning experiences." /&gt;
+          &lt;div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3"&gt;
+            {deliveryPrinciples.<span class="fstat-no" title="function not covered" >map((i</span>tem) =&gt; (
+<span class="cstat-no" title="statement not covered" >              &lt;div key={item.title} className="rounded-[1.25rem] border border-slate-200 p-6"&gt;</span>
+                &lt;h3 className="text-lg font-semibold text-slate-900"&gt;{item.title}&lt;/h3&gt;
+                &lt;p className="mt-3 text-slate-600"&gt;{item.description}&lt;/p&gt;
+              &lt;/div&gt;
+            ))}
+          &lt;/div&gt;
+        &lt;/div&gt;
+&nbsp;
+        &lt;div className="soft-card p-8 sm:p-10"&gt;
+          &lt;SectionHeading eyebrow="Testimonials" title="What Participants Say" description="The experiences of our participants reflect the value of creating supportive learning environments where women can access trusted health information and engage in meaningful conversations." /&gt;
+          &lt;div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3"&gt;
+            {testimonials.<span class="fstat-no" title="function not covered" >map((i</span>tem, index) =&gt; (
+<span class="cstat-no" title="statement not covered" >              &lt;blockquote key={`${item.quote}-${index}`} className="rounded-[1.25rem] border border-slate-200 p-6 text-slate-600"&gt;</span>
+                “{item.quote}”
+              &lt;/blockquote&gt;
+            ))}
+          &lt;/div&gt;
+        &lt;/div&gt;
+&nbsp;
+        &lt;div className="soft-card p-8 sm:p-10"&gt;
+          &lt;SectionHeading eyebrow="Get involved" title="Become Part of the DAHI Community" description="Creating healthier communities requires collaboration. Whether you want to volunteer, support our initiatives, or participate in our programmes, there are many meaningful ways to become involved." /&gt;
+          &lt;div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-4"&gt;
+            {[
+              { title: 'Volunteer', description: 'Offer your time and support to help DAHI expand its community work.', link: '/contact' },
+              { title: 'Support DAHI', description: 'Contribute to the growth of our programmes and educational resources.', link: '/contact' },
+              { title: 'Explore Resources', description: 'Access practical learning materials and health education content.', link: '/resources' },
+              { title: 'Contact Us', description: 'Get in touch to ask questions or learn about upcoming opportunities.', link: '/contact' },
+            ].<span class="fstat-no" title="function not covered" >map((i</span>tem) =&gt; (
+<span class="cstat-no" title="statement not covered" >              &lt;div key={item.title} className="rounded-[1.25rem] border border-slate-200 p-6"&gt;</span>
+                &lt;h3 className="text-lg font-semibold text-slate-900"&gt;{item.title}&lt;/h3&gt;
+                &lt;p className="mt-3 text-slate-600"&gt;{item.description}&lt;/p&gt;
+                &lt;Link to={item.link} className="mt-5 inline-flex text-sm font-semibold text-dahiPrimary transition hover:text-dahiSecondary"&gt;Learn more&lt;/Link&gt;
+              &lt;/div&gt;
+            ))}
+          &lt;/div&gt;
+        &lt;/div&gt;
+&nbsp;
+        &lt;CTASection eyebrow="Together, we can empower women" title="Together, We Can Empower Women Through Health Education" description="Health education has the power to transform lives, strengthen communities, and create lasting change. By participating in our programmes, accessing our educational resources, or supporting our mission, you become part of a growing movement dedicated to improving women’s health through knowledge and awareness. We invite you to explore our programmes, connect with our community, and join us in building a future where every woman has access to the information she needs to make informed health decisions." actions={[
+          &lt;Link key="resources" to="/resources" className="inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-semibold text-dahiPrimary transition hover:-translate-y-0.5"&gt;Explore Resources&lt;/Link&gt;,
+          &lt;Link key="volunteer" to="/contact" className="inline-flex items-center justify-center rounded-full border border-white/70 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10"&gt;Volunteer&lt;/Link&gt;,
+          &lt;Link key="contact" to="/contact" className="inline-flex items-center justify-center rounded-full border border-white/70 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10"&gt;Contact Us&lt;/Link&gt;,
+        ]} /&gt;
+      &lt;/section&gt;
+    &lt;/&gt;
+  );
+}
+&nbsp;
+export default ProgramsPage;
+&nbsp;</pre></td></tr></table></pre>
+
+                <div class='push'></div><!-- for sticky footer -->
+            </div><!-- /wrapper -->
+            <div class='footer quiet pad2 space-top1 center small'>
+                Code coverage generated by
+                <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
+                at 2026-07-19T19:20:57.670Z
+            </div>
+        <script src="../../../prettify.js"></script>
+        <script>
+            window.onload = function () {
+                prettyPrint();
+            };
+        </script>
+        <script src="../../../sorter.js"></script>
+        <script src="../../../block-navigation.js"></script>
+    </body>
+</html>
+    

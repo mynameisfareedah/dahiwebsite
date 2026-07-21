@@ -6,7 +6,7 @@ function OutreachFAQSection({ faqs }) {
   const [expandedIndex, setExpandedIndex] = useState(null);
 
   return (
-    <section className="section-shell mx-auto max-w-7xl space-y-8">
+    <section className="section-shell max-w-7xl space-y-8">
       <SectionHeading
         eyebrow="Have Questions?"
         title="Frequently Asked Questions"
@@ -44,7 +44,7 @@ function OutreachFAQSection({ faqs }) {
 
       <div className="rounded-xl border border-slate-200 bg-slate-50 p-6 text-center sm:p-8">
         <p className="text-sm text-slate-600">
-          Can't find the answer you're looking for?{' '}
+          Can&apos;t find the answer you&apos;re looking for?{' '}
           <a href="/contact" className="font-semibold text-dahiPrimary transition hover:text-dahiSecondary">
             Contact our team
           </a>

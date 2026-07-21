@@ -9,6 +9,7 @@ export { ToastProvider, useToast } from './contexts/ToastContext';
 
 // Hooks
 export { useAdminAuth } from './hooks/useAdminAuth';
+export { useAdminProfile } from './hooks/useAdminProfile';
 export { usePagination, useSearch, useSorting, useForm, useAsync } from './hooks/useDataManagement';
 
 // Services

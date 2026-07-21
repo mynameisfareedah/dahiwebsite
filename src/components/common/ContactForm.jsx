@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { AlertCircle, CheckCircle2, ClipboardCopy, LoaderCircle } from 'lucide-react';
 import { contactSchema } from '../../utils/forms';
+import { messageService } from '../../services/messageService';
 
 const reasons = [
   'General Enquiry',
@@ -44,10 +45,12 @@ function ContactForm({ initialReason = 'General Enquiry' }) {
     setFormData((current) => ({ ...current, attachment: file }));
   };
 
-  const resetForm = () => {
+  const resetForm = ({ preserveStatus = false } = {}) => {
     setFormData({ name: '', email: '', phone: '', subject: '', reason: 'General Enquiry', message: '', attachment: null });
     setErrors({});
-    setStatus('');
+    if (!preserveStatus) {
+      setStatus('');
+    }
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -55,13 +58,20 @@ function ContactForm({ initialReason = 'General Enquiry' }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (isSubmitting) {
+      return;
+    }
+
     setIsSubmitting(true);
     setStatus('');
 
     const validationErrors = {};
-    if (!contactSchema.name(formData.name)) validationErrors.name = contactSchema.name(formData.name);
-    if (!contactSchema.email(formData.email)) validationErrors.email = contactSchema.email(formData.email);
-    if (!contactSchema.message(formData.message)) validationErrors.message = contactSchema.message(formData.message);
+    const nameValidation = contactSchema.name(formData.name);
+    const emailValidation = contactSchema.email(formData.email);
+    const messageValidation = contactSchema.message(formData.message);
+    if (nameValidation !== true) validationErrors.name = nameValidation;
+    if (emailValidation !== true) validationErrors.email = emailValidation;
+    if (messageValidation !== true) validationErrors.message = messageValidation;
     if (!formData.reason) validationErrors.reason = 'Please select a reason for your message.';
 
     if (Object.keys(validationErrors).length) {
@@ -71,44 +81,26 @@ function ContactForm({ initialReason = 'General Enquiry' }) {
     }
 
     try {
-      const endpoint = 'https://formspree.io/f/xjkygdod';
-      let response;
+      const attachmentNote = formData.attachment
+        ? `\n\nAttachment: ${formData.attachment.name}`
+        : '';
 
-      if (formData.attachment) {
-        const payload = new FormData();
-        payload.append('name', formData.name);
-        payload.append('email', formData.email);
-        payload.append('phone', formData.phone);
-        payload.append('subject', formData.subject);
-        payload.append('reason', formData.reason);
-        payload.append('message', formData.message);
-        payload.append('attachment', formData.attachment);
+      const result = await messageService.createMessage({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone || null,
+        subject: formData.subject || formData.reason,
+        message: `${formData.message}${attachmentNote}`,
+        category: (formData.reason || 'General Enquiry').toLowerCase(),
+        status: 'new',
+      });
 
-        response = await fetch(endpoint, {
-          method: 'POST',
-          body: payload,
-        });
-      } else {
-        response = await fetch(endpoint, {
-          method: 'POST',
-          headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name: formData.name,
-            email: formData.email,
-            phone: formData.phone,
-            subject: formData.subject,
-            reason: formData.reason,
-            message: formData.message,
-          }),
-        });
-      }
-
-      if (!response.ok) {
-        throw new Error('Unable to send message');
+      if (!result.success) {
+        throw new Error(result.error?.message || 'Failed to submit message.');
       }
 
       setStatus('Thank you! Your message has been received and our team will be in touch soon.');
-      resetForm();
+      resetForm({ preserveStatus: true });
     } catch (error) {
       setStatus('We could not submit your message right now. Please email us directly at docadi.healthinitiative@gmail.com instead.');
     } finally {
@@ -127,6 +119,7 @@ function ContactForm({ initialReason = 'General Enquiry' }) {
             value={formData.name}
             onChange={handleChange}
             type="text"
+            disabled={isSubmitting}
             className="w-full rounded-full border border-slate-200 px-4 py-3 outline-none focus:border-dahiPrimary"
             required
             aria-describedby={errors.name ? 'contact-name-error' : undefined}
@@ -141,6 +134,7 @@ function ContactForm({ initialReason = 'General Enquiry' }) {
             value={formData.email}
             onChange={handleChange}
             type="email"
+            disabled={isSubmitting}
             className="w-full rounded-full border border-slate-200 px-4 py-3 outline-none focus:border-dahiPrimary"
             required
             aria-describedby={errors.email ? 'contact-email-error' : undefined}
@@ -158,6 +152,7 @@ function ContactForm({ initialReason = 'General Enquiry' }) {
             value={formData.phone}
             onChange={handleChange}
             type="tel"
+            disabled={isSubmitting}
             className="w-full rounded-full border border-slate-200 px-4 py-3 outline-none focus:border-dahiPrimary"
             placeholder="Optional"
           />
@@ -169,6 +164,7 @@ function ContactForm({ initialReason = 'General Enquiry' }) {
             name="reason"
             value={formData.reason}
             onChange={handleChange}
+            disabled={isSubmitting}
             className="w-full rounded-full border border-slate-200 px-4 py-3 outline-none focus:border-dahiPrimary"
             aria-describedby={errors.reason ? 'contact-reason-error' : undefined}
           >
@@ -186,6 +182,7 @@ function ContactForm({ initialReason = 'General Enquiry' }) {
           value={formData.subject}
           onChange={handleChange}
           type="text"
+          disabled={isSubmitting}
           className="w-full rounded-full border border-slate-200 px-4 py-3 outline-none focus:border-dahiPrimary"
           placeholder="What would you like to discuss?"
         />
@@ -200,6 +197,7 @@ function ContactForm({ initialReason = 'General Enquiry' }) {
           onChange={handleChange}
           rows="6"
           maxLength={1200}
+          disabled={isSubmitting}
           className="w-full rounded-[1.25rem] border border-slate-200 px-4 py-3 outline-none focus:border-dahiPrimary"
           placeholder="Please share a few details so we can help you better."
           aria-describedby={`contact-message-help${errors.message ? ' contact-message-error' : ''}`}
@@ -219,6 +217,7 @@ function ContactForm({ initialReason = 'General Enquiry' }) {
           type="file"
           accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
           onChange={handleFileChange}
+          disabled={isSubmitting}
           className="w-full rounded-full border border-slate-200 bg-white px-4 py-3 outline-none file:mr-4 file:rounded-full file:border-0 file:bg-dahiPrimary file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white focus:border-dahiPrimary"
         />
         <p className="mt-2 text-sm text-slate-500">Optional: attach one document or image to help us understand your request.</p>
@@ -237,7 +236,7 @@ function ContactForm({ initialReason = 'General Enquiry' }) {
         <button type="submit" disabled={isSubmitting} className="inline-flex items-center justify-center gap-2 rounded-full bg-dahiPrimary px-6 py-3 text-sm font-semibold text-white transition hover:bg-dahiSecondary disabled:cursor-not-allowed disabled:opacity-70">
           {isSubmitting ? <><LoaderCircle size={16} className="animate-spin" /> Sending...</> : 'Send Message'}
         </button>
-        <button type="button" onClick={resetForm} className="rounded-full border border-slate-300 px-6 py-3 text-sm font-semibold text-slate-700 transition hover:border-dahiPrimary hover:text-dahiPrimary">Reset</button>
+        <button type="button" onClick={resetForm} disabled={isSubmitting} className="rounded-full border border-slate-300 px-6 py-3 text-sm font-semibold text-slate-700 transition hover:border-dahiPrimary hover:text-dahiPrimary disabled:cursor-not-allowed disabled:opacity-70">Reset</button>
       </div>
 
       {status && (

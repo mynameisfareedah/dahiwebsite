@@ -23,6 +23,12 @@ body {
   padding: 5rem 1.5rem;
 }
 
+@media (min-width: 1024px) {
+  .section-shell {
+    padding: 5rem 1.5rem 5rem 0;
+  }
+}
+
 .section-title {
   font-size: clamp(1.6rem, 2.3vw, 2.2rem);
   font-weight: 700;

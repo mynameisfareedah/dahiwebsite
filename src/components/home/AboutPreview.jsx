@@ -1,6 +1,6 @@
 function AboutPreview() {
   return (
-    <section id="about" className="section-shell mx-auto max-w-7xl">
+    <section id="about" className="section-shell max-w-7xl">
       <div className="grid gap-8 lg:grid-cols-[1.15fr_0.85fr]">
         <div className="soft-card p-8 sm:p-10">
           <h2 className="section-title">About DAHI</h2>

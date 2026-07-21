@@ -11,10 +11,13 @@ import TeamPreview from '../../components/home/TeamPreview';
 import GetInvolved from '../../components/home/GetInvolved';
 import NewsletterSection from '../../components/home/NewsletterSection';
 import FAQ from '../../components/home/FAQ';
+import SEO from '../../components/common/SEO';
 
 function HomePage() {
   return (
     <>
+      <SEO title="Home" description="DAHI empowers Muslim women through trusted health education, practical resources, and supportive community programmes." path="/" />
+
       {/* 0. Outreach Announcement Banner */}
       <OutreachAnnouncementBar />
 

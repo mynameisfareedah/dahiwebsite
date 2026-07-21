@@ -22,7 +22,7 @@ function OutreachDetailsPage() {
       />
 
       {/* Hero Section */}
-      <section className="section-shell mx-auto max-w-7xl space-y-8">
+      <section className="section-shell max-w-7xl space-y-8">
         <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] items-center">
           <div className="space-y-6">
             <div>
@@ -89,7 +89,7 @@ function OutreachDetailsPage() {
       </section>
 
       {/* About Section */}
-      <section className="section-shell mx-auto max-w-7xl">
+      <section className="section-shell max-w-7xl">
         <div className="grid gap-8 lg:grid-cols-[1fr_1.2fr]">
           <div className="soft-card p-8 sm:p-10">
             <h2 className="text-2xl font-bold text-slate-900 mb-4">About This Outreach</h2>
@@ -189,7 +189,7 @@ function OutreachDetailsPage() {
         eyebrow="Ready to Join?"
         title="Be Part of This Important Health Initiative"
         description="Whether you're attending, volunteering, sponsoring, or supporting from afar, your involvement matters. We're excited to bring women together for health education and community engagement this August."
-        primaryButtonLabel="Learn More"
+        primaryButtonLabel="Learn More About DAHI"
         primaryButtonHref="/about"
         secondaryButtonLabel="Contact Us"
         secondaryButtonHref="/contact"

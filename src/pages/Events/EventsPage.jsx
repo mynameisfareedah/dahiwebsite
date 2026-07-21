@@ -1,91 +1,15 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import SEO from '../../components/common/SEO';
 import PageHero from '../../components/common/PageHero';
 import SectionHeading from '../../components/common/SectionHeading';
 import CTASection from '../../components/common/CTASection';
 import EventCard from '../../components/common/EventCard';
+import LoadingState from '../../components/common/LoadingState';
+import { getEvents } from '../../services/supabase/eventsService';
+import { EVENT_STATUS } from '../../constants/status';
 import { impactStats, testimonials, upcomingOutreach } from '../../data/siteContent';
-
-const featuredEvents = [
-  {
-    title: upcomingOutreach.title,
-    date: upcomingOutreach.date,
-    time: 'Community Outreach',
-    speaker: 'DAHI Team',
-    description: upcomingOutreach.description,
-    image: upcomingOutreach.image,
-    buttonLabel: 'View Details',
-    buttonHref: '/outreach',
-    category: 'Community Outreach',
-  },
-  {
-    title: 'Menstrual Health Masterclass',
-    date: '20 November 2025',
-    time: 'Masterclass',
-    speaker: 'DAHI Team',
-    description: 'DAHI\'s first educational masterclass focused on menstrual health awareness, helping women better understand the menstrual cycle, menstrual hygiene, common misconceptions, and practical care through evidence-based information.',
-    image: '/MENSTRUAL HEALTH.jpg',
-    buttonLabel: 'Request Details',
-    buttonHref: '/contact',
-    category: 'Masterclass',
-  },
-  {
-    title: 'Joint Webinar for Muslim Women & Women of Faith',
-    date: '25 January 2026',
-    time: 'Webinar',
-    speaker: 'DAHI Team',
-    description: 'An educational webinar bringing together Muslim women and women of other faiths to discuss women\'s health topics in a respectful, inclusive, and supportive environment.',
-    image: '/WEBINARS.jpg',
-    buttonLabel: 'Request Details',
-    buttonHref: '/contact',
-    category: 'Webinar',
-  },
-  {
-    title: 'Contraception & Family Planning for Muslim Women',
-    date: '31 March – 1 April 2026',
-    time: 'Webinar',
-    speaker: 'DAHI Team',
-    description: 'An evidence-based educational webinar exploring contraception, family planning, reproductive health, common misconceptions, and informed decision-making from a culturally sensitive perspective.',
-    image: '/doc adi webinar.jpeg',
-    buttonLabel: 'Request Details',
-    buttonHref: '/contact',
-    category: 'Webinar',
-  },
-  {
-    title: 'Menopause Webinar',
-    date: '26 April 2026',
-    time: 'Webinar',
-    speaker: 'DAHI Team',
-    description: 'An educational session designed to increase awareness of menopause by discussing symptoms, emotional wellbeing, lifestyle changes, healthy ageing, and practical strategies for navigating this stage of life.',
-    image: '/MENOPAUSE.jpg',
-    buttonLabel: 'Request Details',
-    buttonHref: '/contact',
-    category: 'Webinar',
-  },
-  {
-    title: 'Women\'s Health Q&A Webinar',
-    date: '28 June 2026',
-    time: 'Webinar',
-    speaker: 'DAHI Team',
-    description: 'An interactive question-and-answer session where participants had the opportunity to ask women\'s health questions and receive practical, evidence-based guidance from healthcare professionals.',
-    image: '/COMMUNITY DISCUSSION.jpg',
-    buttonLabel: 'Request Details',
-    buttonHref: '/contact',
-    category: 'Webinar',
-  },
-  {
-    title: 'DAHI Educational Quiz Series',
-    date: '28 February – 18 March 2026 and May 2026',
-    time: 'Educational Quiz',
-    speaker: 'DAHI Team',
-    description: 'DAHI successfully organised a series of educational quiz sessions designed to reinforce knowledge shared through its programmes and resources while encouraging friendly, interactive learning within the community.',
-    image: '/COMMUNITY DISCUSSION.jpg',
-    buttonLabel: 'Request Details',
-    buttonHref: '/contact',
-    category: 'Educational Quiz',
-  },
-];
+import { resolveRegistrationState } from '../../utils/registration';
 
 const quizSeriesHighlights = [
   'DAHI Ramadan Quiz (DRQ) — 28 February to 18 March 2026',
@@ -149,12 +73,48 @@ const filterOptions = [
 function EventsPage() {
   const [activeFilter, setActiveFilter] = useState('all');
 
+  const [events, setEvents] = useState([]);
+  const [loadingEvents, setLoadingEvents] = useState(true);
+  const [eventsError, setEventsError] = useState(null);
+
+  useEffect(() => {
+    let mounted = true;
+    setLoadingEvents(true);
+    getEvents()
+      .then((res) => {
+        if (!mounted) return;
+        if (res.error) {
+          setEventsError(res.error);
+          setEvents([]);
+          return;
+        }
+
+        const published = (res.data || []).filter((e) => e.status === EVENT_STATUS.PUBLISHED);
+        // sort ascending by event_date
+        published.sort((a, b) => new Date(a.event_date || a.date || 0) - new Date(b.event_date || b.date || 0));
+        setEvents(published);
+      })
+      .catch((err) => {
+        setEventsError(err);
+        setEvents([]);
+      })
+      .finally(() => {
+        if (mounted) setLoadingEvents(false);
+      });
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
   const filteredEvents = useMemo(() => {
+    const eventSource = events || [];
+
     if (activeFilter === 'all') {
-      return featuredEvents;
+      return eventSource;
     }
 
-    return featuredEvents.filter((event) => {
+    return eventSource.filter((event) => {
       const category = event.category.toLowerCase();
       if (activeFilter === 'community outreach') return category.includes('community outreach');
       if (activeFilter === 'webinar') return category.includes('webinar');
@@ -166,7 +126,17 @@ function EventsPage() {
       if (activeFilter === 'community activities') return event.title.toLowerCase().includes('community');
       return false;
     });
-  }, [activeFilter]);
+  }, [activeFilter, events]);
+
+  const topRegistrationEvent = useMemo(
+    () =>
+      (events || []).find(
+        (event) => Boolean(event.registrationUrl || event.registration_url)
+      ) || null,
+    [events]
+  );
+
+  const topRegistrationState = resolveRegistrationState(topRegistrationEvent, 'Register Now');
 
   return (
     <>
@@ -183,9 +153,22 @@ function EventsPage() {
         ]}
       />
 
-      <section className="section-shell mx-auto max-w-7xl space-y-8">
+      <section className="section-shell max-w-7xl space-y-8">
         <div className="soft-card p-8 sm:p-10">
           <SectionHeading eyebrow="Featured events" title="DAHI's recent educational events" description="The following events reflect DAHI's continuing work in women’s health education, respectful conversation, and community engagement." />
+          {eventsError ? (
+            <div className="mt-6 rounded-[1.25rem] border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
+              We could not load the latest events right now.
+            </div>
+          ) : null}
+          <div className="mt-4 flex flex-wrap gap-3">
+            <Link to="/outreach" className="inline-flex items-center justify-center rounded-full border border-dahiPrimary px-4 py-2 text-sm font-semibold text-dahiPrimary transition hover:bg-dahiPrimary/5" aria-label="Learn more about outreach programs">Learn More About Outreach Programs</Link>
+            {topRegistrationState.enabled ? (
+              <a href={topRegistrationState.href} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-full bg-dahiPrimary px-4 py-2 text-sm font-semibold text-white transition hover:bg-dahiSecondary">{topRegistrationState.label}</a>
+            ) : (
+              <button type="button" disabled className="inline-flex cursor-not-allowed items-center justify-center rounded-full bg-slate-300 px-4 py-2 text-sm font-semibold text-slate-600">{topRegistrationState.label}</button>
+            )}
+          </div>
           <div className="mt-6 flex flex-wrap gap-3">
             {filterOptions.map((option) => (
               <button
@@ -199,9 +182,29 @@ function EventsPage() {
             ))}
           </div>
           <div className="mt-8 grid gap-6 lg:grid-cols-2">
-            {filteredEvents.map((event) => (
-              <EventCard key={event.title} title={event.title} date={event.date} time={event.time} speaker={event.speaker} description={event.description} image={event.image} buttonLabel={event.buttonLabel} buttonHref={event.buttonHref} />
-            ))}
+            {loadingEvents ? (
+              <LoadingState />
+            ) : filteredEvents.length === 0 ? (
+              <div className="rounded-[1.25rem] border border-slate-200 bg-slate-50 p-6 text-sm text-slate-600">No published events are available right now.</div>
+            ) : (
+              filteredEvents.map((event) => (
+                <EventCard
+                  key={event.id || event.title}
+                  title={event.title}
+                  date={event.event_date || event.date}
+                  time={event.start_time || event.time}
+                  speaker={event.speaker || 'DAHI Team'}
+                  description={event.description}
+                  image={event.poster_url || event.image || '/WEBINARS.jpg'}
+                  buttonLabel={event.buttonLabel || event.registrationButtonText || event.registration_button_text || 'Register Now'}
+                  buttonHref={event.buttonHref || null}
+                  registrationEnabled={event.registrationEnabled ?? event.registration_enabled ?? true}
+                  registrationStatus={event.registrationStatus || event.registration_status || 'open'}
+                  registrationUrl={event.registrationUrl || event.registration_url || null}
+                  registrationButtonText={event.registrationButtonText || event.registration_button_text || 'Register Now'}
+                />
+              ))
+            )}
           </div>
         </div>
 

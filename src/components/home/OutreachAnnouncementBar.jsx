@@ -7,8 +7,8 @@ function OutreachAnnouncementBar() {
   if (dismissed) return null;
 
   return (
-    <div className="relative overflow-hidden bg-gradient-to-r from-dahiPrimary/90 to-dahiSecondary/90">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
+    <div className="w-full relative overflow-hidden bg-gradient-to-r from-dahiPrimary/90 to-dahiSecondary/90">
+      <div className="flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-0">
         <div className="flex flex-1 items-center gap-3">
           <span className="text-2xl">📢</span>
           <div>
@@ -18,7 +18,7 @@ function OutreachAnnouncementBar() {
         </div>
         <div className="flex flex-shrink-0 items-center gap-3">
           <a href="/outreach" className="rounded-full bg-white px-4 py-1.5 text-xs font-semibold text-dahiPrimary transition hover:bg-white/90 sm:text-sm">
-            Learn More
+            Learn More About Outreach
           </a>
           <button
             onClick={() => setDismissed(true)}

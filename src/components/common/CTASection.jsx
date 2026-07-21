@@ -8,7 +8,7 @@ function CTASection({ eyebrow, title, description, actions, theme = 'default' })
     : { backgroundImage: 'linear-gradient(90deg, var(--dahi-primary), var(--dahi-secondary))', backgroundColor: 'var(--dahi-primary)' };
 
   return (
-    <section className="section-shell mx-auto max-w-7xl">
+    <section className="section-shell max-w-7xl">
       <div className={`soft-card overflow-hidden p-8 sm:p-10 lg:p-12 ${themeClasses}`} style={themeStyle}>
         <div className="max-w-3xl">
           <span className={`eyebrow ${theme === 'dark' ? 'bg-white/10 text-white' : 'bg-white/15 text-white'}`}>{eyebrow}</span>

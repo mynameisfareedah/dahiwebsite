@@ -2,7 +2,7 @@ import { impactStats } from '../../data/siteContent';
 
 function Impact() {
   return (
-    <section id="our-impact" className="section-shell mx-auto max-w-7xl">
+    <section id="our-impact" className="section-shell max-w-7xl">
       <div className="mb-8 max-w-3xl">
         <span className="eyebrow">Our Impact</span>
         <h2 className="mt-4 section-title">Growing a strong, informed community of Muslim women</h2>

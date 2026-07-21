@@ -1,0 +1,1 @@
+import{k as r}from"./index-RDe9ShcA.js";function n(){const{profile:a,profileLoading:l,profileError:e,userDisplayName:m}=r();return{firstName:(a==null?void 0:a.firstName)??null,fullName:(a==null?void 0:a.fullName)??null,email:(a==null?void 0:a.email)??null,displayName:m,loading:l,error:e}}export{n as u};

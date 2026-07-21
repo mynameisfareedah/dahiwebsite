@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 function PageHero({ eyebrow, title, description, image, actions, breadcrumbs = [] }) {
   return (
-    <section className="mx-auto max-w-7xl px-4 pt-8 sm:px-6 lg:px-8">
+    <section className="max-w-7xl px-4 pt-8 sm:px-6 lg:px-8">
       <div className="hero-glow overflow-hidden rounded-[2rem] px-6 py-8 text-white shadow-2xl sm:px-8 lg:px-12 lg:py-12">
         <div className="grid items-center gap-8 lg:grid-cols-[1.05fr_0.95fr]">
           <div>
@@ -26,7 +26,10 @@ function PageHero({ eyebrow, title, description, image, actions, breadcrumbs = [
           </div>
           {image && (
             <div className="rounded-[1.3rem] border border-white/20 bg-white/10 p-3 backdrop-blur">
-              <img src={image} alt={title} loading="lazy" className="h-[260px] w-full rounded-[1.05rem] object-cover sm:h-[320px]" />
+                <picture>
+                  <source srcSet="/community-1200.webp" type="image/webp" />
+                  <img src={image} alt={title} width="1200" height="684" loading="lazy" className="h-[260px] w-full rounded-[1.05rem] object-cover sm:h-[320px]" />
+                </picture>
             </div>
           )}
         </div>

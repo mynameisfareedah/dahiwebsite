@@ -1,5 +1,21 @@
 import { supabase, isSupabaseConfigured } from '../../lib/supabase';
+
 import { STORAGE_KEYS } from '../utils/constants';
+
+const AUTH_REQUEST_TIMEOUT_MS = 12000;
+
+async function withTimeout(promise, timeoutMs, timeoutMessage) {
+  let timerId;
+  const timeoutPromise = new Promise((_, reject) => {
+    timerId = setTimeout(() => reject(new Error(timeoutMessage)), timeoutMs);
+  });
+
+  try {
+    return await Promise.race([promise, timeoutPromise]);
+  } finally {
+    clearTimeout(timerId);
+  }
+}
 
 /**
  * Authentication Service
@@ -22,10 +38,14 @@ class AuthService {
     }
 
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+      const { data, error } = await withTimeout(
+        supabase.auth.signInWithPassword({
+          email,
+          password,
+        }),
+        AUTH_REQUEST_TIMEOUT_MS,
+        'Timed out while signing in.'
+      );
 
       if (error) {
         return { error: error.message };
@@ -71,7 +91,11 @@ class AuthService {
     }
 
     try {
-      const { data, error } = await supabase.auth.getSession();
+      const { data, error } = await withTimeout(
+        supabase.auth.getSession(),
+        AUTH_REQUEST_TIMEOUT_MS,
+        'Timed out while loading the Supabase session.'
+      );
 
       if (error) {
         console.error('Error getting session:', error);
@@ -96,31 +120,8 @@ class AuthService {
    * @returns {Promise<Object|null>}
    */
   async getUser() {
-    if (!isSupabaseConfigured) {
-      return null;
-    }
-
-    try {
-      const { data, error } = await supabase.auth.getUser();
-
-      if (error) {
-        // Supabase returns AuthSessionMissingError when no session exists.
-        if (error.message?.includes('AuthSessionMissingError')) {
-          return null;
-        }
-        console.error('Error getting user:', error);
-        return null;
-      }
-
-      return data.user ?? null;
-    } catch (err) {
-      const message = err?.message || '';
-      if (message.includes('AuthSessionMissingError')) {
-        return null;
-      }
-      console.error('Error getting user:', err);
-      return null;
-    }
+    const result = await supabase.auth.getUser();
+    return result.data?.user ?? null;
   }
 
   /**
@@ -134,20 +135,24 @@ class AuthService {
     }
 
     try {
-      const { data, error } = await supabase
-        .from('admin_users')
-        .select('id,active,role')
-        .eq('id', userId)
-        .eq('active', true)
-        .eq('role', 'admin')
-        .maybeSingle();
+      const { data, error } = await withTimeout(
+        supabase
+          .from('admin_users')
+          .select('active, role')
+          .eq('id', userId)
+          .maybeSingle(),
+        AUTH_REQUEST_TIMEOUT_MS,
+        'Timed out while validating admin access.'
+      );
 
-      if (error) {
-        console.error('Verify admin error:', error);
+      if (error || !data) {
+        if (error) console.error('Verify admin error:', error);
         return false;
       }
 
-      return Boolean(data?.id);
+      const role = String(data.role || '').trim();
+      const isActive = data.active === true;
+      return isActive && (role === 'Admin' || role === 'Super Admin');
     } catch (err) {
       console.error('Verify admin error:', err);
       return false;

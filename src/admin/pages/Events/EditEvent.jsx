@@ -5,6 +5,7 @@ import { EventForm } from '../../components/events/EventForm';
 import { EventImageUploader } from '../../components/events/EventImageUploader';
 import { validators, validateForm } from '../../utils/validation';
 import { eventService, getEventImageUrl } from '../../services/eventService';
+import { EVENT_STATUS } from '../../../constants/status';
 
 const CATEGORY_OPTIONS = [
   { value: 'health', label: 'Health' },
@@ -16,9 +17,8 @@ const CATEGORY_OPTIONS = [
 ];
 
 const STATUS_OPTIONS = [
-  { value: 'published', label: 'Published' },
-  { value: 'draft', label: 'Draft' },
-  { value: 'cancelled', label: 'Cancelled' },
+  { value: EVENT_STATUS.DRAFT, label: 'Draft' },
+  { value: EVENT_STATUS.PUBLISHED, label: 'Published' },
 ];
 
 const initialFormValues = {
@@ -28,9 +28,26 @@ const initialFormValues = {
   date: '',
   time: '',
   location: '',
+  registrationUrl: '',
+  registrationButtonText: '',
+  registrationEnabled: true,
+  registrationStatus: 'open',
   capacity: '0',
-  status: 'draft',
+  status: EVENT_STATUS.DRAFT,
   featured: false,
+};
+
+const validateOptionalRegistrationUrl = (value) => {
+  if (!value || value.toString().trim() === '') return null;
+  try {
+    const parsed = new URL(value);
+    if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+      return 'Registration URL must start with http:// or https://';
+    }
+    return null;
+  } catch {
+    return 'Enter a valid registration URL';
+  }
 };
 
 const formRules = {
@@ -41,6 +58,7 @@ const formRules = {
   date: [(val) => validators.required(val, 'Date')],
   time: [(val) => validators.required(val, 'Time')],
   location: [(val) => validators.required(val, 'Location')],
+  registrationUrl: [(val) => validateOptionalRegistrationUrl(val)],
   capacity: [
     (val) => validators.required(val, 'Capacity'),
     (val) => validators.number(val),
@@ -99,7 +117,6 @@ export default function EditEvent() {
   }, (values) => validateForm(values, formRules));
 
   useEffect(() => {
-    console.log('Route id:', id);
     if (!id) {
       console.error('Invalid event id');
       setLoadError('Missing event id');
@@ -111,16 +128,10 @@ export default function EditEvent() {
 
     const loadEvent = async () => {
       setLoading(true);
-      console.log('Fetching event', id);
       try {
         const response = await eventService.getEventById(id);
-        console.log('Response success:', response.success);
-        console.log('Response data:', response.data);
-        console.log('Response error:', response.error);
-        console.dir(response);
         if (!isMounted) return;
         if (!response.success || !response.data) {
-          console.log('Error:', response.error);
           setLoadError(response.error?.message || 'Event not found');
           return;
         }
@@ -133,12 +144,21 @@ export default function EditEvent() {
         setFieldValue('date', eventData.date || '');
         setFieldValue('time', eventData.time || '');
         setFieldValue('location', eventData.location || '');
+        setFieldValue('registrationUrl', eventData.registrationUrl || eventData.registration_url || '');
+        setFieldValue('registrationButtonText', eventData.registrationButtonText || eventData.registration_button_text || '');
+        setFieldValue(
+          'registrationEnabled',
+          eventData.registrationEnabled ?? eventData.registration_enabled ?? true
+        );
+        setFieldValue(
+          'registrationStatus',
+          eventData.registrationStatus || eventData.registration_status || 'open'
+        );
         setFieldValue('capacity', String(eventData.capacity || 0));
-        setFieldValue('status', eventData.status || 'draft');
+        setFieldValue('status', eventData.status || EVENT_STATUS.DRAFT);
         setFieldValue('featured', eventData.featured === true);
         setPreviewUrl(getEventImageUrl(eventData.poster_url));
       } catch (error) {
-        console.log('Fetch event caught error:', error);
         setLoadError(error?.message || 'Unable to load event');
       } finally {
         setLoading(false);

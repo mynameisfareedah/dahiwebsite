@@ -4,7 +4,7 @@ function PostEventHighlights({ highlights, enabled = false }) {
   if (!enabled || !highlights) return null;
 
   return (
-    <section className="section-shell mx-auto max-w-7xl space-y-8">
+    <section className="section-shell max-w-7xl space-y-8">
       <SectionHeading
         eyebrow="Event Completed"
         title="August Outreach 2026 – Highlights"

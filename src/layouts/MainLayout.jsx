@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
-import Navbar from '../components/layout/Navbar';
+import Sidebar from '../components/layout/Sidebar';
 import Footer from '../components/layout/Footer';
 import { trackPageView } from '../lib/analytics';
 
@@ -12,11 +12,20 @@ function MainLayout() {
   }, [location.pathname]);
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-700">
-      <Navbar />
-      <main id="main-content" className="pt-24" tabIndex="-1">
-        <Outlet />
-      </main>
+    <div className="min-h-screen overflow-x-hidden bg-slate-50 text-slate-700 flex flex-col">
+      <div className="flex flex-1">
+        {/* Sidebar */}
+        <Sidebar />
+        
+        {/* Main Content */}
+        <main id="main-content" className="flex-1 w-full pt-20 overflow-hidden" tabIndex="-1">
+          <div className="w-full">
+            <Outlet />
+          </div>
+        </main>
+      </div>
+      
+      {/* Footer */}
       <Footer />
     </div>
   );

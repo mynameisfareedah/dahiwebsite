@@ -12,7 +12,7 @@ function RegistrationSection({ registrationStatus }) {
   const closeModal = () => setModalState({ type: null, mode: 'register' });
 
   return (
-    <section className="section-shell mx-auto max-w-7xl space-y-8">
+    <section className="section-shell max-w-7xl space-y-8">
       <SectionHeading
         eyebrow="Get Involved"
         title="Registration & Opportunities"

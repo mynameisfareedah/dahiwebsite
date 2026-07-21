@@ -3,7 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { ChevronDown } from 'lucide-react';
 import { useToast } from '../../hooks/useDataManagement';
 import { eventService, getEventImageUrl } from '../../services/eventService';
-
+import { EVENT_STATUS } from '../../../constants/status';
 export default function EventDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -37,7 +37,7 @@ export default function EventDetails() {
     if (!response.success) {
       addToast(response.error?.message || 'Unable to update publish state', 'error');
     } else {
-      addToast(`Event ${response.data.status === 'published' ? 'published' : 'unpublished'}`, 'success');
+      addToast(`Event ${response.data.status === EVENT_STATUS.PUBLISHED ? EVENT_STATUS.PUBLISHED : 'unpublished'}`, 'success');
       setEvent(response.data);
     }
     setActionLoading(false);
@@ -145,7 +145,7 @@ export default function EventDetails() {
               disabled={actionLoading}
               className="w-full px-4 py-3 text-left text-sm text-gray-100 hover:bg-slate-900 disabled:opacity-60"
             >
-              {event.status === 'published' ? 'Unpublish Event' : 'Publish Event'}
+              {event.status === EVENT_STATUS.PUBLISHED ? 'Unpublish Event' : 'Publish Event'}
             </button>
             <button
               type="button"
@@ -220,12 +220,20 @@ export default function EventDetails() {
             <p className="text-sm uppercase tracking-[0.2em] text-gray-400">Date & Time</p>
             <p className="mt-2 text-lg font-semibold text-white">{event.date || 'TBD'} {event.time || ''}</p>
           </div>
-          {event.registration_link && (
+          {(event.registrationUrl || event.registration_url) && (
             <div className="space-y-3 rounded-3xl border border-gray-800 bg-slate-900 p-5">
               <p className="text-sm uppercase tracking-[0.2em] text-gray-400">Registration</p>
-              <a href={event.registration_link} target="_blank" rel="noreferrer" className="text-blue-400 underline">
-                {event.registration_link}
+              <a
+                href={event.registrationUrl || event.registration_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-400 underline"
+              >
+                {event.registrationUrl || event.registration_url}
               </a>
+              <p className="text-sm text-gray-400">
+                Button text: {event.registrationButtonText || event.registration_button_text || 'Register'}
+              </p>
             </div>
           )}
           <div className="space-y-3 rounded-3xl border border-gray-800 bg-slate-900 p-5">

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Heart, TrendingUp } from 'lucide-react';
 import {
   PageHeader,
@@ -13,46 +13,51 @@ import {
   useSorting,
   useToast,
 } from '../hooks/useDataManagement';
-
-const mockCommunity = [
-  {
-    id: 1,
-    name: 'Amina Hassan',
-    email: 'amina@email.com',
-    engagement: 'high',
-    posts: 24,
-    joinDate: '2024-01-15',
-  },
-  {
-    id: 2,
-    name: 'Layla Mahmoud',
-    email: 'layla@email.com',
-    engagement: 'medium',
-    posts: 12,
-    joinDate: '2024-02-20',
-  },
-  {
-    id: 3,
-    name: 'Sara El-Din',
-    email: 'sara@email.com',
-    engagement: 'high',
-    posts: 35,
-    joinDate: '2023-12-10',
-  },
-  {
-    id: 4,
-    name: 'Nadia Hassan',
-    email: 'nadia@email.com',
-    engagement: 'low',
-    posts: 3,
-    joinDate: '2024-06-01',
-  },
-];
+import { communityMemberService } from '../services/communityMemberService';
 
 export default function AdminCommunity() {
-  const [members, setMembers] = useState(mockCommunity);
+  const [members, setMembers] = useState([]);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isFetching, setIsFetching] = useState(true);
+  const [fetchError, setFetchError] = useState(null);
+
+  const isMountedRef = React.useRef(true);
+  React.useEffect(() => {
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
+
+  // Load community members from Supabase
+  useEffect(() => {
+    const loadMembers = async () => {
+      setIsFetching(true);
+      setFetchError(null);
+      try {
+        const result = await communityMemberService.getCommunityMembers();
+        if (!isMountedRef.current) return;
+        
+        if (result.success) {
+          setMembers(result.data || []);
+        } else {
+          setFetchError(result.error?.message || 'Failed to load community members');
+          setMembers([]);
+        }
+      } catch (err) {
+        if (isMountedRef.current) {
+          setFetchError(err.message || 'An error occurred while loading community members');
+          setMembers([]);
+        }
+      } finally {
+        if (isMountedRef.current) {
+          setIsFetching(false);
+        }
+      }
+    };
+
+    loadMembers();
+  }, []);
 
   const { addToast } = useToast();
   const { searchQuery, setSearchQuery, filtered: searchedMembers } = useSearch(
@@ -66,9 +71,8 @@ export default function AdminCommunity() {
   );
 
   const highEngagementCount = members.filter(
-    (m) => m.engagement === 'high'
+    (m) => m.engagement_score >= 50
   ).length;
-  const totalPosts = members.reduce((sum, m) => sum + m.posts, 0);
 
   const handleDelete = (member) => {
     setDeleteConfirm({ id: member.id, name: member.name });
@@ -76,11 +80,26 @@ export default function AdminCommunity() {
 
   const confirmDelete = async () => {
     setIsLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    setMembers(members.filter((m) => m.id !== deleteConfirm.id));
-    addToast('Community member removed', 'success');
-    setDeleteConfirm(null);
-    setIsLoading(false);
+    try {
+      const result = await communityMemberService.deleteCommunityMember(deleteConfirm.id);
+      if (!isMountedRef.current) return;
+      
+      if (result.success) {
+        setMembers(members.filter((m) => m.id !== deleteConfirm.id));
+        addToast('Community member removed', 'success');
+      } else {
+        addToast(`Error removing member: ${result.error?.message || 'Unknown error'}`, 'error');
+      }
+    } catch (err) {
+      if (isMountedRef.current) {
+        addToast(`Error removing member: ${err.message || 'Unknown error'}`, 'error');
+      }
+    } finally {
+      if (isMountedRef.current) {
+        setDeleteConfirm(null);
+        setIsLoading(false);
+      }
+    }
   };
 
   const engagementColor = (level) => {
@@ -121,7 +140,7 @@ export default function AdminCommunity() {
         </div>
         <div className="bg-gray-900 border border-gray-800 rounded-lg p-4">
           <p className="text-gray-400 text-sm">Total Posts</p>
-          <p className="text-2xl font-bold text-white mt-2">{totalPosts}</p>
+          <p className="text-2xl font-bold text-white mt-2">-</p>
         </div>
       </div>
 
@@ -157,10 +176,13 @@ export default function AdminCommunity() {
                       Email
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">
-                      Engagement
+                      Engagement Score
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">
-                      Posts
+                      Location
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">
+                      Status
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">
                       Joined
@@ -181,22 +203,26 @@ export default function AdminCommunity() {
                       </td>
                       <td className="px-6 py-4 text-gray-300">{member.email}</td>
                       <td className="px-6 py-4">
-                        <span
-                          className={`px-3 py-1 rounded-full text-sm capitalize ${engagementColor(
-                            member.engagement
-                          )}`}
-                        >
-                          {member.engagement}
+                        <span className="px-3 py-1 rounded-full text-sm bg-blue-900 text-blue-100">
+                          {member.engagement_score || 0}
                         </span>
                       </td>
+                      <td className="px-6 py-4 text-gray-300">
+                        {member.city && member.country 
+                          ? `${member.city}, ${member.country}` 
+                          : member.city || member.country || '-'}
+                      </td>
                       <td className="px-6 py-4">
-                        <div className="flex items-center gap-2 text-gray-300">
-                          <TrendingUp size={16} />
-                          {member.posts}
-                        </div>
+                        <span className={`px-3 py-1 rounded-full text-sm capitalize ${
+                          member.status === 'active' ? 'bg-green-900 text-green-100' :
+                          member.status === 'inactive' ? 'bg-yellow-900 text-yellow-100' :
+                          'bg-red-900 text-red-100'
+                        }`}>
+                          {member.status}
+                        </span>
                       </td>
                       <td className="px-6 py-4 text-gray-300">
-                        {new Date(member.joinDate).toLocaleDateString()}
+                        {new Date(member.joined_at).toLocaleDateString()}
                       </td>
                       <td className="px-6 py-4 text-sm">
                         <button

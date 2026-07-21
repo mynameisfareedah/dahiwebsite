@@ -22,12 +22,12 @@ function FAQ() {
     },
     {
       question: "How do I contact DAHI?",
-      answer: "You can reach us through our Contact page, via email at docadi.healthintiative@gmail.com, or through our social media channels. We typically respond within 1-2 business days.",
+      answer: "You can reach us through our Contact page, via email at docadi.healthinitiative@gmail.com, or through our social media channels. We typically respond within 1-2 business days.",
     },
   ];
 
   return (
-    <section className="section-shell mx-auto max-w-7xl">
+    <section className="section-shell max-w-7xl">
       <div className="mb-12 text-center">
         <span className="eyebrow">Questions?</span>
         <h2 className="mt-4 section-title">Frequently Asked Questions</h2>

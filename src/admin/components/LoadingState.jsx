@@ -19,10 +19,10 @@ export function SkeletonLoader({ rows = 3, columns = 4 }) {
   return (
     <div className="space-y-4">
       {Array.from({ length: rows }).map((_, rowIdx) => (
-        <div key={rowIdx} className="flex gap-4">
+        <div key={`skeleton-row-${rowIdx}`} className="flex gap-4">
           {Array.from({ length: columns }).map((_, colIdx) => (
             <div
-              key={colIdx}
+              key={`skeleton-col-${rowIdx}-${colIdx}`}
               className="flex-1 h-10 bg-gray-800 rounded animate-pulse"
             ></div>
           ))}

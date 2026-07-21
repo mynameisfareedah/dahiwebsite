@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Settings } from 'lucide-react';
 import { PageHeader } from '../components';
 import {
   FormInput,
@@ -26,10 +25,16 @@ const initialSettings = {
 };
 
 export default function AdminSettings() {
-  const [isSaving, setIsSaving] = useState(false);
   const { addToast } = useToast();
   const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState('general');
+
+  const isMountedRef = React.useRef(true);
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
 
   useEffect(() => {
     const tab = searchParams.get('tab');
@@ -59,6 +64,7 @@ export default function AdminSettings() {
   } = useForm(initialSettings, async (formValues) => {
     setIsSaving(true);
     await new Promise((resolve) => setTimeout(resolve, 1000));
+    if (!isMountedRef.current) return;
     addToast('Settings saved successfully', 'success');
     setIsSaving(false);
   }, (values) => validateForm(values, formRules));

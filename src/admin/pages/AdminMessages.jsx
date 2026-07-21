@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { MessageSquare } from 'lucide-react';
 import {
   PageHeader,
@@ -13,52 +13,12 @@ import {
   useSorting,
   useToast,
 } from '../hooks/useDataManagement';
-
-const mockMessages = [
-  {
-    id: 1,
-    sender: 'Amina Hassan',
-    subject: 'Program inquiry',
-    preview: 'I am interested in learning more about...',
-    date: '2026-07-25',
-    isRead: false,
-    category: 'inquiry',
-    fullMessage: 'I am interested in learning more about the women health programs offered by DAHI.',
-  },
-  {
-    id: 2,
-    sender: 'Layla Mahmoud',
-    subject: 'Volunteer opportunity',
-    preview: 'I would like to volunteer for...',
-    date: '2026-07-24',
-    isRead: true,
-    category: 'volunteer',
-    fullMessage: 'I would like to volunteer for the community outreach programs.',
-  },
-  {
-    id: 3,
-    sender: 'Contact Form Submission',
-    subject: 'Support request',
-    preview: 'I need help with...',
-    date: '2026-07-23',
-    isRead: true,
-    category: 'support',
-    fullMessage: 'I need help with accessing some of your health resources.',
-  },
-  {
-    id: 4,
-    sender: 'Sara El-Din',
-    subject: 'Event feedback',
-    preview: 'Great event yesterday!...',
-    date: '2026-07-22',
-    isRead: false,
-    category: 'feedback',
-    fullMessage: 'Great event yesterday! I learned a lot and would love to attend more.',
-  },
-];
+import { messageService } from '../../services/messageService';
 
 export default function AdminMessages() {
-  const [messages, setMessages] = useState(mockMessages);
+  const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const [selectedMessage, setSelectedMessage] = useState(null);
   const [showDetail, setShowDetail] = useState(false);
   const { addToast } = useToast();
@@ -73,21 +33,75 @@ export default function AdminMessages() {
     10
   );
 
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadMessages = async () => {
+      setLoading(true);
+      setError('');
+
+      try {
+        const result = await messageService.getMessages();
+        if (!isMounted) return;
+
+        if (result.success) {
+          setMessages(result.data || []);
+        } else {
+          setError(result.error?.message || 'Failed to load messages.');
+          setMessages([]);
+        }
+      } catch (err) {
+        if (!isMounted) return;
+        setError(err?.message || 'Failed to load messages.');
+        setMessages([]);
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    loadMessages();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   const unreadCount = messages.filter((m) => !m.isRead).length;
 
-  const handleMarkAsRead = (messageId) => {
-    setMessages(
-      messages.map((m) =>
-        m.id === messageId ? { ...m, isRead: true } : m
-      )
-    );
-    addToast('Message marked as read', 'success');
+  const handleMarkAsRead = async (messageId) => {
+    const target = messages.find((m) => m.id === messageId);
+    if (!target) return;
+
+    try {
+      const result = await messageService.updateMessage(messageId, { read: true, status: 'responded' });
+      if (!result.success) {
+        addToast(result.error?.message || 'Unable to update message.', 'error');
+        return;
+      }
+
+      setMessages((current) => current.map((m) => (m.id === messageId ? { ...m, ...result.data } : m)));
+      addToast('Message marked as read', 'success');
+    } catch (err) {
+      addToast(err?.message || 'Unable to update message.', 'error');
+    }
   };
 
-  const handleDelete = (messageId) => {
-    setMessages(messages.filter((m) => m.id !== messageId));
-    setShowDetail(false);
-    addToast('Message deleted', 'success');
+  const handleDelete = async (messageId) => {
+    try {
+      const result = await messageService.deleteMessage(messageId);
+      if (!result.success) {
+        addToast(result.error?.message || 'Unable to delete message.', 'error');
+        return;
+      }
+
+      setMessages((current) => current.filter((m) => m.id !== messageId));
+      setShowDetail(false);
+      addToast('Message deleted', 'success');
+    } catch (err) {
+      addToast(err?.message || 'Unable to delete message.', 'error');
+    }
   };
 
   const handleViewMessage = (message) => {
@@ -135,7 +149,16 @@ export default function AdminMessages() {
         onSearch={setSearchQuery}
       />
 
-      {currentItems.length === 0 && searchQuery === '' ? (
+      {loading ? (
+        <div className="bg-gray-900 border border-gray-800 rounded-lg p-12 text-center text-gray-400">
+          Loading messages...
+        </div>
+      ) : error ? (
+        <div className="bg-red-950 border border-red-800 rounded-lg p-6 text-red-200">
+          <p className="font-medium">Unable to load messages.</p>
+          <p className="text-sm mt-1">{error}</p>
+        </div>
+      ) : currentItems.length === 0 && searchQuery === '' ? (
         <EmptyState
           icon={MessageSquare}
           title="No messages yet"

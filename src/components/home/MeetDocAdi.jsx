@@ -2,7 +2,7 @@ import SupabaseContent from '../common/SupabaseContent';
 
 function MeetDocAdi() {
   return (
-    <section id="doctor" className="section-shell mx-auto max-w-7xl">
+    <section id="doctor" className="section-shell max-w-7xl">
       <SupabaseContent
         table="team_members"
         emptyMessage="Team profile information will appear here once content is published."
@@ -13,7 +13,14 @@ function MeetDocAdi() {
             <div className="soft-card overflow-hidden p-8 sm:p-10">
               <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
                 <div className="flex justify-center lg:justify-start">
-                  <img src={founder.photo_url || '/docadi.jpeg'} alt={founder.name} className="h-40 w-40 rounded-full object-cover shadow-lg" />
+                  <img
+                    src={founder.photo_url || '/docadi-320.webp'}
+                    alt={founder.name}
+                    width="320"
+                    height="320"
+                    loading="lazy"
+                    className="h-40 w-40 rounded-full object-cover shadow-lg"
+                  />
                 </div>
                 <div>
                   <span className="eyebrow">Meet Doc Adi</span>

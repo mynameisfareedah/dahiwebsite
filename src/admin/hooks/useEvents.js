@@ -17,7 +17,7 @@ export function useEvents({
 } = {}) {
   const [events, setEvents] = useState([]);
   const [count, setCount] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [search, setSearch] = useState(initialSearch);
   const [filters, setFilters] = useState(initialFilters);

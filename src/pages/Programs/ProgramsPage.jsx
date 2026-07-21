@@ -75,7 +75,7 @@ function ProgramsPage() {
         ]}
       />
 
-      <section className="section-shell mx-auto max-w-7xl space-y-10">
+      <section className="section-shell max-w-7xl space-y-10">
         <div className="soft-card p-8 sm:p-10">
           <SectionHeading eyebrow="Overview" title="Empowering Women Through Education" description="Health education is one of the most effective tools for improving individual and community well-being." />
           <p className="mt-6 text-lg leading-8 text-slate-600">At DAHI, our programmes are developed to provide women with clear, practical, and reliable health information that can be applied in everyday life. Rather than focusing only on treatment, we emphasise prevention, awareness, and informed decision-making. By combining educational resources, expert-led discussions, and community engagement, we strive to create learning experiences that are accessible, inclusive, and relevant to the needs of women.</p>

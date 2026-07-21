@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
-import { impactStats, teamMembers } from '../../data/siteContent';
+import { useEffect, useState } from 'react';
+import { impactStats } from '../../data/siteContent';
 import SEO from '../../components/common/SEO';
 import SectionHeading from '../../components/common/SectionHeading';
 import TeamCard from '../../components/common/TeamCard';
@@ -12,8 +13,12 @@ import ValueCard from '../../components/about/ValueCard';
 import ServiceCard from '../../components/about/ServiceCard';
 import ApproachCard from '../../components/about/ApproachCard';
 import ImpactCounter from '../../components/about/ImpactCounter';
+import { supabase, isSupabaseConfigured } from '../../lib/supabase';
 
 function AboutPage() {
+  const [teamMembers, setTeamMembers] = useState([]);
+  const [teamLoading, setTeamLoading] = useState(true);
+  const [teamError, setTeamError] = useState('');
   const values = [
     { icon: 'fa-solid fa-hand-holding-heart', title: 'Compassion', description: 'We believe health education should be delivered with empathy, understanding, and respect. Every woman’s health journey is unique, and we strive to create a supportive environment where women feel heard and valued.' },
     { icon: 'fa-solid fa-shield-halved', title: 'Integrity', description: 'We are committed to providing trustworthy and responsible health information. Accuracy, honesty, and transparency guide the resources we create and the conversations we facilitate.' },
@@ -47,12 +52,61 @@ function AboutPage() {
     { icon: 'fa-solid fa-lightbulb', title: 'Continuous Learning', description: 'Improving based on feedback, lived experience, and community needs.' },
   ];
 
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadTeamMembers = async () => {
+      if (!isSupabaseConfigured || !supabase) {
+        setTeamMembers([]);
+        setTeamError('');
+        setTeamLoading(false);
+        return;
+      }
+
+      setTeamLoading(true);
+      setTeamError('');
+
+      try {
+        const { data, error } = await supabase
+          .from('team_members')
+          .select('*')
+          .eq('active', true)
+          .eq('status', 'active')
+          .order('display_order', { ascending: true })
+          .order('created_at', { ascending: false });
+
+        if (!isMounted) return;
+
+        if (error) {
+          setTeamError(error.message || 'Unable to load team members.');
+          setTeamMembers([]);
+        } else {
+          setTeamMembers(data || []);
+        }
+      } catch (err) {
+        if (!isMounted) return;
+        setTeamError(err?.message || 'Unable to load team members.');
+        setTeamMembers([]);
+      } finally {
+        if (isMounted) {
+          setTeamLoading(false);
+        }
+      }
+    };
+
+    loadTeamMembers();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   return (
     <>
       <SEO title="About Doc Adi Health Initiative" description="Learn about DAHI's mission, story, values, impact, and how to get involved in women’s health education." />
       <AboutHero />
 
-      <section className="section-shell mx-auto max-w-7xl space-y-8">
+      <section className="section-shell max-w-7xl space-y-8">
         <StorySection />
         <TimelineSection />
 
@@ -125,20 +179,28 @@ function AboutPage() {
           <p className="mt-6 text-lg leading-8 text-slate-600">
             Our team works together across different areas including programme coordination, digital systems, content development, outreach, and community support. Together, we are committed to building meaningful health education experiences that serve women and communities.
           </p>
-          <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {teamMembers.map((member) => {
-              const isFounder = (member.role || '').toLowerCase().includes('founder');
-              return (
-                <TeamCard
-                  key={member.name}
-                  name={member.name}
-                  role={member.role}
-                  initials={member.initials}
-                  description={isFounder ? undefined : member.description}
-                />
-              );
-            })}
-          </div>
+          {teamLoading ? (
+            <div className="mt-8 rounded-[1.25rem] border border-slate-200 bg-slate-50 p-8 text-center text-slate-600">Loading team members...</div>
+          ) : teamError ? (
+            <div className="mt-8 rounded-[1.25rem] border border-rose-200 bg-rose-50 p-8 text-center text-rose-600">Unable to load team members right now.</div>
+          ) : teamMembers.length === 0 ? (
+            <div className="mt-8 rounded-[1.25rem] border border-slate-200 bg-slate-50 p-8 text-center text-slate-600">Team profiles will appear here once content is published.</div>
+          ) : (
+            <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+              {teamMembers.map((member) => {
+                const isFounder = (member.role || '').toLowerCase().includes('founder');
+                return (
+                  <TeamCard
+                    key={member.id || member.name}
+                    name={member.name}
+                    role={member.role}
+                    initials={(member.name || 'DA').split(' ').map((part) => part[0]).join('').slice(0, 2).toUpperCase()}
+                    description={isFounder ? undefined : member.bio || member.description}
+                  />
+                );
+              })}
+            </div>
+          )}
         </div>
 
         <div className="soft-card p-8 sm:p-10">

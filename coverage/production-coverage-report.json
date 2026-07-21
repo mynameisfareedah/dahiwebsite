@@ -1,0 +1,937 @@
+﻿{
+  "totals": {
+    "productionFilesInCoverage": 159,
+    "testedFiles": 24,
+    "untestedZeroFiles": 132,
+    "noExecutableStatementFiles": 3
+  },
+  "testedFiles": [
+    {
+      "rel": "src/admin/components/FileUploader.jsx",
+      "pct": 95.83,
+      "coveredStatements": 23,
+      "totalStatements": 24
+    },
+    {
+      "rel": "src/admin/context/AdminAuthContext.jsx",
+      "pct": 27.48,
+      "coveredStatements": 36,
+      "totalStatements": 131
+    },
+    {
+      "rel": "src/admin/contexts/ToastContext.jsx",
+      "pct": 20.69,
+      "coveredStatements": 6,
+      "totalStatements": 29
+    },
+    {
+      "rel": "src/admin/hooks/useAdminAuth.js",
+      "pct": 75,
+      "coveredStatements": 3,
+      "totalStatements": 4
+    },
+    {
+      "rel": "src/admin/pages/AdminLoginPage.jsx",
+      "pct": 72,
+      "coveredStatements": 36,
+      "totalStatements": 50
+    },
+    {
+      "rel": "src/admin/routes/adminRoutes.jsx",
+      "pct": 54.55,
+      "coveredStatements": 18,
+      "totalStatements": 33
+    },
+    {
+      "rel": "src/admin/routes/ProtectedRoute.jsx",
+      "pct": 100,
+      "coveredStatements": 6,
+      "totalStatements": 6
+    },
+    {
+      "rel": "src/admin/services/authService.js",
+      "pct": 73.81,
+      "coveredStatements": 62,
+      "totalStatements": 84
+    },
+    {
+      "rel": "src/admin/services/eventService.js",
+      "pct": 34.59,
+      "coveredStatements": 64,
+      "totalStatements": 185
+    },
+    {
+      "rel": "src/admin/utils/constants.js",
+      "pct": 100,
+      "coveredStatements": 3,
+      "totalStatements": 3
+    },
+    {
+      "rel": "src/App.jsx",
+      "pct": 59.26,
+      "coveredStatements": 16,
+      "totalStatements": 27
+    },
+    {
+      "rel": "src/components/common/ContactForm.jsx",
+      "pct": 94.92,
+      "coveredStatements": 56,
+      "totalStatements": 59
+    },
+    {
+      "rel": "src/components/common/LoadingState.jsx",
+      "pct": 100,
+      "coveredStatements": 1,
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/components/common/SectionHeading.jsx",
+      "pct": 100,
+      "coveredStatements": 2,
+      "totalStatements": 2
+    },
+    {
+      "rel": "src/components/common/SEO.jsx",
+      "pct": 100,
+      "coveredStatements": 43,
+      "totalStatements": 43
+    },
+    {
+      "rel": "src/components/layout/Footer.jsx",
+      "pct": 100,
+      "coveredStatements": 1,
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/components/layout/Navbar.jsx",
+      "pct": 63.64,
+      "coveredStatements": 7,
+      "totalStatements": 11
+    },
+    {
+      "rel": "src/constants/status.js",
+      "pct": 100,
+      "coveredStatements": 6,
+      "totalStatements": 6
+    },
+    {
+      "rel": "src/layouts/MainLayout.jsx",
+      "pct": 100,
+      "coveredStatements": 4,
+      "totalStatements": 4
+    },
+    {
+      "rel": "src/lib/analytics.js",
+      "pct": 27.27,
+      "coveredStatements": 3,
+      "totalStatements": 11
+    },
+    {
+      "rel": "src/lib/supabase.js",
+      "pct": 50,
+      "coveredStatements": 5,
+      "totalStatements": 10
+    },
+    {
+      "rel": "src/pages/NotFound/NotFoundPage.jsx",
+      "pct": 100,
+      "coveredStatements": 2,
+      "totalStatements": 2
+    },
+    {
+      "rel": "src/pages/Privacy/PrivacyPage.jsx",
+      "pct": 100,
+      "coveredStatements": 1,
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/utils/forms.js",
+      "pct": 100,
+      "coveredStatements": 11,
+      "totalStatements": 11
+    }
+  ],
+  "untestedZeroFiles": [
+    {
+      "rel": "src/admin/components/ConfirmDeleteModal.jsx",
+      "totalStatements": 3
+    },
+    {
+      "rel": "src/admin/components/DashboardComponents.jsx",
+      "totalStatements": 11
+    },
+    {
+      "rel": "src/admin/components/EmptyState.jsx",
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/admin/components/events/DeleteEventModal.jsx",
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/admin/components/events/EmptyState.jsx",
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/admin/components/events/EventFilters.jsx",
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/admin/components/events/EventForm.jsx",
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/admin/components/events/EventImageUploader.jsx",
+      "totalStatements": 4
+    },
+    {
+      "rel": "src/admin/components/events/EventStats.jsx",
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/admin/components/events/EventTable.jsx",
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/admin/components/events/EventToolbar.jsx",
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/admin/components/events/LoadingState.jsx",
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/admin/components/events/StatusBadge.jsx",
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/admin/components/FormElements.jsx",
+      "totalStatements": 10
+    },
+    {
+      "rel": "src/admin/components/FormField.jsx",
+      "totalStatements": 6
+    },
+    {
+      "rel": "src/admin/components/LoadingState.jsx",
+      "totalStatements": 5
+    },
+    {
+      "rel": "src/admin/components/Modal.jsx",
+      "totalStatements": 4
+    },
+    {
+      "rel": "src/admin/components/Pagination.jsx",
+      "totalStatements": 16
+    },
+    {
+      "rel": "src/admin/components/SearchBar.jsx",
+      "totalStatements": 3
+    },
+    {
+      "rel": "src/admin/components/SetupNotice.jsx",
+      "totalStatements": 3
+    },
+    {
+      "rel": "src/admin/components/Sidebar.jsx",
+      "totalStatements": 18
+    },
+    {
+      "rel": "src/admin/components/TableComponents.jsx",
+      "totalStatements": 25
+    },
+    {
+      "rel": "src/admin/components/Topbar.jsx",
+      "totalStatements": 20
+    },
+    {
+      "rel": "src/admin/hooks/useDataManagement.js",
+      "totalStatements": 94
+    },
+    {
+      "rel": "src/admin/hooks/useEvents.js",
+      "totalStatements": 71
+    },
+    {
+      "rel": "src/admin/layouts/AdminLayout.jsx",
+      "totalStatements": 4
+    },
+    {
+      "rel": "src/admin/pages/AdminCommunity.jsx",
+      "totalStatements": 43
+    },
+    {
+      "rel": "src/admin/pages/AdminDashboard.jsx",
+      "totalStatements": 8
+    },
+    {
+      "rel": "src/admin/pages/AdminEvents.jsx",
+      "totalStatements": 78
+    },
+    {
+      "rel": "src/admin/pages/AdminMessages.jsx",
+      "totalStatements": 37
+    },
+    {
+      "rel": "src/admin/pages/AdminPreferences.jsx",
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/admin/pages/AdminProfile.jsx",
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/admin/pages/AdminResources.jsx",
+      "totalStatements": 73
+    },
+    {
+      "rel": "src/admin/pages/AdminSettings.jsx",
+      "totalStatements": 35
+    },
+    {
+      "rel": "src/admin/pages/AdminSponsors.jsx",
+      "totalStatements": 76
+    },
+    {
+      "rel": "src/admin/pages/AdminTeam.jsx",
+      "totalStatements": 72
+    },
+    {
+      "rel": "src/admin/pages/AdminVolunteers.jsx",
+      "totalStatements": 77
+    },
+    {
+      "rel": "src/admin/pages/Events/CreateEvent.jsx",
+      "totalStatements": 44
+    },
+    {
+      "rel": "src/admin/pages/Events/EditEvent.jsx",
+      "totalStatements": 89
+    },
+    {
+      "rel": "src/admin/pages/Events/EventDetails.jsx",
+      "totalStatements": 71
+    },
+    {
+      "rel": "src/admin/pages/Events/EventsPage.jsx",
+      "totalStatements": 81
+    },
+    {
+      "rel": "src/admin/utils/eventHelpers.js",
+      "totalStatements": 3
+    },
+    {
+      "rel": "src/admin/utils/validation.js",
+      "totalStatements": 49
+    },
+    {
+      "rel": "src/components/about/AboutHero.jsx",
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/components/about/ApproachCard.jsx",
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/components/about/ImpactCounter.jsx",
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/components/about/MissionVisionCard.jsx",
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/components/about/ServiceCard.jsx",
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/components/about/StorySection.jsx",
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/components/about/TimelineSection.jsx",
+      "totalStatements": 3
+    },
+    {
+      "rel": "src/components/about/ValueCard.jsx",
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/components/admin/ProtectedRoute.jsx",
+      "totalStatements": 7
+    },
+    {
+      "rel": "src/components/admin/SectionHeader.jsx",
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/components/admin/StatCard.jsx",
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/components/common/BlogCard.jsx",
+      "totalStatements": 2
+    },
+    {
+      "rel": "src/components/common/ContactCard.jsx",
+      "totalStatements": 13
+    },
+    {
+      "rel": "src/components/common/ContactHero.jsx",
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/components/common/CTASection.jsx",
+      "totalStatements": 3
+    },
+    {
+      "rel": "src/components/common/ErrorBoundary.jsx",
+      "totalStatements": 7
+    },
+    {
+      "rel": "src/components/common/ErrorState.jsx",
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/components/common/EventCard.jsx",
+      "totalStatements": 2
+    },
+    {
+      "rel": "src/components/common/FeatureCard.jsx",
+      "totalStatements": 2
+    },
+    {
+      "rel": "src/components/common/LocationSection.jsx",
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/components/common/OfficeHours.jsx",
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/components/common/PageHero.jsx",
+      "totalStatements": 2
+    },
+    {
+      "rel": "src/components/common/PageShell.jsx",
+      "totalStatements": 4
+    },
+    {
+      "rel": "src/components/common/ProgramCard.jsx",
+      "totalStatements": 2
+    },
+    {
+      "rel": "src/components/common/QuickActionCard.jsx",
+      "totalStatements": 4
+    },
+    {
+      "rel": "src/components/common/ReasonCard.jsx",
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/components/common/ResourceCard.jsx",
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/components/common/SkipLink.jsx",
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/components/common/SocialLinks.jsx",
+      "totalStatements": 3
+    },
+    {
+      "rel": "src/components/common/SupabaseContent.jsx",
+      "totalStatements": 10
+    },
+    {
+      "rel": "src/components/common/TeamCard.jsx",
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/components/common/VolunteerForm.jsx",
+      "totalStatements": 42
+    },
+    {
+      "rel": "src/components/events/EventCTAButton.jsx",
+      "totalStatements": 5
+    },
+    {
+      "rel": "src/components/events/EventDetails.jsx",
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/components/events/EventPoster.jsx",
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/components/events/FeaturedEventCard.jsx",
+      "totalStatements": 3
+    },
+    {
+      "rel": "src/components/home/AboutPreview.jsx",
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/components/home/CallToAction.jsx",
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/components/home/FAQ.jsx",
+      "totalStatements": 5
+    },
+    {
+      "rel": "src/components/home/FeaturedPrograms.jsx",
+      "totalStatements": 2
+    },
+    {
+      "rel": "src/components/home/FinalCTA.jsx",
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/components/home/GetInvolved.jsx",
+      "totalStatements": 3
+    },
+    {
+      "rel": "src/components/home/Hero.jsx",
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/components/home/Impact.jsx",
+      "totalStatements": 2
+    },
+    {
+      "rel": "src/components/home/MeetDocAdi.jsx",
+      "totalStatements": 11
+    },
+    {
+      "rel": "src/components/home/NewsletterSection.jsx",
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/components/home/OutreachAnnouncementBar.jsx",
+      "totalStatements": 5
+    },
+    {
+      "rel": "src/components/home/ResourcesPreview.jsx",
+      "totalStatements": 3
+    },
+    {
+      "rel": "src/components/home/TeamPreview.jsx",
+      "totalStatements": 2
+    },
+    {
+      "rel": "src/components/home/Testimonials.jsx",
+      "totalStatements": 2
+    },
+    {
+      "rel": "src/components/home/UpcomingEvent.jsx",
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/components/home/UpcomingEvents.jsx",
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/components/home/UpcomingOutreachSection.jsx",
+      "totalStatements": 22
+    },
+    {
+      "rel": "src/components/outreach/ActivityCard.jsx",
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/components/outreach/CopyButton.jsx",
+      "totalStatements": 2
+    },
+    {
+      "rel": "src/components/outreach/CTAButton.jsx",
+      "totalStatements": 5
+    },
+    {
+      "rel": "src/components/outreach/DonationCard.jsx",
+      "totalStatements": 4
+    },
+    {
+      "rel": "src/components/outreach/DonationSection.jsx",
+      "totalStatements": 48
+    },
+    {
+      "rel": "src/components/outreach/ObjectivesGrid.jsx",
+      "totalStatements": 2
+    },
+    {
+      "rel": "src/components/outreach/OutreachFAQSection.jsx",
+      "totalStatements": 4
+    },
+    {
+      "rel": "src/components/outreach/OutreachInterestModal.jsx",
+      "totalStatements": 37
+    },
+    {
+      "rel": "src/components/outreach/PostEventHighlights.jsx",
+      "totalStatements": 7
+    },
+    {
+      "rel": "src/components/outreach/ProgrammeSchedule.jsx",
+      "totalStatements": 2
+    },
+    {
+      "rel": "src/components/outreach/RegistrationSection.jsx",
+      "totalStatements": 11
+    },
+    {
+      "rel": "src/components/outreach/SpeakerCard.jsx",
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/components/outreach/VolunteerForm.jsx",
+      "totalStatements": 53
+    },
+    {
+      "rel": "src/components/outreach/VolunteerModal.jsx",
+      "totalStatements": 26
+    },
+    {
+      "rel": "src/contexts/AdminAuthContext.jsx",
+      "totalStatements": 75
+    },
+    {
+      "rel": "src/data/siteContent.js",
+      "totalStatements": 8
+    },
+    {
+      "rel": "src/hooks/useSupabaseData.js",
+      "totalStatements": 16
+    },
+    {
+      "rel": "src/lib/queryClient.js",
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/pages/About/AboutPage.jsx",
+      "totalStatements": 12
+    },
+    {
+      "rel": "src/pages/Admin/AdminDashboardPage.jsx",
+      "totalStatements": 20
+    },
+    {
+      "rel": "src/pages/Admin/AdminLayout.jsx",
+      "totalStatements": 11
+    },
+    {
+      "rel": "src/pages/Admin/AdminLoginPage.jsx",
+      "totalStatements": 31
+    },
+    {
+      "rel": "src/pages/Admin/AdminSettingsPage.jsx",
+      "totalStatements": 15
+    },
+    {
+      "rel": "src/pages/Blog/BlogPage.jsx",
+      "totalStatements": 38
+    },
+    {
+      "rel": "src/pages/Contact/ContactPage.jsx",
+      "totalStatements": 20
+    },
+    {
+      "rel": "src/pages/Donate/DonatePage.jsx",
+      "totalStatements": 5
+    },
+    {
+      "rel": "src/pages/Events/EventDetailsPage.jsx",
+      "totalStatements": 24
+    },
+    {
+      "rel": "src/pages/Events/EventsPage.jsx",
+      "totalStatements": 69
+    },
+    {
+      "rel": "src/pages/Home/HomePage.jsx",
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/pages/Outreach/OutreachDetailsPage.jsx",
+      "totalStatements": 4
+    },
+    {
+      "rel": "src/pages/Programs/ProgramsPage.jsx",
+      "totalStatements": 15
+    },
+    {
+      "rel": "src/pages/Resources/ResourcesPage.jsx",
+      "totalStatements": 22
+    },
+    {
+      "rel": "src/pages/Volunteer/VolunteerPage.jsx",
+      "totalStatements": 4
+    },
+    {
+      "rel": "src/services/supabase/authService.js",
+      "totalStatements": 57
+    },
+    {
+      "rel": "src/services/supabase/eventsService.js",
+      "totalStatements": 105
+    },
+    {
+      "rel": "src/utils/adminData.js",
+      "totalStatements": 43
+    }
+  ],
+  "noExecutableStatementFiles": [
+    {
+      "rel": "src/admin/components/index.js"
+    },
+    {
+      "rel": "src/admin/index.js"
+    },
+    {
+      "rel": "src/admin/types/index.js"
+    }
+  ],
+  "lowestCoverageFiles": [
+    {
+      "rel": "src/admin/components/ConfirmDeleteModal.jsx",
+      "pct": 0,
+      "coveredStatements": 0,
+      "totalStatements": 3
+    },
+    {
+      "rel": "src/admin/components/DashboardComponents.jsx",
+      "pct": 0,
+      "coveredStatements": 0,
+      "totalStatements": 11
+    },
+    {
+      "rel": "src/admin/components/EmptyState.jsx",
+      "pct": 0,
+      "coveredStatements": 0,
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/admin/components/events/DeleteEventModal.jsx",
+      "pct": 0,
+      "coveredStatements": 0,
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/admin/components/events/EmptyState.jsx",
+      "pct": 0,
+      "coveredStatements": 0,
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/admin/components/events/EventFilters.jsx",
+      "pct": 0,
+      "coveredStatements": 0,
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/admin/components/events/EventForm.jsx",
+      "pct": 0,
+      "coveredStatements": 0,
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/admin/components/events/EventImageUploader.jsx",
+      "pct": 0,
+      "coveredStatements": 0,
+      "totalStatements": 4
+    },
+    {
+      "rel": "src/admin/components/events/EventStats.jsx",
+      "pct": 0,
+      "coveredStatements": 0,
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/admin/components/events/EventTable.jsx",
+      "pct": 0,
+      "coveredStatements": 0,
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/admin/components/events/EventToolbar.jsx",
+      "pct": 0,
+      "coveredStatements": 0,
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/admin/components/events/LoadingState.jsx",
+      "pct": 0,
+      "coveredStatements": 0,
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/admin/components/events/StatusBadge.jsx",
+      "pct": 0,
+      "coveredStatements": 0,
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/admin/components/FormElements.jsx",
+      "pct": 0,
+      "coveredStatements": 0,
+      "totalStatements": 10
+    },
+    {
+      "rel": "src/admin/components/FormField.jsx",
+      "pct": 0,
+      "coveredStatements": 0,
+      "totalStatements": 6
+    },
+    {
+      "rel": "src/admin/components/LoadingState.jsx",
+      "pct": 0,
+      "coveredStatements": 0,
+      "totalStatements": 5
+    },
+    {
+      "rel": "src/admin/components/Modal.jsx",
+      "pct": 0,
+      "coveredStatements": 0,
+      "totalStatements": 4
+    },
+    {
+      "rel": "src/admin/components/Pagination.jsx",
+      "pct": 0,
+      "coveredStatements": 0,
+      "totalStatements": 16
+    },
+    {
+      "rel": "src/admin/components/SearchBar.jsx",
+      "pct": 0,
+      "coveredStatements": 0,
+      "totalStatements": 3
+    },
+    {
+      "rel": "src/admin/components/SetupNotice.jsx",
+      "pct": 0,
+      "coveredStatements": 0,
+      "totalStatements": 3
+    },
+    {
+      "rel": "src/admin/components/Sidebar.jsx",
+      "pct": 0,
+      "coveredStatements": 0,
+      "totalStatements": 18
+    },
+    {
+      "rel": "src/admin/components/TableComponents.jsx",
+      "pct": 0,
+      "coveredStatements": 0,
+      "totalStatements": 25
+    },
+    {
+      "rel": "src/admin/components/Topbar.jsx",
+      "pct": 0,
+      "coveredStatements": 0,
+      "totalStatements": 20
+    },
+    {
+      "rel": "src/admin/hooks/useDataManagement.js",
+      "pct": 0,
+      "coveredStatements": 0,
+      "totalStatements": 94
+    },
+    {
+      "rel": "src/admin/hooks/useEvents.js",
+      "pct": 0,
+      "coveredStatements": 0,
+      "totalStatements": 71
+    },
+    {
+      "rel": "src/admin/layouts/AdminLayout.jsx",
+      "pct": 0,
+      "coveredStatements": 0,
+      "totalStatements": 4
+    },
+    {
+      "rel": "src/admin/pages/AdminCommunity.jsx",
+      "pct": 0,
+      "coveredStatements": 0,
+      "totalStatements": 43
+    },
+    {
+      "rel": "src/admin/pages/AdminDashboard.jsx",
+      "pct": 0,
+      "coveredStatements": 0,
+      "totalStatements": 8
+    },
+    {
+      "rel": "src/admin/pages/AdminEvents.jsx",
+      "pct": 0,
+      "coveredStatements": 0,
+      "totalStatements": 78
+    },
+    {
+      "rel": "src/admin/pages/AdminMessages.jsx",
+      "pct": 0,
+      "coveredStatements": 0,
+      "totalStatements": 37
+    },
+    {
+      "rel": "src/admin/pages/AdminPreferences.jsx",
+      "pct": 0,
+      "coveredStatements": 0,
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/admin/pages/AdminProfile.jsx",
+      "pct": 0,
+      "coveredStatements": 0,
+      "totalStatements": 1
+    },
+    {
+      "rel": "src/admin/pages/AdminResources.jsx",
+      "pct": 0,
+      "coveredStatements": 0,
+      "totalStatements": 73
+    },
+    {
+      "rel": "src/admin/pages/AdminSettings.jsx",
+      "pct": 0,
+      "coveredStatements": 0,
+      "totalStatements": 35
+    },
+    {
+      "rel": "src/admin/pages/AdminSponsors.jsx",
+      "pct": 0,
+      "coveredStatements": 0,
+      "totalStatements": 76
+    },
+    {
+      "rel": "src/admin/pages/AdminTeam.jsx",
+      "pct": 0,
+      "coveredStatements": 0,
+      "totalStatements": 72
+    },
+    {
+      "rel": "src/admin/pages/AdminVolunteers.jsx",
+      "pct": 0,
+      "coveredStatements": 0,
+      "totalStatements": 77
+    },
+    {
+      "rel": "src/admin/pages/Events/CreateEvent.jsx",
+      "pct": 0,
+      "coveredStatements": 0,
+      "totalStatements": 44
+    },
+    {
+      "rel": "src/admin/pages/Events/EditEvent.jsx",
+      "pct": 0,
+      "coveredStatements": 0,
+      "totalStatements": 89
+    },
+    {
+      "rel": "src/admin/pages/Events/EventDetails.jsx",
+      "pct": 0,
+      "coveredStatements": 0,
+      "totalStatements": 71
+    }
+  ]
+}

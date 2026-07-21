@@ -5,6 +5,7 @@ import { EventForm } from '../../components/events/EventForm';
 import { EventImageUploader } from '../../components/events/EventImageUploader';
 import { validators, validateForm } from '../../utils/validation';
 import { eventService } from '../../services/eventService';
+import { EVENT_STATUS } from '../../../constants/status';
 
 const CATEGORY_OPTIONS = [
   { value: 'health', label: 'Health' },
@@ -16,9 +17,8 @@ const CATEGORY_OPTIONS = [
 ];
 
 const STATUS_OPTIONS = [
-  { value: 'published', label: 'Published' },
-  { value: 'draft', label: 'Draft' },
-  { value: 'cancelled', label: 'Cancelled' },
+  { value: EVENT_STATUS.DRAFT, label: 'Draft' },
+  { value: EVENT_STATUS.PUBLISHED, label: 'Published' },
 ];
 
 const initialFormValues = {
@@ -28,9 +28,26 @@ const initialFormValues = {
   date: '',
   time: '',
   location: '',
+  registrationUrl: '',
+  registrationButtonText: '',
+  registrationEnabled: true,
+  registrationStatus: 'open',
   capacity: '0',
-  status: 'draft',
+  status: EVENT_STATUS.DRAFT,
   featured: false,
+};
+
+const validateOptionalRegistrationUrl = (value) => {
+  if (!value || value.toString().trim() === '') return null;
+  try {
+    const parsed = new URL(value);
+    if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+      return 'Registration URL must start with http:// or https://';
+    }
+    return null;
+  } catch {
+    return 'Enter a valid registration URL';
+  }
 };
 
 const formRules = {
@@ -41,6 +58,7 @@ const formRules = {
   date: [(val) => validators.required(val, 'Date')],
   time: [(val) => validators.required(val, 'Time')],
   location: [(val) => validators.required(val, 'Location')],
+  registrationUrl: [(val) => validateOptionalRegistrationUrl(val)],
   capacity: [
     (val) => validators.required(val, 'Capacity'),
     (val) => validators.number(val),

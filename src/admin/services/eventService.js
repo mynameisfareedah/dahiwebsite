@@ -1,7 +1,13 @@
 import { supabase, isSupabaseConfigured, handleSupabaseError } from '../../lib/supabase';
+import { EVENT_STATUS } from '../../constants/status';
+import { logAudit } from './auditService';
 
 const EVENT_TABLE = 'events';
-const STORAGE_BUCKET = import.meta.env.VITE_SUPABASE_STORAGE_BUCKET || 'events';
+const STORAGE_BUCKET =
+  import.meta.env.VITE_SUPABASE_EVENTS_BUCKET ||
+  import.meta.env.VITE_SUPABASE_STORAGE_BUCKET ||
+  'events';
+const MAX_EVENT_IMAGE_SIZE_BYTES = 10 * 1024 * 1024;
 
 function buildErrorResponse(error) {
   return {
@@ -37,13 +43,26 @@ function buildSuccessResponse(data) {
 function normalizeEvent(event) {
   if (!event) return null;
 
+  const normalizedRegistrationEnabled =
+    event.registration_enabled ?? event.registrationEnabled;
+  const normalizedRegistrationStatus =
+    event.registration_status ?? event.registrationStatus;
+
   return {
     ...event,
     date: event.event_date ?? event.date ?? null,
     time: event.start_time ?? event.time ?? null,
     attendees: event.attendees_count ?? event.attendees ?? 0,
     featured: event.featured ?? false,
-    published: event.status === 'published',
+    published: event.status === EVENT_STATUS.PUBLISHED,
+    registrationUrl: event.registration_url ?? event.registrationUrl ?? null,
+    registrationButtonText:
+      event.registration_button_text ?? event.registrationButtonText ?? null,
+    registrationDeadline:
+      event.registration_deadline ?? event.registrationDeadline ?? null,
+    registrationEnabled:
+      normalizedRegistrationEnabled == null ? true : Boolean(normalizedRegistrationEnabled),
+    registrationStatus: normalizedRegistrationStatus || 'open',
   };
 }
 
@@ -95,6 +114,11 @@ function applyPagination(queryBuilder, options) {
 }
 
 async function getEventRecord(id) {
+  // Validate ID format to prevent injection - should be UUID
+  if (!id || typeof id !== 'string' || !/^[a-f0-9\-]{36}$/i.test(id)) {
+    throw new Error('Invalid event ID format');
+  }
+
   const { data, error } = await supabase
     .from(EVENT_TABLE)
     .select('*')
@@ -109,6 +133,13 @@ async function getEventRecord(id) {
 }
 
 async function updateEventStatus(id, status) {
+  let oldData = null;
+  try {
+    oldData = await getEventRecord(id);
+  } catch {
+    oldData = null;
+  }
+
   const { data, error } = await supabase
     .from(EVENT_TABLE)
     .update({ status, updated_at: new Date().toISOString() })
@@ -120,6 +151,19 @@ async function updateEventStatus(id, status) {
     throw error;
   }
 
+  try {
+    await logAudit({
+      action: 'UPDATE',
+      module: 'Events',
+      record_id: id,
+      description: 'Updated event status',
+      oldData,
+      newData: data,
+    });
+  } catch (auditError) {
+    console.error('Failed to log event update audit entry:', auditError);
+  }
+
   return normalizeEvent(data);
 }
 
@@ -128,7 +172,27 @@ async function uploadImage(file, folder = 'posters') {
     throw new Error('Supabase is not configured');
   }
 
-  const fileExtension = file.name.split('.').pop();
+  if (!file) {
+    throw new Error('Please choose an image to upload.');
+  }
+
+  if (file.size > MAX_EVENT_IMAGE_SIZE_BYTES) {
+    throw new Error('Image is too large. Maximum allowed size is 10MB.');
+  }
+
+  // Validate MIME type for security
+  const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml'];
+  if (!allowedMimeTypes.includes(file.type)) {
+    throw new Error('Invalid file type. Only image files are allowed.');
+  }
+
+  // Validate file extension matches expected format
+  const fileExtension = file.name.split('.').pop()?.toLowerCase();
+  const allowedExtensions = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'svg'];
+  if (!allowedExtensions.includes(fileExtension)) {
+    throw new Error('Invalid file extension. Only image files are allowed.');
+  }
+
   const timestamp = Date.now();
   const safeName = file.name
     .toLowerCase()
@@ -142,14 +206,6 @@ async function uploadImage(file, folder = 'posters') {
       cacheControl: '3600',
       upsert: false,
     });
-
-  console.log('=== STORAGE UPLOAD DEBUG ===');
-  console.log('Bucket:', STORAGE_BUCKET);
-  console.log('Upload path:', filePath);
-  console.log('File:', file);
-  console.log('Upload data:', data);
-  console.log('Upload error:', JSON.stringify(error, null, 2));
-  console.dir(error);
 
   if (error) {
     throw buildStorageError(error);
@@ -192,7 +248,6 @@ export const eventService = {
    */
   async getEventById(id) {
     try {
-      console.log('Requested id:', id);
       if (!isSupabaseConfigured) {
         return buildSuccessResponse(null);
       }
@@ -200,11 +255,6 @@ export const eventService = {
       const record = await getEventRecord(id);
       return buildSuccessResponse(normalizeEvent(record));
     } catch (error) {
-      console.log('=== GET EVENT BY ID DEBUG ===');
-      console.log('Requested id:', id);
-      console.log('Data:', error?.data);
-      console.log('Error:', error);
-      console.dir(error);
       return buildErrorResponse(handleSupabaseError(error));
     }
   },
@@ -229,14 +279,12 @@ export const eventService = {
         error: userError,
       } = await supabase.auth.getUser();
 
-      console.log('=== CREATE EVENT DEBUG ===');
-      console.log('Authenticated user:', currentUser);
-      console.log('User error:', userError);
-      console.log('Current session:', await supabase.auth.getSession());
-
       if (userError || !currentUser?.id) {
         return buildErrorResponse({ message: 'Unable to determine current user' });
       }
+
+      const allowedStatuses = [EVENT_STATUS.DRAFT, EVENT_STATUS.PUBLISHED];
+      const sanitizedStatus = allowedStatuses.includes(data.status) ? data.status : EVENT_STATUS.DRAFT;
 
       const payload = {
         title: data.title,
@@ -247,12 +295,18 @@ export const eventService = {
         start_time: data.time || data.start_time || null,
         location: data.location || null,
         poster_url: data.poster_url || null,
+        registration_url: data.registrationUrl || data.registration_url || null,
+        registration_button_text:
+          data.registrationButtonText || data.registration_button_text || null,
+        registration_enabled:
+          data.registrationEnabled == null ? true : Boolean(data.registrationEnabled),
+        registration_status: data.registrationStatus || 'open',
+        registration_deadline: data.registrationDeadline || data.registration_deadline || null,
         capacity: data.capacity != null ? Number(data.capacity) : 0,
-        status: data.status === 'scheduled' ? 'published' : (data.status || 'draft'),
+        featured: Boolean(data.featured),
+        status: sanitizedStatus,
         created_by: currentUser.id,
       };
-
-      console.log('Insert payload:', payload);
 
       const { data: inserted, error } = await supabase
         .from(EVENT_TABLE)
@@ -260,11 +314,21 @@ export const eventService = {
         .select('*')
         .single();
 
-      console.log('Insert result:', inserted);
-      console.log('Insert error:', error);
-
       if (error) {
         return buildErrorResponse(handleSupabaseError(error));
+      }
+
+      try {
+        await logAudit({
+          action: 'CREATE',
+          module: 'Events',
+          record_id: inserted?.id ?? null,
+          description: 'Created event',
+          oldData: null,
+          newData: inserted,
+        });
+      } catch (auditError) {
+        console.error('Failed to log event create audit entry:', auditError);
       }
 
       return buildSuccessResponse(normalizeEvent(inserted));
@@ -284,6 +348,9 @@ export const eventService = {
         return buildSuccessResponse(null);
       }
 
+      const allowedStatuses = [EVENT_STATUS.DRAFT, EVENT_STATUS.PUBLISHED];
+      const sanitizedStatus = allowedStatuses.includes(data.status) ? data.status : EVENT_STATUS.DRAFT;
+
       const payload = {
         title: data.title,
         description: data.description || null,
@@ -292,8 +359,19 @@ export const eventService = {
         start_time: data.time || data.start_time || null,
         location: data.location || null,
         poster_url: data.poster_url || null,
+        registration_url: data.registrationUrl || data.registration_url || null,
+        registration_button_text:
+          data.registrationButtonText || data.registration_button_text || null,
+        registration_enabled:
+          data.registrationEnabled == null ? true : Boolean(data.registrationEnabled),
+        registration_status: data.registrationStatus || 'open',
+        registration_deadline: data.registrationDeadline || data.registration_deadline || null,
         capacity: data.capacity != null ? Number(data.capacity) : 0,
-        status: data.status === 'scheduled' ? 'published' : (data.status || 'draft'),
+        featured:
+          data.featured == null
+            ? undefined
+            : Boolean(data.featured),
+        status: sanitizedStatus,
         updated_at: new Date().toISOString(),
       };
 
@@ -306,6 +384,19 @@ export const eventService = {
 
       if (error) {
         return buildErrorResponse(handleSupabaseError(error));
+      }
+
+      try {
+        await logAudit({
+          action: 'UPDATE',
+          module: 'Events',
+          record_id: id,
+          description: 'Updated event',
+          oldData: null,
+          newData: updated,
+        });
+      } catch (auditError) {
+        console.error('Failed to log event update audit entry:', auditError);
       }
 
       return buildSuccessResponse(normalizeEvent(updated));
@@ -324,9 +415,29 @@ export const eventService = {
         return buildSuccessResponse(true);
       }
 
+      let oldData = null;
+      try {
+        oldData = await getEventRecord(id);
+      } catch {
+        oldData = null;
+      }
+
       const { error } = await supabase.from(EVENT_TABLE).delete().eq('id', id);
       if (error) {
         return buildErrorResponse(handleSupabaseError(error));
+      }
+
+      try {
+        await logAudit({
+          action: 'DELETE',
+          module: 'Events',
+          record_id: id,
+          description: 'Deleted event',
+          oldData,
+          newData: null,
+        });
+      } catch (auditError) {
+        console.error('Failed to log event delete audit entry:', auditError);
       }
 
       return buildSuccessResponse(true);
@@ -346,7 +457,7 @@ export const eventService = {
       }
 
       const original = await getEventRecord(id);
-      const nextStatus = original.status === 'published' ? 'draft' : 'published';
+      const nextStatus = original.status === EVENT_STATUS.PUBLISHED ? EVENT_STATUS.DRAFT : EVENT_STATUS.PUBLISHED;
 
       const updated = await updateEventStatus(id, nextStatus);
       return buildSuccessResponse(updated);
@@ -361,7 +472,7 @@ export const eventService = {
         return buildSuccessResponse(null);
       }
 
-      const updated = await updateEventStatus(id, 'published');
+      const updated = await updateEventStatus(id, EVENT_STATUS.PUBLISHED);
       return buildSuccessResponse(updated);
     } catch (error) {
       return buildErrorResponse(handleSupabaseError(error));
@@ -374,7 +485,7 @@ export const eventService = {
         return buildSuccessResponse(null);
       }
 
-      const updated = await updateEventStatus(id, 'draft');
+      const updated = await updateEventStatus(id, EVENT_STATUS.DRAFT);
       return buildSuccessResponse(updated);
     } catch (error) {
       return buildErrorResponse(handleSupabaseError(error));
@@ -426,7 +537,7 @@ export const eventService = {
         ...original,
         title: `${original.title} (Copy)`,
         slug: original.slug ? `${original.slug}-copy-${Date.now()}` : null,
-        status: 'draft',
+        status: EVENT_STATUS.DRAFT,
         featured: false,
         created_at: undefined,
         updated_at: undefined,

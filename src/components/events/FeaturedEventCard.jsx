@@ -12,7 +12,7 @@ function FeaturedEventCard({ event, reverse = false, showSecondary = false }) {
       description={event.description}
       buttonLabel={event.buttonLabel}
       buttonHref={event.buttonHref}
-      secondaryLabel={showSecondary ? 'Learn More' : undefined}
+      secondaryLabel={showSecondary ? 'Learn More About Outreach' : undefined}
       secondaryHref={showSecondary ? '/outreach' : undefined}
       onSecondaryClick={showSecondary ? () => window.location.assign('/outreach') : undefined}
     />

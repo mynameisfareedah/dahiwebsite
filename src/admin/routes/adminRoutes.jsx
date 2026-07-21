@@ -21,10 +21,15 @@ const AdminTeam = lazy(() => import('../pages/AdminTeam'));
 const AdminCommunity = lazy(() => import('../pages/AdminCommunity'));
 const AdminMessages = lazy(() => import('../pages/AdminMessages'));
 const AdminVolunteers = lazy(() => import('../pages/AdminVolunteers'));
+const AdminVolunteerApplications = lazy(() => import('../pages/AdminVolunteerApplications'));
 const AdminSponsors = lazy(() => import('../pages/AdminSponsors'));
 const AdminSettings = lazy(() => import('../pages/AdminSettings'));
 const AdminProfile = lazy(() => import('../pages/AdminProfile'));
+const AdminProfileSettings = lazy(() => import('../pages/AdminProfileSettings'));
 const AdminPreferences = lazy(() => import('../pages/AdminPreferences'));
+const AdminAuditTrail = lazy(() => import('../pages/AdminAuditTrail'));
+const AdminUsers = lazy(() => import('../pages/AdminUsers'));
+const AdminDonations = lazy(() => import('../pages/AdminDonations'));
 
 /**
  * Routes for the admin panel
@@ -40,13 +45,17 @@ export const adminRoutes = [
       <Route path="events/edit/:id" element={<EditEvent />} />
       <Route path="events/:id" element={<EventDetails />} />
       <Route path="resources" element={<AdminResources />} />
+      <Route path="donations" element={<AdminDonations />} />
       <Route path="team" element={<AdminTeam />} />
       <Route path="community" element={<AdminCommunity />} />
       <Route path="messages" element={<AdminMessages />} />
       <Route path="volunteers" element={<AdminVolunteers />} />
+      <Route path="volunteer-applications" element={<AdminVolunteerApplications />} />
       <Route path="sponsors" element={<AdminSponsors />} />
+      <Route path="audit-trail" element={<AdminAuditTrail />} />
       <Route path="settings" element={<AdminSettings />} />
-      <Route path="profile" element={<AdminProfile />} />
+      <Route path="profile" element={<AdminProfileSettings />} />
+      <Route path="users" element={<AdminUsers />} />
       <Route path="preferences" element={<AdminPreferences />} />
     </Route>
   </Route>,

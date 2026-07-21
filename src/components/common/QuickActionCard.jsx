@@ -14,7 +14,7 @@ function QuickActionCard({ title, description, href, to }) {
   }
 
   return (
-    <a href={href} target="_blank" rel="noopener" className="block">
+    <a href={href} target="_blank" rel="noopener noreferrer" className="block">
       {content}
     </a>
   );

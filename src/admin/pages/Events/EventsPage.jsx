@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, ChevronDown, ChevronUp, Eye, Edit, Trash2, Feather, Star, EyeOff } from 'lucide-react';
 import { useEvents } from '../../hooks/useEvents';
@@ -6,12 +6,12 @@ import { PageHeader, StatusBadge } from '../../components';
 import { LoadingState } from '../../components/events/LoadingState';
 import { EmptyState } from '../../components/events/EmptyState';
 import { getEventImageUrl } from '../../services/eventService';
+import { EVENT_STATUS } from '../../../constants/status';
 
 const STATUS_OPTIONS = [
   { value: 'all', label: 'All Statuses' },
-  { value: 'published', label: 'Published' },
-  { value: 'draft', label: 'Draft' },
-  { value: 'cancelled', label: 'Cancelled' },
+  { value: EVENT_STATUS.DRAFT, label: 'Draft' },
+  { value: EVENT_STATUS.PUBLISHED, label: 'Published' },
 ];
 
 const CATEGORY_OPTIONS = [
@@ -24,9 +24,15 @@ const CATEGORY_OPTIONS = [
   { value: 'webinar', label: 'Webinar' },
 ];
 
-function EventActionDropdown({ event, onDelete, onTogglePublish, onToggleFeatured }) {
+const EventActionDropdown = memo(function EventActionDropdown({ event, onDelete, onTogglePublish, onToggleFeatured, disabled = false }) {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef(null);
+
+  useEffect(() => {
+    if (disabled && isOpen) {
+      setIsOpen(false);
+    }
+  }, [disabled, isOpen]);
 
   useEffect(() => {
     const handleClickOutside = (eventClick) => {
@@ -49,6 +55,7 @@ function EventActionDropdown({ event, onDelete, onTogglePublish, onToggleFeature
       <button
         type="button"
         onClick={() => setIsOpen((current) => !current)}
+        disabled={disabled}
         className="inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-900 px-3 py-2 text-xs font-semibold text-slate-100 hover:border-blue-500 hover:text-white transition"
       >
         Actions
@@ -79,33 +86,36 @@ function EventActionDropdown({ event, onDelete, onTogglePublish, onToggleFeature
           </Link>
           <button
             type="button"
+            disabled={disabled}
             onClick={() => {
               setIsOpen(false);
               onTogglePublish(event.id);
             }}
-            className="flex w-full items-center gap-2 px-4 py-3 text-left text-sm text-slate-100 hover:bg-slate-900"
+            className="flex w-full items-center gap-2 px-4 py-3 text-left text-sm text-slate-100 hover:bg-slate-900 disabled:opacity-50"
           >
             <EyeOff className="h-4 w-4" />
-            {event.status === 'published' ? 'Unpublish' : 'Publish'}
+            {event.status === EVENT_STATUS.PUBLISHED ? 'Unpublish' : 'Publish'}
           </button>
           <button
             type="button"
+            disabled={disabled}
             onClick={() => {
               setIsOpen(false);
               onToggleFeatured(event.id);
             }}
-            className="flex w-full items-center gap-2 px-4 py-3 text-left text-sm text-slate-100 hover:bg-slate-900"
+            className="flex w-full items-center gap-2 px-4 py-3 text-left text-sm text-slate-100 hover:bg-slate-900 disabled:opacity-50"
           >
             <Star className="h-4 w-4" />
             {event.featured ? 'Unfeature' : 'Feature'}
           </button>
           <button
             type="button"
+            disabled={disabled}
             onClick={() => {
               setIsOpen(false);
               onDelete(event.id);
             }}
-            className="flex w-full items-center gap-2 px-4 py-3 text-left text-sm text-red-400 hover:bg-slate-900"
+            className="flex w-full items-center gap-2 px-4 py-3 text-left text-sm text-red-400 hover:bg-slate-900 disabled:opacity-50"
           >
             <Trash2 className="h-4 w-4" />
             Delete
@@ -114,9 +124,9 @@ function EventActionDropdown({ event, onDelete, onTogglePublish, onToggleFeature
       )}
     </div>
   );
-}
+});
 
-export default function EventsPage() {
+export default memo(function EventsPage() {
   const [searchTerm, setSearchTerm] = useState('');
 
   const {
@@ -147,8 +157,8 @@ export default function EventsPage() {
   });
 
   const stats = useMemo(() => {
-    const published = events.filter((event) => event.status === 'published').length;
-    const draft = events.filter((event) => event.status === 'draft').length;
+    const published = events.filter((event) => event.status === EVENT_STATUS.PUBLISHED).length;
+    const draft = events.filter((event) => event.status === EVENT_STATUS.DRAFT).length;
     const upcoming = events.filter((event) => new Date(event.date) >= new Date()).length;
     return {
       total: count,
@@ -188,11 +198,14 @@ export default function EventsPage() {
     return sortOrder === 'asc' ? <ChevronUp className="w-4 h-4 inline-block" /> : <ChevronDown className="w-4 h-4 inline-block" />;
   };
 
-  if (loading) {
+  const showInitialLoader = loading && events.length === 0 && count === 0 && !error;
+  const showInlineError = error && events.length > 0;
+
+  if (showInitialLoader) {
     return <LoadingState message="Loading events..." />;
   }
 
-  if (error) {
+  if (error && events.length === 0) {
     return (
       <div className="p-8">
         <div className="rounded-3xl border border-red-600 bg-red-950/70 p-8 text-white">
@@ -262,6 +275,7 @@ export default function EventsPage() {
           <select
             value={filters.status}
             onChange={(event) => handleStatusChange(event.target.value)}
+            disabled={loading}
             className="w-full rounded-3xl border border-slate-800 bg-slate-900/80 px-4 py-3 text-sm text-white outline-none transition focus:border-blue-500"
           >
             {STATUS_OPTIONS.map((option) => (
@@ -272,6 +286,7 @@ export default function EventsPage() {
           <select
             value={filters.category}
             onChange={(event) => handleCategoryChange(event.target.value)}
+            disabled={loading}
             className="w-full rounded-3xl border border-slate-800 bg-slate-900/80 px-4 py-3 text-sm text-white outline-none transition focus:border-blue-500"
           >
             {CATEGORY_OPTIONS.map((option) => (
@@ -280,6 +295,18 @@ export default function EventsPage() {
           </select>
         </div>
       </div>
+
+      {showInlineError ? (
+        <div className="rounded-3xl border border-amber-700 bg-amber-950/60 p-4 text-sm text-amber-100">
+          We could not refresh the latest event data. The last loaded results are still shown below.
+        </div>
+      ) : null}
+
+      {loading && events.length > 0 ? (
+        <div className="rounded-3xl border border-slate-800 bg-slate-950/80 p-4 text-sm text-slate-300">
+          Refreshing events…
+        </div>
+      ) : null}
 
       {events.length === 0 ? (
         <EmptyState
@@ -294,7 +321,7 @@ export default function EventsPage() {
           }}
         />
       ) : (
-        <div className="overflow-hidden rounded-3xl border border-slate-800 bg-slate-950">
+        <div className={`overflow-hidden rounded-3xl border border-slate-800 bg-slate-950 ${loading ? 'opacity-80' : ''}`} aria-busy={loading}>
           <div className="overflow-x-auto">
             <table className="min-w-full text-left text-sm text-slate-300">
               <thead className="bg-slate-900 text-slate-400">
@@ -333,7 +360,7 @@ export default function EventsPage() {
                     <td className="px-5 py-4 text-slate-300">{event.category || '—'}</td>
                     <td className="px-5 py-4 text-slate-300">{event.date || 'TBD'}</td>
                     <td className="px-5 py-4">
-                      <StatusBadge status={event.status || 'draft'} />
+                      <StatusBadge status={event.status || EVENT_STATUS.DRAFT} />
                     </td>
                     <td className="px-5 py-4 text-slate-300">{event.featured ? 'Yes' : 'No'}</td>
                     <td className="px-5 py-4 text-slate-300">{new Date(event.created_at || event.event_date || Date.now()).toLocaleDateString()}</td>
@@ -343,6 +370,7 @@ export default function EventsPage() {
                         onDelete={deleteEvent}
                         onTogglePublish={togglePublish}
                         onToggleFeatured={toggleFeatured}
+                        disabled={loading}
                       />
                     </td>
                   </tr>
@@ -356,7 +384,7 @@ export default function EventsPage() {
             <div className="flex flex-wrap items-center gap-2">
               <button
                 onClick={() => setPage(Math.max(1, page - 1))}
-                disabled={page === 1}
+                disabled={loading || page === 1}
                 className="rounded-full border border-slate-700 bg-slate-800 px-4 py-2 text-sm text-white disabled:opacity-50"
               >
                 Previous
@@ -365,6 +393,7 @@ export default function EventsPage() {
                 <button
                   key={index}
                   onClick={() => setPage(index + 1)}
+                  disabled={loading}
                   className={`rounded-full px-4 py-2 text-sm ${page === index + 1 ? 'bg-blue-600 text-white' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}`}
                 >
                   {index + 1}
@@ -372,7 +401,7 @@ export default function EventsPage() {
               ))}
               <button
                 onClick={() => setPage(Math.min(totalPages, page + 1))}
-                disabled={page === totalPages}
+                disabled={loading || page === totalPages}
                 className="rounded-full border border-slate-700 bg-slate-800 px-4 py-2 text-sm text-white disabled:opacity-50"
               >
                 Next
@@ -383,4 +412,4 @@ export default function EventsPage() {
       )}
     </div>
   );
-}
+});

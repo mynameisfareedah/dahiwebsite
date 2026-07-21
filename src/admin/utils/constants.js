@@ -11,8 +11,13 @@ export const ADMIN_ROUTES = {
   COMMUNITY: '/admin/community',
   MESSAGES: '/admin/messages',
   VOLUNTEERS: '/admin/volunteers',
+  VOLUNTEER_APPLICATIONS: '/admin/volunteer-applications',
   SPONSORS: '/admin/sponsors',
+  DONATIONS: '/admin/donations',
+  PROFILE: '/admin/profile',
+  USERS: '/admin/users',
   SETTINGS: '/admin/settings',
+  AUDIT_TRAIL: '/admin/audit-trail',
 };
 
 export const SIDEBAR_MENU = [
@@ -23,22 +28,58 @@ export const SIDEBAR_MENU = [
     icon: 'LayoutDashboard',
   },
   {
+    id: 'profile',
+    label: 'Profile',
+    path: ADMIN_ROUTES.PROFILE,
+    icon: 'User',
+  },
+  {
+    id: 'users',
+    label: 'Admin Users',
+    path: ADMIN_ROUTES.USERS,
+    icon: 'Users',
+  },
+  {
+    id: 'audit-trail',
+    label: 'Audit Trail',
+    path: ADMIN_ROUTES.AUDIT_TRAIL,
+    icon: 'BookOpen',
+  },
+  {
     id: 'events',
     label: 'Events',
     path: ADMIN_ROUTES.EVENTS,
     icon: 'Calendar',
   },
   {
+    id: 'volunteers',
+    label: 'Volunteers',
+    path: ADMIN_ROUTES.VOLUNTEERS,
+    icon: 'Heart',
+  },
+  {
+    id: 'volunteer_applications',
+    label: 'Volunteer Applications',
+    path: ADMIN_ROUTES.VOLUNTEER_APPLICATIONS,
+    icon: 'Users',
+  },
+  {
+    id: 'donations',
+    label: 'Donations',
+    path: ADMIN_ROUTES.DONATIONS,
+    icon: 'Gift',
+  },
+  {
+    id: 'sponsors',
+    label: 'Sponsors',
+    path: ADMIN_ROUTES.SPONSORS,
+    icon: 'Gift',
+  },
+  {
     id: 'resources',
     label: 'Resources',
     path: ADMIN_ROUTES.RESOURCES,
     icon: 'BookOpen',
-  },
-  {
-    id: 'team',
-    label: 'Team',
-    path: ADMIN_ROUTES.TEAM,
-    icon: 'Users',
   },
   {
     id: 'community',
@@ -53,20 +94,8 @@ export const SIDEBAR_MENU = [
     icon: 'Mail',
   },
   {
-    id: 'volunteers',
-    label: 'Volunteers',
-    path: ADMIN_ROUTES.VOLUNTEERS,
-    icon: 'Heart',
-  },
-  {
-    id: 'sponsors',
-    label: 'Sponsors',
-    path: ADMIN_ROUTES.SPONSORS,
-    icon: 'Gift',
-  },
-  {
     id: 'settings',
-    label: 'Website Settings',
+    label: 'Settings',
     path: ADMIN_ROUTES.SETTINGS,
     icon: 'Settings',
   },

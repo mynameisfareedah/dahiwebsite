@@ -2,7 +2,7 @@ import SectionHeading from '../common/SectionHeading';
 
 function ProgrammeSchedule({ schedule }) {
   return (
-    <section className="section-shell mx-auto max-w-7xl space-y-8">
+    <section className="section-shell max-w-7xl space-y-8">
       <SectionHeading
         eyebrow="What To Expect"
         title="Programme Schedule"

@@ -1,6 +1,8 @@
-import { createContext, useEffect, useCallback, useState } from 'react';
+import { createContext, useEffect, useCallback, useMemo, useRef, useState } from 'react';
 import { authService } from '../services/authService';
-import { isSupabaseConfigured } from '../../lib/supabase';
+import { logAudit } from '../services/auditService';
+import { supabase, isSupabaseConfigured } from '../../lib/supabase';
+import { getAdminProfile } from '../services/profileService';
 
 /**
  * Admin Auth Context
@@ -15,11 +17,33 @@ export function AdminAuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isSupabaseReady, setIsSupabaseReady] = useState(isSupabaseConfigured);
+  const [profile, setProfile] = useState({
+    firstName: null,
+    fullName: null,
+    lastName: null,
+    email: null,
+    role: null,
+    profile_photo: null,
+  });
+  const [profileLoading, setProfileLoading] = useState(false);
+  const [profileError, setProfileError] = useState(null);
+  const lastProfileUserIdRef = useRef(null);
 
   const clearAuthState = () => {
     setUser(null);
     setSession(null);
     setIsAdmin(false);
+    setProfile({
+      firstName: null,
+      fullName: null,
+      lastName: null,
+      email: null,
+      role: null,
+      profile_photo: null,
+    });
+    setProfileError(null);
+    setProfileLoading(false);
+    lastProfileUserIdRef.current = null;
   };
 
   const handleUnauthorized = async () => {
@@ -47,18 +71,38 @@ export function AdminAuthProvider({ children }) {
         const currentSession = await authService.getSession();
         const currentUser = await authService.getUser();
 
-        if (!currentSession || !currentUser?.id) {
+        if (!currentSession) {
           if (isMounted) {
             clearAuthState();
+            setError(null);
             setLoading(false);
           }
           return;
         }
 
-        const authorized = await authService.verifyAdmin(currentUser.id);
+        if (!currentUser?.id) {
+          if (isMounted) {
+            clearAuthState();
+            setError(null);
+            setLoading(false);
+          }
+          return;
+        }
+
+        let authorized = false;
+
+        try {
+          authorized = await authService.verifyAdmin(currentUser.id);
+        } catch (verifyError) {
+          console.error('AdminAuthProvider: verifyAdmin failed', verifyError);
+        }
+
         if (!authorized) {
           if (isMounted) {
-            await handleUnauthorized();
+            setSession(currentSession);
+            setUser(currentUser);
+            setIsAdmin(false);
+            setError(null);
             setLoading(false);
           }
           return;
@@ -76,6 +120,7 @@ export function AdminAuthProvider({ children }) {
         if (isMounted) {
           clearAuthState();
           setError(err.message || 'Failed to initialize authentication.');
+          console.log('initializeAuth loading false');
           setLoading(false);
         }
       }
@@ -93,10 +138,19 @@ export function AdminAuthProvider({ children }) {
       }
 
       const currentUser = await authService.getUser();
-      const authorized = await authService.verifyAdmin(currentUser?.id);
+
+      let authorized = false;
+      try {
+        authorized = await authService.verifyAdmin(currentUser?.id);
+      } catch (verifyError) {
+        console.error('AdminAuthProvider: auth change verifyAdmin failed', verifyError);
+      }
 
       if (!authorized) {
-        await handleUnauthorized();
+        setSession(newSession);
+        setUser(currentUser);
+        setIsAdmin(false);
+        setError(null);
         return;
       }
 
@@ -112,9 +166,74 @@ export function AdminAuthProvider({ children }) {
     };
   }, []);
 
-  /**
-   * Sign in handler
-   */
+  useEffect(() => {
+    let isMounted = true;
+    const userId = user?.id;
+
+    if (!userId) {
+      setProfile({
+        firstName: null,
+        fullName: null,
+        lastName: null,
+        email: null,
+        role: null,
+        profile_photo: null,
+      });
+      setProfileError(null);
+      setProfileLoading(false);
+      lastProfileUserIdRef.current = null;
+      return () => {
+        isMounted = false;
+      };
+    }
+
+    if (lastProfileUserIdRef.current === userId) {
+      return () => {
+        isMounted = false;
+      };
+    }
+
+    lastProfileUserIdRef.current = userId;
+    setProfileLoading(true);
+    setProfileError(null);
+
+    getAdminProfile(user)
+      .then((resolvedProfile) => {
+        if (!isMounted) return;
+        const profileData = resolvedProfile || {};
+        const profileToStore = {
+          firstName: profileData.firstName ?? null,
+          fullName: profileData.fullName ?? null,
+          lastName: profileData.lastName ?? null,
+          email: profileData.email ?? user?.email ?? null,
+          role: profileData.role ?? null,
+          profile_photo: profileData.profile_photo ?? null,
+        };
+        setProfile(profileToStore);
+      })
+      .catch((err) => {
+        if (!isMounted) return;
+        const profileToStore = {
+          firstName: null,
+          fullName: null,
+          lastName: null,
+          email: user?.email ?? null,
+          role: null,
+          profile_photo: null,
+        };
+        setProfile(profileToStore);
+        setProfileError(err.message || 'Failed to load profile.');
+      })
+      .finally(() => {
+        if (!isMounted) return;
+        setProfileLoading(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [user]);
+
   const signIn = useCallback(async (email, password) => {
     setLoading(true);
     setError(null);
@@ -147,6 +266,12 @@ export function AdminAuthProvider({ children }) {
         setLoading(false);
         return { error: message };
       }
+
+      await logAudit({
+        action: 'LOGIN',
+        module: 'Authentication',
+        description: 'Admin logged into the dashboard',
+      });
 
       setUser(newUser);
       setSession(newSession);
@@ -211,7 +336,24 @@ export function AdminAuthProvider({ children }) {
     }
   }, []);
 
-  const value = {
+  const userDisplayName = (() => {
+    // Use firstName from admin_users, extracting first word if multiple words
+    const firstName = profile?.firstName;
+    if (typeof firstName === 'string' && firstName.trim()) {
+      return firstName.trim().split(/\s+/)[0];
+    }
+
+    // Fall back to email prefix
+    const emailValue = user?.email;
+    if (typeof emailValue === 'string' && emailValue.trim()) {
+      const [emailPrefix] = emailValue.trim().split('@');
+      return emailPrefix || 'Admin';
+    }
+
+    return 'Admin';
+  })();
+
+  const value = useMemo(() => ({
     user,
     session,
     loading,
@@ -222,7 +364,25 @@ export function AdminAuthProvider({ children }) {
     resetPassword,
     isAuthenticated: !!user,
     isSupabaseConfigured: isSupabaseReady,
-  };
+    profile,
+    profileLoading,
+    profileError,
+    userDisplayName,
+  }), [
+    user,
+    session,
+    loading,
+    isAdmin,
+    error,
+    signIn,
+    signOut,
+    resetPassword,
+    isSupabaseReady,
+    profile,
+    profileLoading,
+    profileError,
+    userDisplayName,
+  ]);
 
   return (
     <AdminAuthContext.Provider value={value}>

@@ -5,6 +5,7 @@ import PageHero from '../../components/common/PageHero';
 import SectionHeading from '../../components/common/SectionHeading';
 import ResourceCard from '../../components/common/ResourceCard';
 import CTASection from '../../components/common/CTASection';
+import { useSupabaseData } from '../../hooks/useSupabaseData';
 
 const categories = ['All', 'Women’s Health', 'Menstrual Health', 'Fertility'];
 
@@ -14,11 +15,7 @@ const categoryCards = [
   { title: 'Fertility Awareness', description: 'Supportive resources for understanding fertility and reproductive health.', icon: 'fa-solid fa-seedling' },
 ];
 
-const ebooks = [
-  { title: 'Sunnah Reset – 7 Day Menopause Reset Guide', category: 'Women’s Health', description: 'A faith-conscious guide designed to support women through menopause with clarity and confidence.', image: '/sunnah-reset-a-7-day-meno-selar.com-6a0c3775671cd.png', href: 'https://selar.com/66566z1k7x', price: '₦7,507.94' },
-  { title: 'Comprehensive Menstrual Health Guide', category: 'Menstrual Health', description: 'A practical resource covering menstrual health, common questions, and self-care.', image: '/comprehensive-menstrual-h-selar.com-690cc0d476a89.jpg', href: 'https://selar.com/p346083214', price: '₦4,504.77' },
-  { title: '8 Weeks to Understanding Your Cycle', category: 'Fertility', description: 'A structured learning resource that helps women understand their cycle in a supportive way.', image: '/8-weeks-to-understanding--selar.com-6903a8099f4b8.jpg', href: 'https://selar.com/d661vie336', price: 'Free' },
-];
+// Resources are now loaded from Supabase via useSupabaseData
 
 const howToUseSteps = [
   { title: 'Browse the library', description: 'Explore the categories and find the topic that matches your needs.', icon: 'fa-solid fa-magnifying-glass' },
@@ -31,13 +28,22 @@ function ResourcesPage() {
   const [query, setQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
 
+  const { data: resources = [], isLoading, error } = useSupabaseData('resources', '*', {
+    staleTime: 60000,
+    retry: false,
+  });
+
   const filteredResources = useMemo(() => {
-    return ebooks.filter((resource) => {
-      const matchesQuery = `${resource.title} ${resource.description}`.toLowerCase().includes(query.toLowerCase());
-      const matchesCategory = selectedCategory === 'All' || resource.category === selectedCategory;
+    const items = resources || [];
+    return items.filter((resource) => {
+      const title = resource?.title || '';
+      const description = resource?.description || '';
+      const category = resource?.category || 'All';
+      const matchesQuery = `${title} ${description}`.toLowerCase().includes(query.toLowerCase());
+      const matchesCategory = selectedCategory === 'All' || category === selectedCategory;
       return matchesQuery && matchesCategory;
     });
-  }, [query, selectedCategory]);
+  }, [query, selectedCategory, resources]);
 
   return (
     <>
@@ -54,7 +60,7 @@ function ResourcesPage() {
         ]}
       />
 
-      <section id="resource-library" className="section-shell mx-auto max-w-7xl space-y-8">
+      <section id="resource-library" className="section-shell max-w-7xl space-y-8">
         <div className="soft-card p-8 sm:p-10">
           <SectionHeading eyebrow="Resource library overview" title="Your trusted women's health resource library" description="DAHI develops educational materials that simplify important health topics into practical, easy-to-understand resources for women at every stage of life." />
           <p className="mt-6 text-lg leading-8 text-slate-600">Each resource is designed to complement our webinars, awareness campaigns, and educational programmes, allowing women to continue learning at their own pace. Our library continues to grow as we create new guides, pamphlets, and digital publications to support lifelong learning.</p>
@@ -91,9 +97,29 @@ function ResourcesPage() {
         <div className="soft-card p-8 sm:p-10">
           <SectionHeading eyebrow="Featured resources" title="Available DAHI eBooks" description="Browse the three trusted DAHI publications currently available in the library." />
           <div className="mt-8 grid gap-6 lg:grid-cols-3">
-            {filteredResources.map((resource) => (
-              <ResourceCard key={resource.title} title={resource.title} category={resource.category} description={resource.description} image={resource.image} href={resource.href} price={resource.price} />
-            ))}
+            {isLoading ? (
+              <div className="col-span-3"><div className="rounded-[1.25rem] border border-slate-200 p-8"><p>Loading resources...</p></div></div>
+            ) : error ? (
+              <div className="col-span-3"><div className="rounded-[1.25rem] border border-red-200 bg-red-50 p-8"><p className="text-red-800">Unable to load resources. Showing default resources.</p></div></div>
+            ) : filteredResources.length === 0 ? (
+              <div className="col-span-3"><div className="rounded-[1.25rem] border border-slate-200 bg-slate-50 p-8 text-center"><p className="text-slate-600">No resources match your search criteria.</p></div></div>
+            ) : (
+              filteredResources.map((resource) => (
+                <ResourceCard
+                  key={resource?.id || resource?.title || 'resource'}
+                  title={resource?.title || 'Untitled Resource'}
+                  category={resource?.category || 'Resource'}
+                  description={resource?.description || 'No description available'}
+                  image={resource?.cover_image || resource?.thumbnail_url || resource?.image || resource?.image_url || '/ebook.svg'}
+                  type={resource?.resource_type || resource?.type}
+                  price={resource?.price}
+                  currency={resource?.currency}
+                  platform={resource?.platform}
+                  externalUrl={resource?.external_url || resource?.externalUrl || resource?.selar_url || resource?.file_url}
+                  buttonText={resource?.button_text || resource?.buttonText}
+                />
+              ))
+            )}
           </div>
         </div>
 
@@ -125,14 +151,14 @@ function ResourcesPage() {
           <SectionHeading eyebrow="Continue your learning" title="Continue your health education journey" description="Learning doesn’t end after a webinar or awareness campaign. Explore our growing collection of trusted educational resources and continue building the knowledge and confidence to make informed health decisions." />
           <div className="mt-6 flex flex-wrap gap-3">
             <a href="#resource-library" className="inline-flex items-center justify-center rounded-full bg-dahiPrimary px-6 py-3 text-sm font-semibold text-white transition hover:bg-dahiSecondary">Browse All Resources</a>
-            <a href="https://whatsapp.com/channel/0029VbBdF4hLI8YZRabyWF0j" target="_blank" rel="noopener" className="inline-flex items-center justify-center rounded-full border border-slate-300 px-6 py-3 text-sm font-semibold text-slate-700 transition hover:border-dahiPrimary hover:text-dahiPrimary">Join Our Community</a>
+            <a href="https://whatsapp.com/channel/0029VbBdF4hLI8YZRabyWF0j" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-full border border-slate-300 px-6 py-3 text-sm font-semibold text-slate-700 transition hover:border-dahiPrimary hover:text-dahiPrimary">Join Our Community</a>
             <Link to="/contact" className="inline-flex items-center justify-center rounded-full border border-slate-300 px-6 py-3 text-sm font-semibold text-slate-700 transition hover:border-dahiPrimary hover:text-dahiPrimary">Contact Us</Link>
           </div>
         </div>
 
         <CTASection eyebrow="Need support?" title="Reach out for additional resources" description="If you need help finding a specific topic or would like guidance on relevant materials, our team is happy to help." actions={[
           <Link key="contact" to="/contact" className="inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-semibold text-dahiPrimary transition hover:-translate-y-0.5">Contact Us</Link>,
-          <a key="community" href="https://whatsapp.com/channel/0029VbBdF4hLI8YZRabyWF0j" target="_blank" rel="noopener" className="inline-flex items-center justify-center rounded-full border border-white/70 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10">Join WhatsApp</a>,
+          <a key="community" href="https://whatsapp.com/channel/0029VbBdF4hLI8YZRabyWF0j" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-full border border-white/70 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10">Join WhatsApp</a>,
         ]} />
       </section>
     </>

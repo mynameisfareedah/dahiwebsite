@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Users } from 'lucide-react';
 import {
   PageHeader,
@@ -18,52 +18,54 @@ import {
 } from '../hooks/useDataManagement';
 import { FormInput, FormSelect, FormTextarea } from '../components/FormField';
 import { validators, validateForm } from '../utils/validation';
-
-const mockVolunteers = [
-  {
-    id: 1,
-    name: 'Zainab Rashid',
-    email: 'zainab@email.com',
-    status: 'approved',
-    hoursLogged: 48,
-    joinDate: '2024-01-15',
-    skills: 'Health Education',
-  },
-  {
-    id: 2,
-    name: 'Noor Samir',
-    email: 'noor@email.com',
-    status: 'approved',
-    hoursLogged: 32,
-    joinDate: '2024-02-20',
-    skills: 'Community Outreach',
-  },
-  {
-    id: 3,
-    name: 'Hana Karim',
-    email: 'hana@email.com',
-    status: 'pending',
-    hoursLogged: 0,
-    joinDate: '2026-07-20',
-    skills: 'Communications',
-  },
-  {
-    id: 4,
-    name: 'Dina Omar',
-    email: 'dina@email.com',
-    status: 'rejected',
-    hoursLogged: 0,
-    joinDate: '2026-07-10',
-    skills: 'General Support',
-  },
-];
+import { GENERAL_STATUS, VOLUNTEER_STATUS } from '../../constants/status';
+import { volunteerService } from '../services/volunteerService';
 
 export default function AdminVolunteers() {
-  const [volunteers, setVolunteers] = useState(mockVolunteers);
+  const [volunteers, setVolunteers] = useState([]);
+  const [isFetching, setIsFetching] = useState(true);
+  const [fetchError, setFetchError] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  const isMountedRef = React.useRef(true);
+  React.useEffect(() => {
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
+
+  // Load volunteers from Supabase
+  useEffect(() => {
+    const loadVolunteers = async () => {
+      setIsFetching(true);
+      setFetchError(null);
+      try {
+        const result = await volunteerService.getVolunteers();
+        if (!isMountedRef.current) return;
+        
+        if (result.success) {
+          setVolunteers(result.data || []);
+        } else {
+          setFetchError(result.error?.message || 'Failed to load volunteers');
+          setVolunteers([]);
+        }
+      } catch (err) {
+        if (isMountedRef.current) {
+          setFetchError(err.message || 'An error occurred while loading volunteers');
+          setVolunteers([]);
+        }
+      } finally {
+        if (isMountedRef.current) {
+          setIsFetching(false);
+        }
+      }
+    };
+
+    loadVolunteers();
+  }, []);
 
   const { addToast } = useToast();
   const { searchQuery, setSearchQuery, filtered: searchedVolunteers } = useSearch(
@@ -77,12 +79,12 @@ export default function AdminVolunteers() {
   );
 
   const approvedCount = volunteers.filter(
-    (v) => v.status === 'approved'
+    (v) => v.approval_status === 'approved'
   ).length;
   const pendingCount = volunteers.filter(
-    (v) => v.status === 'pending'
+    (v) => v.approval_status === 'pending'
   ).length;
-  const totalHours = volunteers.reduce((sum, v) => sum + v.hoursLogged, 0);
+  const totalHours = volunteers.reduce((sum, v) => sum + (v.hours_logged || 0), 0);
 
   const formRules = {
     name: [
@@ -99,7 +101,7 @@ export default function AdminVolunteers() {
         name: '',
         email: '',
         skills: '',
-        status: 'pending',
+        status: GENERAL_STATUS.PENDING,
       };
 
   const {
@@ -114,6 +116,8 @@ export default function AdminVolunteers() {
   } = useForm(initialFormValues, async (formValues) => {
     setIsLoading(true);
     await new Promise((resolve) => setTimeout(resolve, 500));
+
+    if (!isMountedRef.current) return;
 
     if (editingId) {
       setVolunteers(
@@ -148,11 +152,26 @@ export default function AdminVolunteers() {
 
   const confirmDelete = async () => {
     setIsLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    setVolunteers(volunteers.filter((v) => v.id !== deleteConfirm.id));
-    addToast('Volunteer application removed', 'success');
-    setDeleteConfirm(null);
-    setIsLoading(false);
+    try {
+      const result = await volunteerService.deleteVolunteer(deleteConfirm.id);
+      if (!isMountedRef.current) return;
+      
+      if (result.success) {
+        setVolunteers(volunteers.filter((v) => v.id !== deleteConfirm.id));
+        addToast('Volunteer removed successfully', 'success');
+      } else {
+        addToast(`Error removing volunteer: ${result.error?.message || 'Unknown error'}`, 'error');
+      }
+    } catch (err) {
+      if (isMountedRef.current) {
+        addToast(`Error removing volunteer: ${err.message || 'Unknown error'}`, 'error');
+      }
+    } finally {
+      if (isMountedRef.current) {
+        setDeleteConfirm(null);
+        setIsLoading(false);
+      }
+    }
   };
 
   const handleCloseForm = () => {
@@ -335,9 +354,9 @@ export default function AdminVolunteers() {
             value={values.status}
             onChange={handleChange}
           >
-            <option value="pending">Pending</option>
-            <option value="approved">Approved</option>
-            <option value="rejected">Rejected</option>
+            <option value={GENERAL_STATUS.PENDING}>Pending</option>
+            <option value={VOLUNTEER_STATUS.APPROVED}>Approved</option>
+            <option value={VOLUNTEER_STATUS.REJECTED}>Rejected</option>
           </FormSelect>
 
           <div className="flex gap-3 pt-4 border-t border-gray-700">

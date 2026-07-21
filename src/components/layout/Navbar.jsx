@@ -8,6 +8,8 @@ const navLinks = [
   { to: '/events', label: 'Events & Activities' },
   { to: '/resources', label: 'Resources' },
   { to: '/blog', label: 'Blog' },
+  { to: '/volunteer', label: 'Volunteer' },
+  { to: '/donate', label: 'Donate' },
   { to: '/contact', label: 'Contact' },
 ];
 
@@ -40,12 +42,19 @@ function Navbar() {
         <div className="hidden md:flex md:items-center md:gap-4">
           <NavLink
             to="/outreach"
-            className="rounded-full border border-dahiAccent px-4 py-2 text-sm font-semibold text-dahiAccent transition hover:bg-dahiAccent/10"
+            className="rounded-full border border-dahiPrimary px-4 py-2 text-sm font-semibold text-dahiPrimary transition hover:bg-dahiPrimary/10"
           >
             <i className="fa-solid fa-heart mr-1.5"></i>
             Support Outreach
           </NavLink>
-          <a href="https://forms.gle/joTjf3VYW9anCA9MA" target="_blank" rel="noopener" className="inline-flex items-center justify-center rounded-full bg-dahiPrimary px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-dahiSecondary">Join Our Community</a>
+          <NavLink
+            to="/donate"
+            className="rounded-full border border-dahiPrimary px-4 py-2 text-sm font-semibold text-dahiPrimary transition hover:bg-dahiPrimary/10"
+          >
+            <i className="fa-solid fa-hand-holding-heart mr-1.5"></i>
+            Donate
+          </NavLink>
+          <a href="https://forms.gle/joTjf3VYW9anCA9MA" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-full bg-dahiPrimary px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-dahiSecondary">Join Our Community</a>
         </div>
 
         <button
@@ -74,13 +83,21 @@ function Navbar() {
           ))}
           <NavLink
             to="/outreach"
-            className="rounded-xl px-3 py-2 text-sm font-semibold text-dahiAccent hover:bg-dahiAccent/10"
+            className="rounded-xl px-3 py-2 text-sm font-semibold text-dahiPrimary hover:bg-dahiPrimary/10"
             onClick={() => setMobileOpen(false)}
           >
             <i className="fa-solid fa-heart mr-1.5"></i>
             Support Outreach
           </NavLink>
-          <a href="https://forms.gle/joTjf3VYW9anCA9MA" target="_blank" rel="noopener" className="mt-2 inline-flex items-center justify-center rounded-full bg-dahiPrimary px-5 py-2.5 text-sm font-semibold text-white">Join Our Community</a>
+          <NavLink
+            to="/donate"
+            className="rounded-xl px-3 py-2 text-sm font-semibold text-dahiPrimary hover:bg-dahiPrimary/10"
+            onClick={() => setMobileOpen(false)}
+          >
+            <i className="fa-solid fa-hand-holding-heart mr-1.5"></i>
+            Donate
+          </NavLink>
+          <a href="https://forms.gle/joTjf3VYW9anCA9MA" target="_blank" rel="noopener noreferrer" className="mt-2 inline-flex items-center justify-center rounded-full bg-dahiPrimary px-5 py-2.5 text-sm font-semibold text-white">Join Our Community</a>
         </div>
       </div>
     </header>

@@ -44,7 +44,7 @@ function ContactCard({ icon: Icon, title, value, description, href, linkLabel = 
       )}
       {href && (
         <div className="mt-5 text-sm font-semibold text-dahiPrimary">
-          <a href={href} target="_blank" rel="noopener" className="transition hover:text-dahiSecondary">
+          <a href={href} target="_blank" rel="noopener noreferrer" className="transition hover:text-dahiSecondary">
             {linkLabel} →
           </a>
         </div>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Edit2, Trash2, Eye, ChevronUp, ChevronDown } from 'lucide-react';
 
 /**
@@ -31,9 +31,9 @@ export function TableHeader({ columns, sortBy, sortOrder, onSort }) {
 }
 
 /**
- * Reusable table row component
+ * Reusable table row component - memoized to prevent re-renders
  */
-export function TableRow({ item, columns, onEdit, onDelete, onView }) {
+export const TableRow = memo(function TableRow({ item, columns, onEdit, onDelete, onView }) {
   return (
     <tr className="border-b border-gray-700 hover:bg-gray-800 transition">
       {columns.map((col) => (
@@ -46,7 +46,7 @@ export function TableRow({ item, columns, onEdit, onDelete, onView }) {
           <button
             onClick={() => onView(item)}
             className="text-blue-400 hover:text-blue-300 transition p-1"
-            title="View details"
+            aria-label="View details"
           >
             <Eye size={16} />
           </button>
@@ -55,7 +55,7 @@ export function TableRow({ item, columns, onEdit, onDelete, onView }) {
           <button
             onClick={() => onEdit(item)}
             className="text-amber-400 hover:text-amber-300 transition p-1"
-            title="Edit"
+            aria-label="Edit item"
           >
             <Edit2 size={16} />
           </button>
@@ -64,7 +64,7 @@ export function TableRow({ item, columns, onEdit, onDelete, onView }) {
           <button
             onClick={() => onDelete(item)}
             className="text-red-400 hover:text-red-300 transition p-1"
-            title="Delete"
+            aria-label="Delete item"
           >
             <Trash2 size={16} />
           </button>
@@ -72,7 +72,7 @@ export function TableRow({ item, columns, onEdit, onDelete, onView }) {
       </td>
     </tr>
   );
-}
+});
 
 /**
  * Reusable data table component

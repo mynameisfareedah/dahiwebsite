@@ -2,7 +2,7 @@ import SectionHeading from '../common/SectionHeading';
 
 function ObjectivesGrid({ objectives }) {
   return (
-    <section className="section-shell mx-auto max-w-7xl space-y-8">
+    <section className="section-shell max-w-7xl space-y-8">
       <SectionHeading
         eyebrow="What We Aim To Do"
         title="Our Objectives"

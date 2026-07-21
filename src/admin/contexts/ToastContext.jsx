@@ -11,12 +11,15 @@ export function ToastProvider({ children }) {
     setToasts((prev) => [...prev, { id, message, type }]);
 
     if (duration > 0) {
-      setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         setToasts((prev) => prev.filter((t) => t.id !== id));
       }, duration);
+      
+      // Return cleanup function via closure for manual removal if needed
+      return { id, clear: () => clearTimeout(timeoutId) };
     }
 
-    return id;
+    return { id };
   }, []);
 
   const removeToast = useCallback((id) => {

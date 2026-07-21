@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 function AboutHero() {
   return (
-    <section className="mx-auto max-w-7xl px-4 pt-8 sm:px-6 lg:px-8">
+    <section className="max-w-7xl px-4 pt-8 sm:px-6 lg:px-8">
       <div className="hero-glow overflow-hidden rounded-[2rem] px-6 py-8 text-white shadow-2xl sm:px-8 lg:px-12 lg:py-12">
         <div className="grid items-center gap-8 lg:grid-cols-[1.05fr_0.95fr]">
           <div>

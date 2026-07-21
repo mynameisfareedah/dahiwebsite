@@ -13,7 +13,10 @@ function ContactHero({
 }) {
   return (
     <section className="relative overflow-hidden rounded-[2rem] bg-slate-900 text-white shadow-sm">
-      <img src={image} alt="" className="absolute inset-0 h-full w-full object-cover opacity-40" />
+      <picture>
+        <source srcSet="/community-1200.webp" type="image/webp" />
+        <img src={image} alt="" width="1200" height="684" loading="lazy" className="absolute inset-0 h-full w-full object-cover opacity-40" />
+      </picture>
       <div className="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/90 to-slate-900/60" />
       <div className="relative grid gap-8 p-8 sm:p-10 lg:grid-cols-[1.1fr_0.9fr] lg:p-12">
         <div>

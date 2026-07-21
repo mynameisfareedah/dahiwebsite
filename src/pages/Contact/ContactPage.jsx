@@ -47,7 +47,19 @@ function ContactPage() {
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const reasonParam = params.get('reason');
-    if (reasonParam) {
+    // Only allow safe reason values to prevent injection attacks
+    const validReasons = [
+      'General Enquiry',
+      'Programme Information',
+      'Educational Resources',
+      'Volunteer',
+      'Partnership',
+      'Media Enquiry',
+      'Speaking Invitation',
+      'Technical Support',
+      'Other',
+    ];
+    if (reasonParam && validReasons.includes(reasonParam)) {
       setSelectedReason(reasonParam);
       formSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
@@ -61,7 +73,7 @@ function ContactPage() {
   return (
     <>
       <SEO title="Contact" description="Get in touch with DAHI for enquiries, partnerships, volunteering, resources, and community support." />
-      <section id="top" className="section-shell mx-auto max-w-7xl space-y-8">
+      <section id="top" className="section-shell max-w-7xl space-y-8">
         <ContactHero
           eyebrow="Contact"
           title="Get in Touch"

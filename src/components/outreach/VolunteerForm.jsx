@@ -24,6 +24,7 @@ function VolunteerForm({ onSuccess, onCancel, autoFocus = false }) {
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const submitTimeoutRef = useRef(null);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -51,6 +52,10 @@ function VolunteerForm({ onSuccess, onCancel, autoFocus = false }) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    if (isSubmitting) {
+      return;
+    }
+
     const nextErrors = validate();
     if (Object.keys(nextErrors).length) {
       setErrors(nextErrors);
@@ -58,7 +63,7 @@ function VolunteerForm({ onSuccess, onCancel, autoFocus = false }) {
     }
 
     setIsSubmitting(true);
-    window.setTimeout(() => {
+    submitTimeoutRef.current = window.setTimeout(() => {
       setIsSubmitting(false);
       setSubmitted(true);
       onSuccess?.();
@@ -73,6 +78,14 @@ function VolunteerForm({ onSuccess, onCancel, autoFocus = false }) {
     }
   }, [autoFocus]);
 
+  useEffect(() => {
+    return () => {
+      if (submitTimeoutRef.current) {
+        window.clearTimeout(submitTimeoutRef.current);
+      }
+    };
+  }, []);
+
   return (
     <form className="space-y-5" onSubmit={handleSubmit} noValidate>
       <div className="grid gap-4 sm:grid-cols-2">
@@ -83,6 +96,7 @@ function VolunteerForm({ onSuccess, onCancel, autoFocus = false }) {
             name="name"
             value={formData.name}
             onChange={handleChange}
+            disabled={isSubmitting}
             className="w-full rounded-full border border-slate-200 px-4 py-3 outline-none focus:border-dahiPrimary"
           />
           {errors.name && <span className="mt-2 block text-sm text-rose-600">{errors.name}</span>}
@@ -94,6 +108,7 @@ function VolunteerForm({ onSuccess, onCancel, autoFocus = false }) {
             type="email"
             value={formData.email}
             onChange={handleChange}
+            disabled={isSubmitting}
             className="w-full rounded-full border border-slate-200 px-4 py-3 outline-none focus:border-dahiPrimary"
           />
           {errors.email && <span className="mt-2 block text-sm text-rose-600">{errors.email}</span>}
@@ -107,6 +122,7 @@ function VolunteerForm({ onSuccess, onCancel, autoFocus = false }) {
           type="tel"
           value={formData.phone}
           onChange={handleChange}
+          disabled={isSubmitting}
           className="w-full rounded-full border border-slate-200 px-4 py-3 outline-none focus:border-dahiPrimary"
           placeholder="Optional"
         />
@@ -119,7 +135,7 @@ function VolunteerForm({ onSuccess, onCancel, autoFocus = false }) {
             const checked = formData.skills.includes(skill);
             return (
               <label key={skill} className="flex items-center gap-2 rounded-full border border-slate-200 px-3 py-2 text-sm text-slate-700">
-                <input type="checkbox" checked={checked} onChange={() => handleSkillToggle(skill)} />
+                <input type="checkbox" checked={checked} disabled={isSubmitting} onChange={() => handleSkillToggle(skill)} />
                 <span>{skill}</span>
               </label>
             );
@@ -133,6 +149,7 @@ function VolunteerForm({ onSuccess, onCancel, autoFocus = false }) {
           name="availability"
           value={formData.availability}
           onChange={handleChange}
+          disabled={isSubmitting}
           className="w-full rounded-full border border-slate-200 px-4 py-3 outline-none focus:border-dahiPrimary"
         >
           <option value="Weekdays">Weekdays</option>
@@ -148,6 +165,7 @@ function VolunteerForm({ onSuccess, onCancel, autoFocus = false }) {
           rows="4"
           value={formData.message}
           onChange={handleChange}
+          disabled={isSubmitting}
           className="w-full rounded-[1.25rem] border border-slate-200 px-4 py-3 outline-none focus:border-dahiPrimary"
         />
         {errors.message && <span className="mt-2 block text-sm text-rose-600">{errors.message}</span>}
@@ -160,7 +178,7 @@ function VolunteerForm({ onSuccess, onCancel, autoFocus = false }) {
       ) : null}
 
       <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
-        <button type="button" onClick={onCancel} className="rounded-full border border-slate-300 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-dahiPrimary hover:text-dahiPrimary">
+        <button type="button" onClick={onCancel} disabled={isSubmitting} className="rounded-full border border-slate-300 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-dahiPrimary hover:text-dahiPrimary disabled:cursor-not-allowed disabled:opacity-70">
           Cancel
         </button>
         <button type="submit" disabled={isSubmitting} className="rounded-full bg-dahiPrimary px-5 py-3 text-sm font-semibold text-white transition hover:bg-dahiSecondary disabled:cursor-not-allowed disabled:opacity-70">

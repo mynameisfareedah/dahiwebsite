@@ -1,45 +1,46 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
-import { focusAreas, testimonials, teamMembers } from '../data/siteContent';
 
-const fallbackDataByTable = {
-  programs: focusAreas.map((item, index) => ({
-    id: `fallback-program-${index}`,
-    title: item.title,
-    description: item.description,
-  })),
-  testimonials: testimonials.map((item, index) => ({
-    id: `fallback-testimonial-${index}`,
-    quote: item.quote,
-    name: item.name || 'DAHI Participant',
-    role: item.role,
-  })),
-  team_members: teamMembers.map((item, index) => ({
-    id: `fallback-team-${index}`,
-    name: item.name,
-    role: item.role,
-    position: item.role,
-    bio: item.description,
-    photo_url: '/docadi.jpeg',
-  })),
-};
+function applyTableFilters(query, table) {
+  if (table === 'team_members') {
+    return query.eq('active', true).eq('status', 'active');
+  }
+
+  if (table === 'resources') {
+    return query.eq('status', 'published');
+  }
+
+  if (table === 'donations') {
+    return query.eq('active', true).order('display_order', { ascending: false });
+  }
+
+  return query;
+}
 
 export function useSupabaseData(table, select = '*', options = {}) {
   return useQuery({
     queryKey: [table, select],
     queryFn: async () => {
       if (!isSupabaseConfigured || !supabase) {
-        return fallbackDataByTable[table] || [];
+        return [];
       }
 
-      const { data, error } = await supabase
-        .from(table)
-        .select(select)
-        .eq('status', 'Published')
-        .order('created_at', { ascending: false });
+      try {
+        let query = supabase.from(table).select(select).order('created_at', { ascending: false });
+        query = applyTableFilters(query, table);
 
-      if (error) throw error;
-      return data || [];
+        const { data, error } = await query;
+
+        if (error) {
+          console.error('Supabase query error for', table, error);
+          throw error;
+        }
+
+        return data || [];
+      } catch (err) {
+        console.error('Unexpected error in useSupabaseData for', table, err);
+        throw err;
+      }
     },
     ...options,
   });

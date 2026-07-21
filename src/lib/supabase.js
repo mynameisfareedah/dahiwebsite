@@ -27,9 +27,25 @@ if (!isSupabaseConfigured) {
  * Create and export Supabase client
  * Use this client in all services to interact with the database
  */
-export const supabase = isSupabaseConfigured
-  ? createClient(supabaseUrl, supabaseAnonKey)
-  : null;
+const globalForSupabase = globalThis;
+
+export const supabase =
+  globalForSupabase.__DAHI_SUPABASE__ ??
+  (isSupabaseConfigured
+    ? createClient(supabaseUrl, supabaseAnonKey, {
+        auth: {
+          persistSession: true,
+          autoRefreshToken: true,
+          detectSessionInUrl: true,
+          // use localStorage in browser, undefined on server
+          storage: typeof window !== 'undefined' ? window.localStorage : undefined,
+        },
+      })
+    : null);
+
+if (import.meta.env.DEV) {
+  globalForSupabase.__DAHI_SUPABASE__ = supabase;
+}
 
 /**
  * Helper to handle Supabase errors consistently

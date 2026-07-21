@@ -1,6 +1,12 @@
 import React from 'react';
 import { FormCheckbox, FormInput, FormSelect, FormTextarea } from '../FormField';
 
+const REGISTRATION_STATUS_OPTIONS = [
+  { value: 'open', label: 'Open' },
+  { value: 'coming_soon', label: 'Coming Soon' },
+  { value: 'closed', label: 'Closed' },
+];
+
 export function EventForm({
   values,
   errors,
@@ -93,6 +99,61 @@ export function EventForm({
         required
         placeholder="Main Community Center - Hall B"
       />
+
+      <div className="grid gap-4 lg:grid-cols-2">
+        <FormInput
+          label="Registration URL"
+          name="registrationUrl"
+          type="url"
+          value={values.registrationUrl}
+          onChange={onChange}
+          onBlur={onBlur}
+          error={touched.registrationUrl && errors.registrationUrl}
+          placeholder="https://example.com/register"
+          help="Optional. Enter a valid http:// or https:// URL to enable direct registration."
+        />
+        <FormInput
+          label="Registration Button Text"
+          name="registrationButtonText"
+          value={values.registrationButtonText}
+          onChange={onChange}
+          onBlur={onBlur}
+          error={touched.registrationButtonText && errors.registrationButtonText}
+          placeholder="Register Now"
+          help="Optional label override. Defaults to Register Now."
+        />
+      </div>
+
+      <div className="grid gap-4 lg:grid-cols-2">
+        <FormCheckbox
+          label="Enable Registration"
+          name="registrationEnabled"
+          checked={values.registrationEnabled}
+          onChange={onChange}
+          onBlur={onBlur}
+          help="If disabled, registration is closed regardless of URL or status."
+        />
+        <FormSelect
+          label="Registration Status"
+          name="registrationStatus"
+          value={values.registrationStatus}
+          onChange={onChange}
+          onBlur={onBlur}
+          options={REGISTRATION_STATUS_OPTIONS}
+          help="Controls registration state when registration is enabled."
+        />
+      </div>
+
+      <div className="rounded-2xl border border-gray-800 bg-slate-900 p-5">
+        <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-300">Preview</h3>
+        <div className="mt-4 space-y-2 text-sm text-gray-200">
+          <p><span className="font-semibold text-white">Event Title:</span> {values.title || 'Untitled Event'}</p>
+          <p><span className="font-semibold text-white">Date:</span> {values.date || 'TBD'}</p>
+          <p><span className="font-semibold text-white">Registration Status:</span> {values.registrationEnabled ? values.registrationStatus : 'closed'}</p>
+          <p><span className="font-semibold text-white">Button Text:</span> {values.registrationButtonText || 'Register Now'}</p>
+          <p className="break-all"><span className="font-semibold text-white">Registration URL:</span> {values.registrationUrl || 'Not set'}</p>
+        </div>
+      </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
         <FormSelect

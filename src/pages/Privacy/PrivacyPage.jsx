@@ -6,7 +6,7 @@ function PrivacyPage() {
   return (
     <>
       <SEO title="Privacy Policy" description="DAHI privacy policy for the use of this site and contact form communications." />
-      <section className="section-shell mx-auto max-w-6xl space-y-8">
+      <section className="section-shell max-w-6xl space-y-8">
         <SectionHeading eyebrow="Legal" title="Privacy Policy" description="How DAHI protects your information when you reach out or explore our services." />
         <div className="rounded-[1.25rem] border border-slate-200 bg-white p-8 shadow-sm">
           <p className="mb-4 text-slate-700 leading-7">

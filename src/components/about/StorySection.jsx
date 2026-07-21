@@ -1,6 +1,6 @@
 function StorySection() {
   return (
-    <section id="our-story" className="section-shell mx-auto max-w-7xl">
+    <section id="our-story" className="section-shell max-w-7xl">
       <div className="lg:items-center">
         <div className="space-y-4">
           <span className="eyebrow">Our Story</span>

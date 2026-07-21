@@ -4,7 +4,7 @@
 		{
 			"label": "build-site",
 			"type": "shell",
-			"command": "C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\node\\node-v20.20.2-win-x64\\npm.cmd run build",
+			"command": "cmd /c \"set PATH=C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\node\\node-v20.20.2-win-x64;%PATH% && \"C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\node\\node-v20.20.2-win-x64\\npm.cmd\" run build\"",
 			"problemMatcher": [
 				"$tsc"
 			],
@@ -20,22 +20,125 @@
 		{
 			"label": "start-vite-dev",
 			"type": "shell",
-			"command": "C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\node\\node-v20.20.2-win-x64\\npm.cmd run dev -- --host 0.0.0.0 --port 3001",
+			"command": "cmd /c \"set PATH=C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\node\\node-v20.20.2-win-x64;%PATH% && \"C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\node\\node-v20.20.2-win-x64\\npm.cmd\" run dev -- --host 0.0.0.0 --port 3001\"",
 			"problemMatcher": [],
 			"group": "build"
 		},
 		{
 			"label": "start-vite-dev",
 			"type": "shell",
-			"command": "cmd /c \"\"c:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\node\\node-v20.20.2-win-x64\\npm.cmd\" run dev -- --host 0.0.0.0 --port 3001\"",
+			"command": "cmd /c \"set PATH=c:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\node\\node-v20.20.2-win-x64;%PATH% && \"c:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\node\\node-v20.20.2-win-x64\\npm.cmd\" run dev -- --host 0.0.0.0 --port 3001\"",
 			"problemMatcher": [],
 			"group": "build"
 		},
 		{
 			"label": "start-vite-dev",
 			"type": "shell",
-			"command": "& 'C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\node\\node-v20.20.2-win-x64\\npm.cmd' run dev -- --host 0.0.0.0 --port 3001",
+			"command": "cmd /c \"set PATH=C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\node\\node-v20.20.2-win-x64;%PATH% && \"C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\node\\node-v20.20.2-win-x64\\npm.cmd\" run dev -- --host 0.0.0.0 --port 3001\"",
 			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "lighthouse-mobile",
+			"type": "shell",
+			"command": "cmd /c \"set PATH=C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\node\\node-v20.20.2-win-x64;%PATH% && \"C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\node\\node-v20.20.2-win-x64\\npx.cmd\" --yes lighthouse http://127.0.0.1:4174 --only-categories=performance,accessibility,best-practices,seo --output=json --output-path=\"C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\lighthouse-mobile.json\" --chrome-flags=\"--headless=new --disable-gpu --no-sandbox\" --no-enable-error-reporting --quiet\""
+		},
+		{
+			"label": "build-site-post-lighthouse-fix",
+			"type": "shell",
+			"command": "cmd /c \"set PATH=C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\node\\node-v20.20.2-win-x64;%PATH% && \"C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\node\\node-v20.20.2-win-x64\\npm.cmd\" run build\"",
+			"group": "build"
+		},
+		{
+			"label": "lighthouse-desktop-rerun",
+			"type": "shell",
+			"command": "cmd /c \"set PATH=C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\node\\node-v20.20.2-win-x64;%PATH% && \"C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\node\\node-v20.20.2-win-x64\\npx.cmd\" --yes lighthouse http://127.0.0.1:4174 --preset=desktop --only-categories=performance,accessibility,best-practices,seo --output=json --output-path=\"C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\lighthouse-desktop-rerun.json\" --chrome-flags=\"--headless=new --disable-gpu --no-sandbox\" --no-enable-error-reporting --quiet\""
+		},
+		{
+			"label": "lighthouse-mobile-rerun",
+			"type": "shell",
+			"command": "cmd /c \"set PATH=C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\node\\node-v20.20.2-win-x64;%PATH% && \"C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\node\\node-v20.20.2-win-x64\\npx.cmd\" --yes lighthouse http://127.0.0.1:4174 --only-categories=performance,accessibility,best-practices,seo --output=json --output-path=\"C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\lighthouse-mobile-rerun.json\" --chrome-flags=\"--headless=new --disable-gpu --no-sandbox\" --no-enable-error-reporting --quiet\""
+		},
+		{
+			"label": "lighthouse-desktop-after-fix",
+			"type": "shell",
+			"command": "cmd /c \"set PATH=C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\node\\node-v20.20.2-win-x64;%PATH% && \"C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\node\\node-v20.20.2-win-x64\\npx.cmd\" --yes lighthouse http://127.0.0.1:4174 --preset=desktop --only-categories=performance,accessibility,best-practices,seo --output=json --output-path=\"C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\lighthouse-desktop.json\" --chrome-flags=\"--headless=new --disable-gpu --no-sandbox\" --no-enable-error-reporting --quiet\""
+		},
+		{
+			"label": "lighthouse-mobile-after-fix",
+			"type": "shell",
+			"command": "cmd /c \"set PATH=C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\node\\node-v20.20.2-win-x64;%PATH% && \"C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\node\\node-v20.20.2-win-x64\\npx.cmd\" --yes lighthouse http://127.0.0.1:4174 --only-categories=performance,accessibility,best-practices,seo --output=json --output-path=\"C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\lighthouse-mobile.json\" --chrome-flags=\"--headless=new --disable-gpu --no-sandbox\" --no-enable-error-reporting --quiet\""
+		},
+		{
+			"label": "lh-desktop-rerun",
+			"type": "shell",
+			"command": "cmd /c \"set PATH=C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\node\\node-v20.20.2-win-x64;%PATH% && \"C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\node\\node-v20.20.2-win-x64\\npx.cmd\" --yes lighthouse http://127.0.0.1:4174 --preset=desktop --only-categories=performance,accessibility,best-practices,seo --output=json --output-path=\"C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\lighthouse-desktop-rerun.json\" --chrome-flags=\"--headless=new --disable-gpu --no-sandbox\" --no-enable-error-reporting --quiet\"",
+			"group": "build"
+		},
+		{
+			"label": "lh-mobile-rerun",
+			"type": "shell",
+			"command": "cmd /c \"set PATH=C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\node\\node-v20.20.2-win-x64;%PATH% && \"C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\node\\node-v20.20.2-win-x64\\npx.cmd\" --yes lighthouse http://127.0.0.1:4174 --only-categories=performance,accessibility,best-practices,seo --output=json --output-path=\"C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\lighthouse-mobile-rerun.json\" --chrome-flags=\"--headless=new --disable-gpu --no-sandbox\" --no-enable-error-reporting --quiet\"",
+			"group": "build"
+		},
+		{
+			"label": "lh-desktop-rerun-2",
+			"type": "shell",
+			"command": "cmd /c \"set PATH=C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\node\\node-v20.20.2-win-x64;%PATH% && \"C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\node\\node-v20.20.2-win-x64\\npx.cmd\" --yes lighthouse http://127.0.0.1:4174 --preset=desktop --only-categories=performance,accessibility,best-practices,seo --output=json --output-path=\"C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\lighthouse-desktop-rerun-2.json\" --chrome-flags=\"--headless=new --disable-gpu --no-sandbox\" --no-enable-error-reporting --quiet\"",
+			"group": "build"
+		},
+		{
+			"label": "lh-mobile-rerun-2",
+			"type": "shell",
+			"command": "cmd /c \"set PATH=C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\node\\node-v20.20.2-win-x64;%PATH% && \"C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\node\\node-v20.20.2-win-x64\\npx.cmd\" --yes lighthouse http://127.0.0.1:4174 --only-categories=performance,accessibility,best-practices,seo --output=json --output-path=\"C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\lighthouse-mobile-rerun-2.json\" --chrome-flags=\"--headless=new --disable-gpu --no-sandbox\" --no-enable-error-reporting --quiet\"",
+			"group": "build"
+		},
+		{
+			"label": "lint",
+			"type": "shell",
+			"command": "cmd /c \"set PATH=C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\node\\node-v20.20.2-win-x64;%PATH% && \"C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\node\\node-v20.20.2-win-x64\\npm.cmd\" run lint\"",
+			"group": "build"
+		},
+		{
+			"label": "eslint-debug",
+			"type": "shell",
+			"command": "cmd /c \"set PATH=C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\node\\node-v20.20.2-win-x64;%PATH% && \"C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\node\\node-v20.20.2-win-x64\\npx.cmd\" eslint src --debug 2>&1 | findstr /C:\"Linting\" /C:\"error\" /C:\"warning\"\"",
+			"group": "build"
+		},
+		{
+			"label": "eslint-test",
+			"type": "shell",
+			"command": "cmd /c \"set PATH=C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\node\\node-v20.20.2-win-x64;%PATH% && \"C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\node\\node-v20.20.2-win-x64\\npx.cmd\" eslint src 2>&1\"",
+			"group": "build"
+		},
+		{
+			"label": "eslint-json",
+			"type": "shell",
+			"command": "cmd /c \"set PATH=C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\node\\node-v20.20.2-win-x64;%PATH% && \"C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\node\\node-v20.20.2-win-x64\\npx.cmd\" eslint src --format json > eslint-out.json 2>&1 && type eslint-out.json\"",
+			"group": "build"
+		},
+		{
+			"label": "run-lint-capture",
+			"type": "shell",
+			"command": "cmd /c \"set PATH=C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\node\\node-v20.20.2-win-x64;%PATH% && \"C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\node\\node-v20.20.2-win-x64\\npx.cmd\" eslint src\" 2>&1",
+			"group": "build"
+		},
+		{
+			"label": "lint-single-file",
+			"type": "shell",
+			"command": "cmd /c \"set PATH=C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\node\\node-v20.20.2-win-x64;%PATH% && \"C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\node\\node-v20.20.2-win-x64\\npx.cmd\" eslint src/App.jsx\"",
+			"group": "build"
+		},
+		{
+			"label": "eslint-version",
+			"type": "shell",
+			"command": "cmd /c \"set PATH=C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\node\\node-v20.20.2-win-x64;%PATH% && \"C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\node\\node-v20.20.2-win-x64\\npx.cmd\" eslint --version\"",
+			"group": "build"
+		},
+		{
+			"label": "test-eslint-file",
+			"type": "shell",
+			"command": "cmd /c \"set PATH=C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\node\\node-v20.20.2-win-x64;%PATH% && \"C:\\Users\\USER\\Documents\\FINAL DOC ADI PAGE\\node\\node-v20.20.2-win-x64\\npx.cmd\" eslint src/test-eslint.jsx\"",
 			"group": "build"
 		}
 	]

@@ -7,7 +7,7 @@ function GetInvolved() {
       title: 'Volunteer',
       description: 'Help us educate and empower more women by sharing your skills and time.',
       link: '/volunteer',
-      buttonText: 'Learn More',
+      buttonText: 'Learn More About Volunteering',
     },
     {
       icon: 'fa-solid fa-heart',
@@ -34,7 +34,7 @@ function GetInvolved() {
   ];
 
   return (
-    <section className="section-shell mx-auto max-w-7xl">
+    <section className="section-shell max-w-7xl">
       <div className="mb-12 text-center">
         <span className="eyebrow">Ways to Engage</span>
         <h2 className="mt-4 section-title">Get Involved with DAHI</h2>
@@ -53,8 +53,9 @@ function GetInvolved() {
               <a
                 href={action.href}
                 target="_blank"
-                rel="noopener"
+                rel="noopener noreferrer"
                 className="mt-4 inline-flex items-center justify-center rounded-full bg-dahiPrimary px-4 py-2 text-sm font-semibold text-white transition hover:bg-dahiSecondary"
+                aria-label={action.buttonText}
               >
                 {action.buttonText}
               </a>
@@ -62,6 +63,7 @@ function GetInvolved() {
               <Link
                 to={action.link}
                 className="mt-4 inline-flex items-center justify-center rounded-full bg-dahiPrimary px-4 py-2 text-sm font-semibold text-white transition hover:bg-dahiSecondary"
+                aria-label={action.buttonText}
               >
                 {action.buttonText}
               </Link>

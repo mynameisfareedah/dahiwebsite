@@ -6,13 +6,28 @@ import SectionHeading from '../../components/common/SectionHeading';
 import BlogCard from '../../components/common/BlogCard';
 import CTASection from '../../components/common/CTASection';
 
-const substackFeedUrl = 'https://womenshealthwithdocadi.substack.com/feed';
-const substackApiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(substackFeedUrl)}`;
+const substackFeedProxyUrl = '/.netlify/functions/fetchSubstackFeed';
+
+function decodeEntities(value) {
+  return value
+    ? value
+        .replace(/&amp;/g, '&')
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&quot;/g, '"')
+        .replace(/&#39;/g, "'")
+        .replace(/&nbsp;/g, ' ')
+        .replace(/&#x27;/g, "'")
+        .replace(/&#x2F;/g, '/')
+        .replace(/&#x60;/g, '`')
+        .replace(/&#x3D;/g, '=')
+        .trim()
+    : '';
+}
 
 function stripHtml(value) {
-  return value
-    ?.replace(/<[^>]*>/g, ' ')
-    .replace(/&nbsp;/g, ' ')
+  return decodeEntities(value)
+    .replace(/<[^>]*>/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
 }
@@ -28,7 +43,7 @@ function BlogPage() {
 
     async function loadPosts() {
       try {
-        const response = await fetch(substackApiUrl);
+        const response = await fetch(substackFeedProxyUrl);
         if (!response.ok) {
           throw new Error('Unable to load Substack feed');
         }
@@ -39,16 +54,16 @@ function BlogPage() {
           return;
         }
 
-        if (data.status === 'ok' && Array.isArray(data.items)) {
-          const normalizedPosts = data.items
-            .filter((item) => item.title && item.link)
+        if (Array.isArray(data.posts)) {
+          const normalizedPosts = data.posts
+            .filter((post) => post.title && post.link)
             .map((item) => ({
               title: item.title,
-              excerpt: stripHtml(item.contentSnippet || item.description || item.content) || 'Read the full article on Substack for more details.',
+              excerpt: stripHtml(item.description || item.content || '' ) || 'Read the full article on Substack for more details.',
               category: item.categories?.[0] || 'Featured',
               author: item.author || 'DAHI',
               date: item.pubDate ? new Date(item.pubDate).toLocaleDateString('en', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Recently published',
-              image: item.thumbnail || '/community-768.jpg',
+              image: item.image || '/community-768.jpg',
               href: item.link,
             }))
             .slice(0, 5);
@@ -91,12 +106,12 @@ function BlogPage() {
         image="/community-1200.jpg"
         breadcrumbs={[{ label: 'Blog' }]}
         actions={[
-          <a key="subscribe" href="https://womenshealthwithdocadi.substack.com" target="_blank" rel="noopener" className="inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-semibold text-dahiPrimary transition hover:-translate-y-0.5">Read on Substack</a>,
-          <a key="community" href="https://whatsapp.com/channel/0029VbBdF4hLI8YZRabyWF0j" target="_blank" rel="noopener" className="inline-flex items-center justify-center rounded-full border border-white/70 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10">Join WhatsApp</a>,
+          <a key="subscribe" href="https://womenshealthwithdocadi.substack.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-semibold text-dahiPrimary transition hover:-translate-y-0.5">Read on Substack</a>,
+          <a key="community" href="https://whatsapp.com/channel/0029VbBdF4hLI8YZRabyWF0j" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-full border border-white/70 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10">Join WhatsApp</a>,
         ]}
       />
 
-      <section className="section-shell mx-auto max-w-7xl space-y-8">
+      <section className="section-shell max-w-7xl space-y-8">
         {loading ? (
           <div className="soft-card p-8 text-center text-slate-600">Loading the latest articles from the DAHI Substack publication…</div>
         ) : null}
@@ -110,7 +125,7 @@ function BlogPage() {
                 <span>•</span>
                 <span>{featuredArticle.date}</span>
               </div>
-              <a href={featuredArticle.href} target="_blank" rel="noopener" className="mt-6 inline-flex rounded-full bg-dahiPrimary px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-dahiSecondary">Read More on Substack</a>
+              <a href={featuredArticle.href} target="_blank" rel="noopener noreferrer" className="mt-6 inline-flex rounded-full bg-dahiPrimary px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-dahiSecondary">Read More on Substack</a>
             </div>
           </div>
         ) : null}
@@ -147,14 +162,14 @@ function BlogPage() {
             <div className="mt-8 rounded-[1.25rem] border border-slate-200 p-6">
               <h3 className="text-lg font-semibold text-slate-900">Stay connected</h3>
               <p className="mt-3 text-slate-600">Receive updates when new articles are published and be the first to hear about upcoming programs and events.</p>
-              <a href="https://womenshealthwithdocadi.substack.com" target="_blank" rel="noopener" className="mt-6 inline-flex text-sm font-semibold text-dahiPrimary">Explore the publication →</a>
+              <a href="https://womenshealthwithdocadi.substack.com" target="_blank" rel="noopener noreferrer" className="mt-6 inline-flex text-sm font-semibold text-dahiPrimary">Explore the publication →</a>
             </div>
           </aside>
         </div>
 
         <CTASection eyebrow="Stay informed" title="Join DAHI for more stories and updates" description="Subscribe for new articles, event announcements, and community moments that support women’s health education." actions={[
           <Link key="contact" to="/contact" className="inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-semibold text-dahiPrimary transition hover:-translate-y-0.5">Contact Us</Link>,
-          <a key="community" href="https://forms.gle/joTjf3VYW9anCA9MA" target="_blank" rel="noopener" className="inline-flex items-center justify-center rounded-full border border-white/70 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10">Register</a>,
+          <a key="community" href="https://forms.gle/joTjf3VYW9anCA9MA" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-full border border-white/70 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10">Register</a>,
         ]} />
       </section>
     </>

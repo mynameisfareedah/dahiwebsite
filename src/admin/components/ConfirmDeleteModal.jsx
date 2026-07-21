@@ -30,7 +30,7 @@ export function ConfirmDeleteModal({ isOpen, title, message, onConfirm, onCancel
             className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded transition font-medium flex items-center justify-center gap-2 disabled:opacity-50"
           >
             {isLoading && <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>}
-            Delete
+            {isLoading ? 'Deleting...' : 'Delete'}
           </button>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Gift } from 'lucide-react';
 import {
   PageHeader,
@@ -18,48 +18,13 @@ import {
 } from '../hooks/useDataManagement';
 import { FormInput, FormSelect } from '../components/FormField';
 import { validators, validateForm } from '../utils/validation';
-
-const mockSponsors = [
-  {
-    id: 1,
-    name: 'Global Health Foundation',
-    amount: 120000,
-    type: 'Grant',
-    status: 'active',
-    contact: 'info@globalhealthfoundation.org',
-    date: '2024-01-15',
-  },
-  {
-    id: 2,
-    name: 'Women Wellness Initiative',
-    amount: 50000,
-    type: 'Sponsorship',
-    status: 'active',
-    contact: 'contact@womenwell.org',
-    date: '2024-03-20',
-  },
-  {
-    id: 3,
-    name: 'Community Care Fund',
-    amount: 35000,
-    type: 'Donation',
-    status: 'active',
-    contact: 'donate@communitycare.org',
-    date: '2024-05-10',
-  },
-  {
-    id: 4,
-    name: 'Future Leaders Fund',
-    amount: 25000,
-    type: 'Grant',
-    status: 'pending',
-    contact: 'grants@futureleaders.org',
-    date: '2026-07-01',
-  },
-];
+import { GENERAL_STATUS } from '../../constants/status';
+import { sponsorService } from '../services/sponsorService';
 
 export default function AdminSponsors() {
-  const [sponsors, setSponsors] = useState(mockSponsors);
+  const [sponsors, setSponsors] = useState([]);
+  const [isFetching, setIsFetching] = useState(true);
+  const [fetchError, setFetchError] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
@@ -76,7 +41,7 @@ export default function AdminSponsors() {
     10
   );
 
-  const totalFunding = sponsors.reduce((sum, s) => sum + s.amount, 0);
+  const totalFunding = sponsors.reduce((sum, s) => sum + (s.amount || 0), 0);
   const activeSponsors = sponsors.filter((s) => s.status === 'active').length;
 
   const formRules = {
@@ -96,8 +61,45 @@ export default function AdminSponsors() {
         amount: '',
         type: 'Grant',
         contact: '',
-        status: 'pending',
+        status: GENERAL_STATUS.PENDING,
       };
+
+  const isMountedRef = React.useRef(true);
+  React.useEffect(() => {
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
+
+  // Load sponsors from Supabase
+  useEffect(() => {
+    const loadSponsors = async () => {
+      setIsFetching(true);
+      setFetchError(null);
+      try {
+        const result = await sponsorService.getSponsors();
+        if (!isMountedRef.current) return;
+        
+        if (result.success) {
+          setSponsors(result.data || []);
+        } else {
+          setFetchError(result.error?.message || 'Failed to load sponsors');
+          setSponsors([]);
+        }
+      } catch (err) {
+        if (isMountedRef.current) {
+          setFetchError(err.message || 'An error occurred while loading sponsors');
+          setSponsors([]);
+        }
+      } finally {
+        if (isMountedRef.current) {
+          setIsFetching(false);
+        }
+      }
+    };
+
+    loadSponsors();
+  }, []);
 
   const {
     values,
@@ -111,6 +113,8 @@ export default function AdminSponsors() {
   } = useForm(initialFormValues, async (formValues) => {
     setIsLoading(true);
     await new Promise((resolve) => setTimeout(resolve, 500));
+
+    if (!isMountedRef.current) return;
 
     if (editingId) {
       setSponsors(
@@ -145,11 +149,26 @@ export default function AdminSponsors() {
 
   const confirmDelete = async () => {
     setIsLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    setSponsors(sponsors.filter((s) => s.id !== deleteConfirm.id));
-    addToast('Sponsor removed successfully', 'success');
-    setDeleteConfirm(null);
-    setIsLoading(false);
+    try {
+      const result = await sponsorService.deleteSponsor(deleteConfirm.id);
+      if (!isMountedRef.current) return;
+      
+      if (result.success) {
+        setSponsors(sponsors.filter((s) => s.id !== deleteConfirm.id));
+        addToast('Sponsor removed successfully', 'success');
+      } else {
+        addToast(`Error removing sponsor: ${result.error?.message || 'Unknown error'}`, 'error');
+      }
+    } catch (err) {
+      if (isMountedRef.current) {
+        addToast(`Error removing sponsor: ${err.message || 'Unknown error'}`, 'error');
+      }
+    } finally {
+      if (isMountedRef.current) {
+        setDeleteConfirm(null);
+        setIsLoading(false);
+      }
+    }
   };
 
   const handleCloseForm = () => {
@@ -344,9 +363,9 @@ export default function AdminSponsors() {
             value={values.status}
             onChange={handleChange}
           >
-            <option value="pending">Pending</option>
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
+            <option value={GENERAL_STATUS.PENDING}>Pending</option>
+            <option value={GENERAL_STATUS.ACTIVE}>Active</option>
+            <option value={GENERAL_STATUS.INACTIVE}>Inactive</option>
           </FormSelect>
 
           <div className="flex gap-3 pt-4 border-t border-gray-700">

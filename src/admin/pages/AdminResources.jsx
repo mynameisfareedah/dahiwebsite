@@ -1,400 +1,317 @@
-import React, { useState } from 'react';
-import { FileText, Download } from 'lucide-react';
-import {
-  PageHeader,
-  StatusBadge,
-  Modal,
-  SearchBar,
-  Pagination,
-  ConfirmDeleteModal,
-  EmptyState,
-} from '../components';
-import {
-  usePagination,
-  useSearch,
-  useSorting,
-  useForm,
-  useToast,
-} from '../hooks/useDataManagement';
-import {
-  FormField,
-  FormInput,
-  FormSelect,
-  FormTextarea,
-} from '../components/FormField';
-import { FileUploader } from '../components/FileUploader';
-import { validators, validateForm } from '../utils/validation';
+import React, { useEffect, useState } from 'react';
+import { FileText, Image as ImageIcon, Edit2, Trash2 } from 'lucide-react';
+import { PageHeader, EmptyState, LoadingSpinner, StatusBadge, Modal } from '../components';
+import { FormInput, FormSelect, FormTextarea } from '../components/FormField';
+import { resourceService } from '../services/resourceService';
 
-const mockResources = [
-  {
-    id: 1,
-    title: 'Menstrual Health Guide',
-    description: 'Comprehensive guide to menstrual health',
-    type: 'PDF',
-    downloads: 1245,
-    author: 'Dr. Fatima',
-    status: 'published',
-    uploadDate: '2026-06-15',
-    fileSize: '2.4 MB',
-  },
-  {
-    id: 2,
-    title: 'Reproductive Health Video Series',
-    description: 'Video tutorials on reproductive health',
-    type: 'Video',
-    downloads: 892,
-    author: 'Health Team',
-    status: 'published',
-    uploadDate: '2026-06-10',
-    fileSize: '145 MB',
-  },
-  {
-    id: 3,
-    title: 'Mental Wellness Workbook',
-    description: 'Interactive workbook for mental wellness',
-    type: 'PDF',
-    downloads: 567,
-    author: 'Dr. Aisha',
-    status: 'published',
-    uploadDate: '2026-06-05',
-    fileSize: '3.2 MB',
-  },
-  {
-    id: 4,
-    title: 'Nutrition Guide for Women',
-    description: 'Nutrition guide tailored for women',
-    type: 'PDF',
-    downloads: 0,
-    author: 'Nutritionist',
-    status: 'draft',
-    uploadDate: '2026-07-01',
-    fileSize: '1.8 MB',
-  },
-];
+const EMPTY_FORM_VALUES = {
+  title: '',
+  description: '',
+  author: '',
+  coverImage: '',
+  category: 'general',
+  resourceType: 'ebook',
+  price: '',
+  currency: '',
+  platform: '',
+  externalUrl: '',
+  buttonText: '',
+  featured: 'false',
+  status: 'draft',
+};
+
+const formatDate = (value) => {
+  if (!value) return '—';
+  try {
+    return new Date(value).toLocaleDateString();
+  } catch {
+    return value;
+  }
+};
 
 export default function AdminResources() {
-  const [resources, setResources] = useState(mockResources);
+  const [resources, setResources] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
   const [showForm, setShowForm] = useState(false);
-  const [editingId, setEditingId] = useState(null);
-  const [deleteConfirm, setDeleteConfirm] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [uploadedFiles, setUploadedFiles] = useState([]);
-  
-  const { addToast } = useToast();
-  const { searchQuery, setSearchQuery, filtered: searchedResources } = useSearch(
-    resources,
-    ['title', 'author', 'type']
-  );
-  const { sorted: sortedResources } = useSorting(searchedResources);
-  const { currentItems, currentPage, totalPages, goToPage } = usePagination(
-    sortedResources,
-    10
-  );
+  const [editingResource, setEditingResource] = useState(null);
+  const [formValues, setFormValues] = useState(EMPTY_FORM_VALUES);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const formRules = {
-    title: [
-      (val) => validators.required(val, 'Resource title'),
-      (val) => validators.minLength(val, 3, 'Resource title'),
-    ],
-    type: [(val) => validators.required(val, 'Resource type')],
-    author: [(val) => validators.required(val, 'Author name')],
-  };
+  useEffect(() => {
+    let isMounted = true;
 
-  const initialFormValues = editingId
-    ? resources.find((r) => r.id === editingId)
-    : {
-        title: '',
-        description: '',
-        type: 'PDF',
-        author: '',
-        status: 'draft',
-      };
+    const loadResources = async () => {
+      setIsLoading(true);
+      setError('');
 
-  const {
-    values,
-    errors,
-    touched,
-    isSubmitting,
-    handleChange,
-    handleBlur,
-    handleSubmit: handleFormSubmit,
-    resetForm,
-  } = useForm(initialFormValues, async (formValues) => {
-    setIsLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 500));
+      try {
+        const result = await resourceService.getResources();
+        if (!isMounted) return;
 
-    if (editingId) {
-      setResources(
-        resources.map((r) =>
-          r.id === editingId ? { ...r, ...formValues } : r
-        )
-      );
-      addToast('Resource updated successfully', 'success');
-    } else {
-      const newResource = {
-        ...formValues,
-        id: Math.max(...resources.map((r) => r.id), 0) + 1,
-        downloads: 0,
-        uploadDate: new Date().toISOString().split('T')[0],
-        fileSize: uploadedFiles[0]?.size || '0 KB',
-      };
-      setResources([...resources, newResource]);
-      addToast('Resource created successfully', 'success');
-    }
+        if (result.success) {
+          setResources(result.data || []);
+        } else {
+          setError(result.error?.message || 'Failed to load resources.');
+          setResources([]);
+        }
+      } catch (err) {
+        if (!isMounted) return;
+        setError(err?.message || 'Failed to load resources.');
+        setResources([]);
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    };
 
-    setShowForm(false);
-    setEditingId(null);
-    setUploadedFiles([]);
-    resetForm();
-    setIsLoading(false);
-  }, (values) => validateForm(values, formRules));
+    loadResources();
 
-  const handleEdit = (resource) => {
-    setEditingId(resource.id);
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const openCreateForm = () => {
+    setEditingResource(null);
+    setFormValues(EMPTY_FORM_VALUES);
     setShowForm(true);
   };
 
-  const handleDelete = async (resource) => {
-    setDeleteConfirm({ id: resource.id, title: resource.title });
+  const openEditForm = (resource) => {
+    setEditingResource(resource);
+    setFormValues({
+      title: resource.title || '',
+      description: resource.description || '',
+      author: resource.author || '',
+      coverImage: resource.coverImage || '',
+      category: resource.category || 'general',
+      resourceType: resource.resourceType || resource.type || 'ebook',
+      price: resource.price != null ? String(resource.price) : '',
+      currency: resource.currency || '',
+      platform: resource.platform || '',
+      externalUrl: resource.externalUrl || '',
+      buttonText: resource.buttonText || '',
+      featured: resource.featured ? 'true' : 'false',
+      status: resource.status || 'draft',
+    });
+    setShowForm(true);
   };
 
-  const confirmDelete = async () => {
-    setIsLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    setResources(resources.filter((r) => r.id !== deleteConfirm.id));
-    addToast('Resource deleted successfully', 'success');
-    setDeleteConfirm(null);
-    setIsLoading(false);
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormValues((current) => ({ ...current, [name]: value }));
   };
 
-  const handleCloseForm = () => {
+  const closeForm = () => {
     setShowForm(false);
-    setEditingId(null);
-    setUploadedFiles([]);
-    resetForm();
+    setEditingResource(null);
+    setFormValues(EMPTY_FORM_VALUES);
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setIsSubmitting(true);
+    setError('');
+
+    try {
+      const payload = {
+        ...formValues,
+        featured: formValues.featured === 'true',
+      };
+
+      const result = editingResource
+        ? await resourceService.updateResource(editingResource.id, payload)
+        : await resourceService.createResource(payload);
+
+      if (!result.success) {
+        setError(result.error?.message || 'Failed to save resource.');
+        return;
+      }
+
+      if (editingResource) {
+        setResources((current) => current.map((item) => (item.id === editingResource.id ? result.data || item : item)));
+      } else {
+        setResources((current) => [result.data, ...current]);
+      }
+
+      closeForm();
+    } catch (err) {
+      setError(err?.message || 'Failed to save resource.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleDelete = async (resource) => {
+    if (!window.confirm(`Delete "${resource.title}"?`)) {
+      return;
+    }
+
+    try {
+      const result = await resourceService.deleteResource(resource.id);
+      if (!result.success) {
+        setError(result.error?.message || 'Failed to delete resource.');
+        return;
+      }
+
+      setResources((current) => current.filter((item) => item.id !== resource.id));
+    } catch (err) {
+      setError(err?.message || 'Failed to delete resource.');
+    }
   };
 
   return (
     <div className="space-y-6">
       <PageHeader
         title="Resources Management"
-        subtitle="Upload and manage educational resources"
-        action={() => setShowForm(true)}
-        actionLabel="Upload Resource"
+        subtitle="Manage external resource links and metadata"
+        action={openCreateForm}
+        actionLabel="Create Resource"
       />
 
-      <SearchBar
-        placeholder="Search resources by title, author..."
-        value={searchQuery}
-        onSearch={setSearchQuery}
-      />
-
-      {currentItems.length === 0 && searchQuery === '' ? (
+      {isLoading ? (
+        <div className="bg-gray-900 border border-gray-800 rounded-lg p-12 flex justify-center">
+          <LoadingSpinner size="lg" text="Loading resources..." />
+        </div>
+      ) : error ? (
+        <div className="bg-red-950 border border-red-800 rounded-lg p-6 text-red-200">
+          <p className="font-medium">Unable to load resources.</p>
+          <p className="text-sm mt-1">{error}</p>
+        </div>
+      ) : resources.length === 0 ? (
         <EmptyState
           icon={FileText}
           title="No resources yet"
-          description="Upload your first resource to get started"
-          action={() => setShowForm(true)}
-          actionLabel="Upload Resource"
-        />
-      ) : currentItems.length === 0 ? (
-        <EmptyState
-          icon={FileText}
-          title="No resources found"
-          description="Try adjusting your search query"
+          description="Create your first external resource link to get started"
+          action={openCreateForm}
+          actionLabel="Create Resource"
         />
       ) : (
-        <>
-          <div className="bg-gray-900 border border-gray-800 rounded-lg overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-gray-800 border-b border-gray-700">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">
-                      Title
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">
-                      Type
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">
-                      Author
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">
-                      Downloads
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">
-                      Status
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">
-                      Actions
-                    </th>
+        <div className="bg-gray-900 border border-gray-800 rounded-lg overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-700">
+              <thead className="bg-gray-800 border-b border-gray-700">
+                <tr>
+                  <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-300">Cover</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-300">Title</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-300">Category</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-300">Type</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-300">Status</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-300">Featured</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-300">Downloads</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-300">Created At</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-300">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-700">
+                {resources.map((resource) => (
+                  <tr key={resource.id} className="hover:bg-gray-800 transition">
+                    <td className="px-4 py-4">
+                      {resource.coverImage ? (
+                        <img src={resource.coverImage} alt={resource.title} className="h-12 w-16 object-cover rounded border border-gray-700" />
+                      ) : (
+                        <div className="h-12 w-16 rounded border border-gray-700 bg-gray-800 flex items-center justify-center text-gray-500">
+                          <ImageIcon size={16} />
+                        </div>
+                      )}
+                    </td>
+                    <td className="px-4 py-4">
+                      <div className="font-medium text-white">{resource.title}</div>
+                      <div className="text-sm text-gray-400">{resource.author || '—'}</div>
+                    </td>
+                    <td className="px-4 py-4 text-gray-300">{resource.category || 'general'}</td>
+                    <td className="px-4 py-4 text-gray-300">{resource.resourceType || resource.type || 'general'}</td>
+                    <td className="px-4 py-4"><StatusBadge status={resource.status || 'draft'} /></td>
+                    <td className="px-4 py-4 text-gray-300">{resource.featured ? 'Yes' : 'No'}</td>
+                    <td className="px-4 py-4 text-gray-300">{resource.downloads ?? 0}</td>
+                    <td className="px-4 py-4 text-gray-300">{formatDate(resource.createdAt || resource.created_at)}</td>
+                    <td className="px-4 py-4">
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => openEditForm(resource)}
+                          className="p-2 rounded text-amber-400 hover:bg-gray-800"
+                          aria-label={`Edit ${resource.title}`}
+                        >
+                          <Edit2 size={16} />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(resource)}
+                          className="p-2 rounded text-red-400 hover:bg-gray-800"
+                          aria-label={`Delete ${resource.title}`}
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
+                    </td>
                   </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-700">
-                  {currentItems.map((resource) => (
-                    <tr
-                      key={resource.id}
-                      className="hover:bg-gray-800 transition"
-                    >
-                      <td className="px-6 py-4">
-                        <div>
-                          <p className="font-medium text-white">
-                            {resource.title}
-                          </p>
-                          <p className="text-sm text-gray-400">
-                            {resource.fileSize}
-                          </p>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="px-3 py-1 bg-blue-900 text-blue-100 rounded-full text-sm">
-                          {resource.type}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-gray-300">
-                        {resource.author}
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-2 text-gray-300">
-                          <Download size={16} />
-                          {resource.downloads}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <StatusBadge status={resource.status} />
-                      </td>
-                      <td className="px-6 py-4 text-sm">
-                        <div className="flex gap-2">
-                          <button
-                            onClick={() => handleEdit(resource)}
-                            className="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded transition"
-                          >
-                            Edit
-                          </button>
-                          <button
-                            onClick={() => handleDelete(resource)}
-                            className="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded transition"
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={goToPage}
-              itemsPerPage={10}
-              totalItems={sortedResources.length}
-            />
+                ))}
+              </tbody>
+            </table>
           </div>
-        </>
+        </div>
       )}
 
-      <Modal
-        isOpen={showForm}
-        onClose={handleCloseForm}
-        title={editingId ? 'Edit Resource' : 'Upload Resource'}
-        size="lg"
-      >
-        <form onSubmit={handleFormSubmit} className="space-y-4">
-          <FormInput
-            label="Resource Title"
-            name="title"
-            value={values.title}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            error={touched.title ? errors.title : null}
-            required
-          />
+      <Modal isOpen={showForm} onClose={closeForm} title={editingResource ? 'Edit Resource' : 'Create Resource'} size="lg">
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <FormInput label="Title" name="title" value={formValues.title} onChange={handleChange} required />
+          <FormTextarea label="Description" name="description" value={formValues.description} onChange={handleChange} rows="3" />
+          <FormInput label="Cover Image" name="coverImage" type="url" value={formValues.coverImage} onChange={handleChange} placeholder="https://example.com/cover.jpg" />
+          <FormInput label="Author" name="author" value={formValues.author} onChange={handleChange} placeholder="Author or creator" />
 
-          <FormTextarea
-            label="Description"
-            name="description"
-            value={values.description}
-            onChange={handleChange}
-            rows="3"
-          />
-
-          <FileUploader
-            accept="application/pdf,video/*,image/*"
-            maxSize={104857600}
-            onChange={setUploadedFiles}
-            multiple={false}
-          />
-
-          <div className="grid grid-cols-2 gap-4">
-            <FormSelect
-              label="Resource Type"
-              name="type"
-              value={values.type}
-              onChange={handleChange}
-              required
-            >
-              <option value="PDF">PDF</option>
-              <option value="Video">Video</option>
-              <option value="Image">Image</option>
-              <option value="Document">Document</option>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <FormSelect label="Category" name="category" value={formValues.category} onChange={handleChange}>
+              <option value="general">General</option>
+              <option value="womens-health">Women's Health</option>
+              <option value="menstrual-health">Menstrual Health</option>
+              <option value="fertility">Fertility</option>
+              <option value="education">Education</option>
             </FormSelect>
 
-            <FormInput
-              label="Author"
-              name="author"
-              value={values.author}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              error={touched.author ? errors.author : null}
-              required
-            />
+            <FormSelect label="Resource Type" name="resourceType" value={formValues.resourceType} onChange={handleChange}>
+              <option value="ebook">eBook</option>
+              <option value="guide">Guide</option>
+              <option value="course">Course</option>
+              <option value="webinar">Webinar</option>
+              <option value="toolkit">Toolkit</option>
+              <option value="article">Article</option>
+              <option value="other">Other</option>
+            </FormSelect>
           </div>
 
-          <FormSelect
-            label="Status"
-            name="status"
-            value={values.status}
-            onChange={handleChange}
-          >
-            <option value="draft">Draft</option>
-            <option value="published">Published</option>
-            <option value="archived">Archived</option>
-          </FormSelect>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+            <FormInput label="Price" name="price" type="number" min="0" step="0.01" value={formValues.price} onChange={handleChange} placeholder="0" />
+            <FormInput label="Currency" name="currency" value={formValues.currency} onChange={handleChange} placeholder="NGN" />
+            <FormInput label="Platform" name="platform" value={formValues.platform} onChange={handleChange} placeholder="Selar, Gumroad, etc." />
+          </div>
+
+          <FormInput label="External URL" name="externalUrl" type="url" value={formValues.externalUrl} onChange={handleChange} placeholder="https://example.com" required />
+          <FormInput label="Button Text" name="buttonText" value={formValues.buttonText} onChange={handleChange} placeholder="Get Resource" />
+
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <FormSelect label="Featured" name="featured" value={formValues.featured} onChange={handleChange}>
+              <option value="false">No</option>
+              <option value="true">Yes</option>
+            </FormSelect>
+
+            <FormSelect label="Status" name="status" value={formValues.status} onChange={handleChange}>
+              <option value="draft">Draft</option>
+              <option value="published">Published</option>
+              <option value="archived">Archived</option>
+            </FormSelect>
+          </div>
 
           <div className="flex gap-3 pt-4 border-t border-gray-700">
-            <button
-              type="button"
-              onClick={handleCloseForm}
-              disabled={isSubmitting}
-              className="flex-1 px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded transition disabled:opacity-50"
-            >
+            <button type="button" onClick={closeForm} className="flex-1 px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded transition">
               Cancel
             </button>
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded transition flex items-center justify-center gap-2 disabled:opacity-50"
-            >
-              {isSubmitting && (
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-              )}
-              {editingId ? 'Update Resource' : 'Upload Resource'}
+            <button type="submit" disabled={isSubmitting} className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded transition disabled:opacity-50">
+              {isSubmitting ? 'Saving...' : editingResource ? 'Save Changes' : 'Create Resource'}
             </button>
           </div>
         </form>
       </Modal>
-
-      <ConfirmDeleteModal
-        isOpen={!!deleteConfirm}
-        title="Delete Resource"
-        message={`Are you sure you want to delete "${deleteConfirm?.title}"? This action cannot be undone.`}
-        onConfirm={confirmDelete}
-        onCancel={() => setDeleteConfirm(null)}
-        isLoading={isLoading}
-      />
     </div>
   );
 }

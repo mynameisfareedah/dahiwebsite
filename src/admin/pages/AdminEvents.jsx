@@ -1,7 +1,6 @@
 /**
  * Admin Events Page
  * Manage events with Supabase backend
- * Falls back to mock data if Supabase not configured
  */
 import React, { useState, useEffect } from 'react';
 import { Calendar, MapPin, Users, Plus } from 'lucide-react';
@@ -21,20 +20,18 @@ import {
 } from '../hooks/useDataManagement';
 import { useEvents } from '../hooks/useEvents';
 import {
-  FormField,
   FormInput,
   FormSelect,
   FormTextarea,
-  FormCheckbox,
 } from '../components/FormField';
 import { validators, validateForm } from '../utils/validation';
+import { EVENT_STATUS } from '../../constants/status';
 
 export default function AdminEvents() {
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [formLoading, setFormLoading] = useState(false);
-  const [actionLoading, setActionLoading] = useState(false);
 
   const {
     events,
@@ -48,7 +45,6 @@ export default function AdminEvents() {
     page,
     setPage,
     pageSize,
-    setPageSize,
     totalPages,
     refresh,
     createEvent,
@@ -89,7 +85,7 @@ export default function AdminEvents() {
         location: '',
         category: 'health',
         capacity: '',
-        status: 'scheduled',
+        status: EVENT_STATUS.DRAFT,
       }
     : {
         title: '',
@@ -99,7 +95,7 @@ export default function AdminEvents() {
         location: '',
         category: 'health',
         capacity: '',
-        status: 'scheduled',
+        status: EVENT_STATUS.DRAFT,
       };
 
   const {
@@ -121,7 +117,9 @@ export default function AdminEvents() {
         } else {
           addToast('Event updated successfully', 'success');
           await refresh();
-          handleCloseForm();
+          setShowForm(false);
+          setEditingId(null);
+          resetForm();
         }
       } else {
         const response = await createEvent(formValues);
@@ -130,7 +128,9 @@ export default function AdminEvents() {
         } else {
           addToast('Event created successfully', 'success');
           await refresh();
-          handleCloseForm();
+          setShowForm(false);
+          setEditingId(null);
+          resetForm();
         }
       }
     } catch (err) {
@@ -180,22 +180,19 @@ export default function AdminEvents() {
   ];
 
   const statusOptions = [
-    { value: 'scheduled', label: 'Scheduled' },
-    { value: 'completed', label: 'Completed' },
-    { value: 'cancelled', label: 'Cancelled' },
+    { value: EVENT_STATUS.DRAFT, label: 'Draft' },
+    { value: EVENT_STATUS.PUBLISHED, label: 'Published' },
   ];
 
   const filterStatusOptions = [
     { value: 'all', label: 'All statuses' },
-    { value: 'scheduled', label: 'Scheduled' },
-    { value: 'completed', label: 'Completed' },
-    { value: 'cancelled', label: 'Cancelled' },
+    { value: EVENT_STATUS.DRAFT, label: 'Draft' },
+    { value: EVENT_STATUS.PUBLISHED, label: 'Published' },
   ];
 
   const statusColors = {
-    scheduled: 'bg-blue-900 text-blue-200',
-    completed: 'bg-green-900 text-green-200',
-    cancelled: 'bg-red-900 text-red-200',
+    [EVENT_STATUS.PUBLISHED]: 'bg-blue-900 text-blue-200',
+    [EVENT_STATUS.DRAFT]: 'bg-gray-700 text-gray-200',
   };
 
   if (loading) {

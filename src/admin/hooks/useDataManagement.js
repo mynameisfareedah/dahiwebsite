@@ -124,16 +124,22 @@ export function useForm(initialValues, onSubmit, validate) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isSubmitting) {
+      return;
+    }
+
     setIsSubmitting(true);
 
     const newErrors = validate ? validate(values) : {};
     setErrors(newErrors);
 
-    if (Object.keys(newErrors).length === 0) {
-      await onSubmit(values);
+    try {
+      if (Object.keys(newErrors).length === 0) {
+        await onSubmit(values);
+      }
+    } finally {
+      setIsSubmitting(false);
     }
-
-    setIsSubmitting(false);
   };
 
   const resetForm = () => {

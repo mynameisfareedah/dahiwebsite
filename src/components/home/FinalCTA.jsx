@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 function FinalCTA() {
   return (
-    <section className="section-shell mx-auto max-w-7xl">
+    <section className="section-shell max-w-7xl">
       <div className="soft-card overflow-hidden bg-gradient-to-r from-dahiPrimary to-dahiSecondary p-8 text-white sm:p-10">
         <div className="max-w-3xl">
           <span className="eyebrow bg-white/15 text-white">Continue the journey</span>

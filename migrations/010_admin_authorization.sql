@@ -266,4 +266,33 @@ CREATE POLICY "admin_delete_events" ON public.events
   FOR DELETE
   USING (public.is_admin());
 
+-- ===== DONATIONS =====
+-- Public: SELECT only where active = true
+DROP POLICY IF EXISTS "public_read_active_donations" ON public.donations;
+CREATE POLICY "public_read_active_donations" ON public.donations
+  FOR SELECT
+  USING (active = true);
+
+-- Admins: full CRUD
+DROP POLICY IF EXISTS "admin_select_donations" ON public.donations;
+CREATE POLICY "admin_select_donations" ON public.donations
+  FOR SELECT
+  USING (public.is_admin());
+
+DROP POLICY IF EXISTS "admin_insert_donations" ON public.donations;
+CREATE POLICY "admin_insert_donations" ON public.donations
+  FOR INSERT
+  WITH CHECK (public.is_admin() AND created_by = auth.uid());
+
+DROP POLICY IF EXISTS "admin_update_donations" ON public.donations;
+CREATE POLICY "admin_update_donations" ON public.donations
+  FOR UPDATE
+  USING (public.is_admin())
+  WITH CHECK (public.is_admin());
+
+DROP POLICY IF EXISTS "admin_delete_donations" ON public.donations;
+CREATE POLICY "admin_delete_donations" ON public.donations
+  FOR DELETE
+  USING (public.is_admin());
+
 -- End of 010_admin_authorization.sql

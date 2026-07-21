@@ -1,0 +1,520 @@
+
+> dahi-website@1.0.0 lint
+> eslint src
+
+
+C:\Users\USER\Documents\FINAL DOC ADI PAGE\src\admin\components\ConfirmDeleteModal.jsx
+  2:23  error  'X' is defined but never used  no-unused-vars
+
+C:\Users\USER\Documents\FINAL DOC ADI PAGE\src\admin\components\DashboardComponents.jsx
+   1:24  error  'Users' is defined but never used                                no-unused-vars
+   1:31  error  'Calendar' is defined but never used                             no-unused-vars
+   1:41  error  'BookOpen' is defined but never used                             no-unused-vars
+   1:51  error  'Heart' is defined but never used                                no-unused-vars
+   1:58  error  'MessageSquare' is defined but never used                        no-unused-vars
+  81:13  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  81:20  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+C:\Users\USER\Documents\FINAL DOC ADI PAGE\src\admin\components\FileUploader.jsx
+  11:9  error  'alert' is not defined  no-undef
+
+C:\Users\USER\Documents\FINAL DOC ADI PAGE\src\admin\components\SearchBar.jsx
+  1:17  error  'useState' is defined but never used  no-unused-vars
+
+C:\Users\USER\Documents\FINAL DOC ADI PAGE\src\admin\components\SetupNotice.jsx
+  161:61  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  161:83  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+
+C:\Users\USER\Documents\FINAL DOC ADI PAGE\src\admin\components\Sidebar.jsx
+   1:10  error  'useEffect' is defined but never used    no-unused-vars
+  13:3   error  'ChevronDown' is defined but never used  no-unused-vars
+
+C:\Users\USER\Documents\FINAL DOC ADI PAGE\src\admin\context\AdminAuthContext.jsx
+   17:27  error    'setIsSupabaseReady' is assigned a value but never used                                                                no-unused-vars
+  122:6   warning  React Hook useEffect has a missing dependency: 'handleUnauthorized'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\USER\Documents\FINAL DOC ADI PAGE\src\admin\contexts\ToastContext.jsx
+  14:25  error  'setTimeout' is not defined    no-undef
+  19:33  error  'clearTimeout' is not defined  no-undef
+
+C:\Users\USER\Documents\FINAL DOC ADI PAGE\src\admin\hooks\useDataManagement.js
+  192:3  error    'React' is not defined                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       no-undef
+  194:7  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  192 |   React.useEffect(() => {
+  193 |     if (immediate) {
+> 194 |       execute();
+      |       ^^^^^^^ Avoid calling setState() directly within an effect
+  195 |     }
+  196 |   }, []);
+  197 |  react-hooks/set-state-in-effect
+  196:6  warning  React Hook React.useEffect has missing dependencies: 'execute' and 'immediate'. Either include them or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           react-hooks/exhaustive-deps
+
+C:\Users\USER\Documents\FINAL DOC ADI PAGE\src\admin\hooks\useEvents.js
+  74:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  72 |
+  73 |   useEffect(() => {
+> 74 |     loadEvents();
+     |     ^^^^^^^^^^ Avoid calling setState() directly within an effect
+  75 |   }, [loadEvents]);
+  76 |
+  77 |   const refresh = useCallback(() => loadEvents(), [loadEvents]);  react-hooks/set-state-in-effect
+
+C:\Users\USER\Documents\FINAL DOC ADI PAGE\src\admin\pages\AdminCommunity.jsx
+  87:38  error  'setTimeout' is not defined  no-undef
+
+C:\Users\USER\Documents\FINAL DOC ADI PAGE\src\admin\pages\AdminDashboard.jsx
+  7:44  error  'MessageSquare' is defined but never used  no-unused-vars
+
+C:\Users\USER\Documents\FINAL DOC ADI PAGE\src\admin\pages\AdminEvents.jsx
+   24:3   error  'FormField' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  no-unused-vars
+   28:3   error  'FormCheckbox' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               no-unused-vars
+   38:10  error  'actionLoading' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     no-unused-vars
+   38:25  error  'setActionLoading' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  no-unused-vars
+   52:5   error  'setPageSize' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       no-unused-vars
+  125:11  error  Error: Cannot access variable before it is declared
+
+`handleCloseForm` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+  123 |           addToast('Event updated successfully', 'success');
+  124 |           await refresh();
+> 125 |           handleCloseForm();
+      |           ^^^^^^^^^^^^^^^ `handleCloseForm` accessed before it is declared
+  126 |         }
+  127 |       } else {
+  128 |         const response = await createEvent(formValues);
+
+  166 |   };
+  167 |
+> 168 |   const handleCloseForm = () => {
+      |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 169 |     setShowForm(false);
+      | ^^^^^^^^^^^^^^^^^^^^^^^
+> 170 |     setEditingId(null);
+      | ^^^^^^^^^^^^^^^^^^^^^^^
+> 171 |     resetForm();
+      | ^^^^^^^^^^^^^^^^^^^^^^^
+> 172 |   };
+      | ^^^^^ `handleCloseForm` is declared here
+  173 |
+  174 |   const categoryOptions = [
+  175 |     { value: 'health', label: 'Health' },  react-hooks/immutability
+
+C:\Users\USER\Documents\FINAL DOC ADI PAGE\src\admin\pages\AdminLoginPage.jsx
+  60:7   error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  58 |   useEffect(() => {
+  59 |     if (user && !authLoading) {
+> 60 |       setSuccess(true);
+     |       ^^^^^^^^^^ Avoid calling setState() directly within an effect
+  61 |       const timer = setTimeout(() => {
+  62 |         const from = location.state?.from?.pathname || '/admin';
+  63 |         navigate(from, { replace: true });  react-hooks/set-state-in-effect
+  61:21  error  'setTimeout' is not defined                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             no-undef
+  65:20  error  'clearTimeout' is not defined                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           no-undef
+
+C:\Users\USER\Documents\FINAL DOC ADI PAGE\src\admin\pages\AdminResources.jsx
+   20:3   error  'FormField' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          no-unused-vars
+  132:36  error  'setTimeout' is not defined                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    no-undef
+  158:5   error  Error: Cannot access variable before it is declared
+
+`resetForm` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+  156 |     setEditingId(null);
+  157 |     setUploadedFiles([]);
+> 158 |     resetForm();
+      |     ^^^^^^^^^ `resetForm` accessed before it is declared
+  159 |     setIsLoading(false);
+  160 |   }, (values) => validateForm(values, formRules));
+  161 |
+
+  127 |     handleBlur,
+  128 |     handleSubmit: handleFormSubmit,
+> 129 |     resetForm,
+      |     ^^^^^^^^^ `resetForm` is declared here
+  130 |   } = useForm(initialFormValues, async (formValues) => {
+  131 |     setIsLoading(true);
+  132 |     await new Promise((resolve) => setTimeout(resolve, 500));  react-hooks/immutability
+  174:38  error  'setTimeout' is not defined                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    no-undef
+
+C:\Users\USER\Documents\FINAL DOC ADI PAGE\src\admin\pages\AdminSettings.jsx
+   3:10  error  'Settings' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              no-unused-vars
+  29:10  error  'isSaving' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     no-unused-vars
+  45:7   error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  43 |     const validTabs = ['general', 'notifications', 'security', 'appearance', 'backup'];
+  44 |     if (tab && validTabs.includes(tab)) {
+> 45 |       setActiveTab(tab);
+     |       ^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  46 |     }
+  47 |   }, [searchParams]);
+  48 |  react-hooks/set-state-in-effect
+  66:39  error  'formValues' is defined but never used. Allowed unused args must match /^_/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      no-unused-vars
+  68:36  error  'setTimeout' is not defined                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       no-undef
+
+C:\Users\USER\Documents\FINAL DOC ADI PAGE\src\admin\pages\AdminSponsors.jsx
+  121:36  error  'setTimeout' is not defined                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  no-undef
+  143:5   error  Error: Cannot access variable before it is declared
+
+`resetForm` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+  141 |     setShowForm(false);
+  142 |     setEditingId(null);
+> 143 |     resetForm();
+      |     ^^^^^^^^^ `resetForm` accessed before it is declared
+  144 |     setIsLoading(false);
+  145 |   }, (values) => validateForm(values, formRules));
+  146 |
+
+  116 |     handleBlur,
+  117 |     handleSubmit: handleFormSubmit,
+> 118 |     resetForm,
+      |     ^^^^^^^^^ `resetForm` is declared here
+  119 |   } = useForm(initialFormValues, async (formValues) => {
+  120 |     setIsLoading(true);
+  121 |     await new Promise((resolve) => setTimeout(resolve, 500));  react-hooks/immutability
+  159:38  error  'setTimeout' is not defined                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  no-undef
+
+C:\Users\USER\Documents\FINAL DOC ADI PAGE\src\admin\pages\AdminTeam.jsx
+   22:3   error  'FormTextarea' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     no-unused-vars
+  122:36  error  'setTimeout' is not defined                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  no-undef
+  143:5   error  Error: Cannot access variable before it is declared
+
+`resetForm` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+  141 |     setShowForm(false);
+  142 |     setEditingId(null);
+> 143 |     resetForm();
+      |     ^^^^^^^^^ `resetForm` accessed before it is declared
+  144 |     setIsLoading(false);
+  145 |   }, (values) => validateForm(values, formRules));
+  146 |
+
+  117 |     handleBlur,
+  118 |     handleSubmit: handleFormSubmit,
+> 119 |     resetForm,
+      |     ^^^^^^^^^ `resetForm` is declared here
+  120 |   } = useForm(initialFormValues, async (formValues) => {
+  121 |     setIsLoading(true);
+  122 |     await new Promise((resolve) => setTimeout(resolve, 500));  react-hooks/immutability
+  159:38  error  'setTimeout' is not defined                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  no-undef
+
+C:\Users\USER\Documents\FINAL DOC ADI PAGE\src\admin\pages\AdminVolunteers.jsx
+   19:33  error  'FormTextarea' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     no-unused-vars
+  124:36  error  'setTimeout' is not defined                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  no-undef
+  146:5   error  Error: Cannot access variable before it is declared
+
+`resetForm` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+  144 |     setShowForm(false);
+  145 |     setEditingId(null);
+> 146 |     resetForm();
+      |     ^^^^^^^^^ `resetForm` accessed before it is declared
+  147 |     setIsLoading(false);
+  148 |   }, (values) => validateForm(values, formRules));
+  149 |
+
+  119 |     handleBlur,
+  120 |     handleSubmit: handleFormSubmit,
+> 121 |     resetForm,
+      |     ^^^^^^^^^ `resetForm` is declared here
+  122 |   } = useForm(initialFormValues, async (formValues) => {
+  123 |     setIsLoading(true);
+  124 |     await new Promise((resolve) => setTimeout(resolve, 500));  react-hooks/immutability
+  162:38  error  'setTimeout' is not defined                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  no-undef
+
+C:\Users\USER\Documents\FINAL DOC ADI PAGE\src\admin\pages\Events\CreateEvent.jsx
+  96:7  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  94 |   useEffect(() => {
+  95 |     if (!posterFile) {
+> 96 |       setPreviewUrl(null);
+     |       ^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  97 |       return undefined;
+  98 |     }
+  99 |  react-hooks/set-state-in-effect
+
+C:\Users\USER\Documents\FINAL DOC ADI PAGE\src\admin\pages\Events\EditEvent.jsx
+  104:7  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  102 |     if (!id) {
+  103 |       console.error('Invalid event id');
+> 104 |       setLoadError('Missing event id');
+      |       ^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  105 |       setLoading(false);
+  106 |       return;
+  107 |     }                           react-hooks/set-state-in-effect
+  145:6  warning  React Hook useEffect has a missing dependency: 'setFieldValue'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        react-hooks/exhaustive-deps
+  150:9  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  148 |     if (!posterFile) {
+  149 |       if (eventRecord?.poster_url) {
+> 150 |         setPreviewUrl(getEventImageUrl(eventRecord.poster_url));
+      |         ^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  151 |       }
+  152 |       return undefined;
+  153 |     }  react-hooks/set-state-in-effect
+
+C:\Users\USER\Documents\FINAL DOC ADI PAGE\src\admin\pages\Events\EventDetails.jsx
+  31:5  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  29 |
+  30 |   useEffect(() => {
+> 31 |     loadEvent();
+     |     ^^^^^^^^^ Avoid calling setState() directly within an effect
+  32 |   }, [id]);
+  33 |
+  34 |   const handleTogglePublish = async () => {  react-hooks/set-state-in-effect
+  32:6  warning  React Hook useEffect has a missing dependency: 'loadEvent'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       react-hooks/exhaustive-deps
+
+C:\Users\USER\Documents\FINAL DOC ADI PAGE\src\admin\services\eventService.js
+  100:50  error  Unnecessary escape character: \-  no-useless-escape
+  153:23  error  Unnecessary escape character: \.  no-useless-escape
+  395:29  error  Redundant Boolean call            no-extra-boolean-cast
+
+C:\Users\USER\Documents\FINAL DOC ADI PAGE\src\admin\utils\validation.js
+  36:33  error  Unnecessary escape character: \+  no-useless-escape
+  36:35  error  Unnecessary escape character: \(  no-useless-escape
+  36:37  error  Unnecessary escape character: \)  no-useless-escape
+
+C:\Users\USER\Documents\FINAL DOC ADI PAGE\src\components\common\ContactCard.jsx
+  13:13  error  'navigator' is not defined         no-undef
+  16:14  error  'error' is defined but never used  no-unused-vars
+
+C:\Users\USER\Documents\FINAL DOC ADI PAGE\src\components\common\ContactForm.jsx
+    2:37  error  'ClipboardCopy' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     no-unused-vars
+   34:5   error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  32 |
+  33 |   useEffect(() => {
+> 34 |     setFormData((current) => ({ ...current, reason: initialReason }));
+     |     ^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  35 |   }, [initialReason]);
+  36 |
+  37 |   const handleChange = (event) => {  react-hooks/set-state-in-effect
+  104:14  error  'error' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             no-unused-vars
+
+C:\Users\USER\Documents\FINAL DOC ADI PAGE\src\components\common\PageShell.jsx
+  1:20  error  'lazy' is defined but never used  no-unused-vars
+
+C:\Users\USER\Documents\FINAL DOC ADI PAGE\src\components\common\VolunteerForm.jsx
+  60:14  error  'error' is defined but never used  no-unused-vars
+
+C:\Users\USER\Documents\FINAL DOC ADI PAGE\src\components\events\EventDetails.jsx
+  3:109  error  'secondaryHref' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+
+C:\Users\USER\Documents\FINAL DOC ADI PAGE\src\components\events\FeaturedEventCard.jsx
+  3:8  error  'EventCTAButton' is defined but never used  no-unused-vars
+
+C:\Users\USER\Documents\FINAL DOC ADI PAGE\src\components\home\GetInvolved.jsx
+  41:116  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+C:\Users\USER\Documents\FINAL DOC ADI PAGE\src\components\home\OutreachAnnouncementBar.jsx
+  16:139  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+C:\Users\USER\Documents\FINAL DOC ADI PAGE\src\components\home\Testimonials.jsx
+  15:66  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  15:79  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+
+C:\Users\USER\Documents\FINAL DOC ADI PAGE\src\components\home\UpcomingEvents.jsx
+  22:92  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+C:\Users\USER\Documents\FINAL DOC ADI PAGE\src\components\home\UpcomingOutreachSection.jsx
+  15:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  13 |   useEffect(() => {
+  14 |     let mounted = true;
+> 15 |     setLoading(true);
+     |     ^^^^^^^^^^ Avoid calling setState() directly within an effect
+  16 |     getUpcomingEvents(1)
+  17 |       .then((res) => {
+  18 |         if (!mounted) return;  react-hooks/set-state-in-effect
+  35:9  error  'source' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            no-unused-vars
+
+C:\Users\USER\Documents\FINAL DOC ADI PAGE\src\components\outreach\DonationSection.jsx
+   33:26  error  'IntersectionObserver' is not defined                            no-undef
+   55:11  error  'navigator' is not defined                                       no-undef
+   56:15  error  'navigator' is not defined                                       no-undef
+   60:14  error  'error' is defined but never used                                no-unused-vars
+  111:66  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+C:\Users\USER\Documents\FINAL DOC ADI PAGE\src\components\outreach\OutreachFAQSection.jsx
+  47:14  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  47:36  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+C:\Users\USER\Documents\FINAL DOC ADI PAGE\src\components\outreach\OutreachInterestModal.jsx
+  13:7   error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  11 |   useEffect(() => {
+  12 |     if (isOpen) {
+> 13 |       setMounted(true);
+     |       ^^^^^^^^^^ Avoid calling setState() directly within an effect
+  14 |       requestAnimationFrame(() => setVisible(true));
+  15 |       const prevOverflow = document.body.style.overflow;
+  16 |       document.body.style.overflow = 'hidden';  react-hooks/set-state-in-effect
+  14:7   error  'requestAnimationFrame' is not defined                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              no-undef
+  29:17  error  'setTimeout' is not defined                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         no-undef
+  30:20  error  'clearTimeout' is not defined                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       no-undef
+
+C:\Users\USER\Documents\FINAL DOC ADI PAGE\src\components\outreach\VolunteerForm.jsx
+  77:47  error  'e' is defined but never used  no-unused-vars
+  77:50  error  Empty block statement          no-empty
+
+C:\Users\USER\Documents\FINAL DOC ADI PAGE\src\components\outreach\VolunteerModal.jsx
+  11:7   error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+   9 |   useEffect(() => {
+  10 |     if (isOpen) {
+> 11 |       setMounted(true);
+     |       ^^^^^^^^^^ Avoid calling setState() directly within an effect
+  12 |       // allow mount then flip visible for CSS entry animation
+  13 |       requestAnimationFrame(() => setVisible(true));
+  14 |  react-hooks/set-state-in-effect
+  13:7   error  'requestAnimationFrame' is not defined                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     no-undef
+  32:17  error  'setTimeout' is not defined                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                no-undef
+  33:20  error  'clearTimeout' is not defined                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              no-undef
+
+C:\Users\USER\Documents\FINAL DOC ADI PAGE\src\main.jsx
+  13:26  error  'navigator' is not defined  no-undef
+  15:7   error  'navigator' is not defined  no-undef
+
+C:\Users\USER\Documents\FINAL DOC ADI PAGE\src\pages\Admin\AdminLoginPage.jsx
+   16:76  error  'authContextError' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   no-unused-vars
+   26:7   error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  24 |   useEffect(() => {
+  25 |     if (user && !authLoading) {
+> 26 |       setSuccess(true);
+     |       ^^^^^^^^^^ Avoid calling setState() directly within an effect
+  27 |       const timer = setTimeout(() => {
+  28 |         const from = location.state?.from?.pathname || '/admin';
+  29 |         navigate(from, { replace: true });  react-hooks/set-state-in-effect
+   27:21  error  'setTimeout' is not defined                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             no-undef
+   31:20  error  'clearTimeout' is not defined                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           no-undef
+  109:99  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         react/no-unescaped-entities
+
+C:\Users\USER\Documents\FINAL DOC ADI PAGE\src\pages\Admin\AdminSettingsPage.jsx
+  21:5  error  'alert' is not defined  no-undef
+
+C:\Users\USER\Documents\FINAL DOC ADI PAGE\src\pages\Blog\BlogPage.jsx
+  63:16  error  'err' is defined but never used  no-unused-vars
+
+C:\Users\USER\Documents\FINAL DOC ADI PAGE\src\pages\Contact\ContactPage.jsx
+  63:7  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  61 |     ];
+  62 |     if (reasonParam && validReasons.includes(reasonParam)) {
+> 63 |       setSelectedReason(reasonParam);
+     |       ^^^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  64 |       formSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  65 |     }
+  66 |   }, [location.search]);  react-hooks/set-state-in-effect
+
+C:\Users\USER\Documents\FINAL DOC ADI PAGE\src\pages\Events\EventsPage.jsx
+  109:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  107 |   useEffect(() => {
+  108 |     let mounted = true;
+> 109 |     setLoadingEvents(true);
+      |     ^^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  110 |     getEvents()
+  111 |       .then((res) => {
+  112 |         if (!mounted) return;  react-hooks/set-state-in-effect
+
+C:\Users\USER\Documents\FINAL DOC ADI PAGE\src\utils\adminData.js
+  46:20  error  'Blob' is not defined  no-undef
+
+✖ 110 problems (106 errors, 4 warnings)
+  1 error and 0 warnings potentially fixable with the `--fix` option.
+

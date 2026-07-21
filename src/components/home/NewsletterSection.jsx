@@ -1,6 +1,6 @@
 function NewsletterSection() {
   return (
-    <section className="section-shell mx-auto max-w-7xl">
+    <section className="section-shell max-w-7xl">
       <div className="soft-card overflow-hidden p-8 sm:p-10">
         <div className="max-w-3xl">
           <span className="eyebrow">Stay Connected</span>
