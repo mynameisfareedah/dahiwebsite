@@ -64,9 +64,13 @@ export function Sidebar({ isOpen, onClose }) {
 
       {/* Sidebar */}
       <aside
-        className={`fixed left-0 top-0 h-screen w-64 bg-gray-900 text-white transform transition-transform duration-200 ease-in-out z-50 lg:relative lg:transform-none ${
-          isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
-        }`}
+        className={`fixed left-0 top-0 h-screen w-64
+          flex flex-col
+          bg-gray-900 text-white
+          transform transition-transform duration-200 ease-in-out
+          z-50 lg:relative lg:transform-none ${
+            isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+          }`}
       >
         {/* Logo Section */}
         <div className="p-6 border-b border-gray-800">
