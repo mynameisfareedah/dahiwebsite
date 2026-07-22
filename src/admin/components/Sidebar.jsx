@@ -64,7 +64,7 @@ export function Sidebar({ isOpen, onClose }) {
 
       {/* Sidebar */}
       <aside
-        className={`fixed left-0 top-0 h-screen w-64
+        className={`fixed left-0 top-0 h-screen w-72
           flex flex-col
           bg-gray-900 text-white
           transform transition-transform duration-200 ease-in-out
@@ -104,14 +104,14 @@ export function Sidebar({ isOpen, onClose }) {
                     navigate(item.path);
                     onClose();
                   }}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition ${
+                  className={`w-full min-h-[48px] flex items-center gap-3 px-4 py-3 rounded-lg transition ${
                     isActive(item.path)
                       ? 'bg-blue-600 text-white'
                       : 'text-gray-300 hover:bg-gray-800'
                   }`}
                 >
                   {Icon && <Icon className="w-5 h-5" />}
-                  <span className="text-sm font-medium">{item.label}</span>
+                  <span className="text-sm font-medium whitespace-nowrap truncate flex-1">{item.label}</span>
                 </button>
               );
             })}

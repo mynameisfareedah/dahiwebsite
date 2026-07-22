@@ -18,13 +18,16 @@ function ResourcesPreview() {
         table="resources"
         emptyMessage="Resources will appear here once content is published."
         render={(items) => (
-          <div className="grid gap-6 lg:grid-cols-3">
+          <div className="grid gap-6">
             {(items || []).slice(0, 3).map((resource) => (
               <ResourceCard
                 key={resource?.id || resource?.title || 'resource'}
                 title={resource?.title || 'Untitled Resource'}
                 category={resource?.category || resource?.type || 'Resource'}
                 description={resource?.description || 'No description available'}
+                author={resource?.author}
+                featured={resource?.featured}
+                status={resource?.status}
                 image={resource?.cover_image || resource?.thumbnail_url || resource?.image || resource?.image_url || '/ebook.svg'}
                 type={resource?.resource_type || resource?.type}
                 price={resource?.price}
