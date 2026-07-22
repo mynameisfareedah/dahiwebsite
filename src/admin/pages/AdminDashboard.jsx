@@ -3,25 +3,21 @@
  * Main dashboard showing overview and statistics
  */
 
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQueries } from '@tanstack/react-query';
 import { Users, Calendar, BookOpen, Heart } from 'lucide-react';
 import { useAdminProfile } from '../hooks/useAdminProfile';
 import { countCommunityMembers, countPublishedResources, countUpcomingEvents, countVolunteers } from '../../services/supabase/adminStatsService';
-import { auditTrailService } from '../services/auditTrailService';
 import {
   StatCard,
   WelcomeSection,
-  RecentActivityCard,
 } from '../components/DashboardComponents';
 
 export default function AdminDashboard() {
   const { displayName, loading: profileLoading, error: profileError } = useAdminProfile();
   console.log('Dashboard profileLoading:', profileLoading);
   const navigate = useNavigate();
-  const [recentEntries, setRecentEntries] = useState([]);
-  const [recentLoading, setRecentLoading] = useState(true);
 
   const statsConfig = useMemo(
     () => [
@@ -76,29 +72,6 @@ export default function AdminDashboard() {
     [queryResults, statsConfig]
   );
 
-  useEffect(() => {
-    let mounted = true;
-
-    const loadRecentEntries = async () => {
-      setRecentLoading(true);
-      const result = await auditTrailService.getRecentAuditEntries(10);
-      if (!mounted) return;
-
-      if (result.success) {
-        setRecentEntries(result.data || []);
-      } else {
-        setRecentEntries([]);
-      }
-      setRecentLoading(false);
-    };
-
-    loadRecentEntries();
-
-    return () => {
-      mounted = false;
-    };
-  }, []);
-
   return (
     <div className="p-6 lg:p-8">
       {/* Welcome Section */}
@@ -118,7 +91,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Main Content Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {/* Quick Actions */}
         <div>
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
@@ -161,50 +134,22 @@ export default function AdminDashboard() {
                 Site Settings
               </button>
             </div>
-
-            {/* Help Card */}
-            <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-              <h3 className="font-medium text-sm text-blue-900 mb-2">Need Help?</h3>
-              <p className="text-xs text-blue-800 mb-3">
-                Check out the documentation to learn more about managing your community.
-              </p>
-              <a
-                href="/"
-                className="text-xs text-blue-600 hover:text-blue-700 font-medium"
-              >
-                View Documentation →
-              </a>
-            </div>
           </div>
+        </div>
 
+        {/* Need Help */}
+        <div>
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-gray-900">Recent Activity</h2>
-              <button
-                onClick={() => navigate('/admin/audit-trail')}
-                className="text-sm font-medium text-blue-600 hover:text-blue-700"
-              >
-                View all
-              </button>
-            </div>
-
-            {recentLoading ? (
-              <p className="text-sm text-gray-500">Loading recent activity...</p>
-            ) : recentEntries.length === 0 ? (
-              <p className="text-sm text-gray-500">No activity has been logged yet.</p>
-            ) : (
-              <div className="space-y-3">
-                {recentEntries.map((entry) => (
-                  <RecentActivityCard
-                    key={entry.id}
-                    title={`${entry.action} • ${entry.module}`}
-                    description={entry.description || 'No description provided.'}
-                    timestamp={entry.createdAt ? new Date(entry.createdAt).toLocaleString() : 'Just now'}
-                    type="info"
-                  />
-                ))}
-              </div>
-            )}
+            <h2 className="text-lg font-bold text-gray-900 mb-4">Need Help?</h2>
+            <p className="text-sm text-gray-600 mb-4">
+              Go back to the public website to see the community-facing content.
+            </p>
+            <a
+              href="/"
+              className="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-700"
+            >
+              Go Back to public website →
+            </a>
           </div>
         </div>
       </div>
