@@ -63,6 +63,8 @@ class AuthService {
    * @returns {Promise<{error: null} | {error: string}>}
    */
   async signOut() {
+    console.trace("signOut() CALLED");
+
     if (isSupabaseConfigured && supabase) {
       try {
         const { error } = await supabase.auth.signOut();
