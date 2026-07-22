@@ -34,12 +34,6 @@ export const SIDEBAR_MENU = [
     icon: 'User',
   },
   {
-    id: 'users',
-    label: 'Admin Users',
-    path: ADMIN_ROUTES.USERS,
-    icon: 'Users',
-  },
-  {
     id: 'audit-trail',
     label: 'Audit Trail',
     path: ADMIN_ROUTES.AUDIT_TRAIL,
@@ -68,6 +62,12 @@ export const SIDEBAR_MENU = [
     label: 'Donations',
     path: ADMIN_ROUTES.DONATIONS,
     icon: 'Gift',
+  },
+  {
+    id: 'team',
+    label: 'Team Members',
+    path: ADMIN_ROUTES.TEAM,
+    icon: 'Users',
   },
   {
     id: 'sponsors',
