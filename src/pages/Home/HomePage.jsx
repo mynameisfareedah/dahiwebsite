@@ -7,7 +7,6 @@ import MeetDocAdi from '../../components/home/MeetDocAdi';
 import Impact from '../../components/home/Impact';
 import ResourcesPreview from '../../components/home/ResourcesPreview';
 import Testimonials from '../../components/home/Testimonials';
-import TeamPreview from '../../components/home/TeamPreview';
 import GetInvolved from '../../components/home/GetInvolved';
 import NewsletterSection from '../../components/home/NewsletterSection';
 import FAQ from '../../components/home/FAQ';
@@ -45,10 +44,7 @@ function HomePage() {
       {/* 7. Testimonials */}
       <Testimonials />
 
-      {/* 8. Meet the Team */}
-      <TeamPreview />
-
-      {/* 9. Get Involved */}
+      {/* 8. Get Involved */}
       <GetInvolved />
 
       {/* 10. Newsletter Subscription */}
