@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Users, Mail } from 'lucide-react';
 import { PageHeader, StatusBadge, Modal, EmptyState, LoadingSpinner } from '../components';
-import { FormInput, FormSelect, FormTextarea } from '../components/FormField';
+import { FormCheckbox, FormInput, FormSelect, FormTextarea } from '../components/FormField';
 import { teamMemberService } from '../services/teamMemberService';
 import { TEAM_MEMBER_STATUS } from '../../constants/status';
 
@@ -10,18 +10,29 @@ const EMPTY_FORM_VALUES = {
   role: '',
   department: 'Leadership',
   bio: '',
+  photo_url: '',
   email: '',
   linkedin_url: '',
   display_order: 0,
+  featured: false,
   active: true,
   status: TEAM_MEMBER_STATUS.ACTIVE,
 };
+
+function getMemberName(member) {
+  return member.full_name || member.name || 'Unnamed team member';
+}
+
+function getMemberImage(member) {
+  return member.profile_image || member.photo_url || '';
+}
 
 function normalizeFormValues(values) {
   return {
     ...values,
     display_order: Number(values.display_order || 0),
-    active: true,
+    active: values.active !== false,
+    status: values.active === false ? TEAM_MEMBER_STATUS.INACTIVE : TEAM_MEMBER_STATUS.ACTIVE,
   };
 }
 
@@ -78,15 +89,17 @@ export default function AdminTeam() {
   const openEditForm = (member) => {
     setEditingMember(member);
     setFormValues({
-      name: member.name || '',
+      name: member.full_name || member.name || '',
       role: member.role || '',
       department: member.department || 'Leadership',
       bio: member.bio || '',
+      photo_url: member.profile_image || member.photo_url || '',
       email: member.email || '',
       linkedin_url: member.linkedin_url || '',
       display_order: member.display_order ?? 0,
-      active: true,
-      status: member.status || TEAM_MEMBER_STATUS.ACTIVE,
+      featured: Boolean(member.featured),
+      active: member.active !== false,
+      status: member.active === false ? TEAM_MEMBER_STATUS.INACTIVE : TEAM_MEMBER_STATUS.ACTIVE,
     });
     setShowForm(true);
   };
@@ -98,8 +111,8 @@ export default function AdminTeam() {
   };
 
   const handleChange = (event) => {
-    const { name, value } = event.target;
-    setFormValues((current) => ({ ...current, [name]: value }));
+    const { name, value, type, checked } = event.target;
+    setFormValues((current) => ({ ...current, [name]: type === 'checkbox' ? checked : value }));
   };
 
   const handleSubmit = async (event) => {
@@ -133,7 +146,7 @@ export default function AdminTeam() {
   };
 
   const handleDelete = async (member) => {
-    if (!window.confirm(`Delete ${member.name}?`)) {
+    if (!window.confirm(`Delete ${getMemberName(member)}?`)) {
       return;
     }
 
@@ -211,10 +224,14 @@ export default function AdminTeam() {
             <table className="w-full">
               <thead className="bg-gray-800 border-b border-gray-700">
                 <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Photo</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Name</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Email</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Role</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Department</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Bio</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Order</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Featured</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Status</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Actions</th>
                 </tr>
@@ -223,21 +240,28 @@ export default function AdminTeam() {
                 {renderedMembers.map((member) => (
                   <tr key={member.id} className="hover:bg-gray-800 transition">
                     <td className="px-6 py-4">
-                      <p className="font-medium text-white">{member.name}</p>
+                      {getMemberImage(member) ? <img src={getMemberImage(member)} alt="" className="h-12 w-12 rounded-full object-cover" /> : <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-900 text-xs font-bold text-blue-200">{getMemberName(member).slice(0, 2).toUpperCase()}</div>}
+                    </td>
+                    <td className="px-6 py-4">
+                      <p className="font-medium text-white">{getMemberName(member)}</p>
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2 text-gray-300">
                         <Mail size={16} />
-                        {member.email || '—'}
+                        <div>
+                          <p>{member.email || '—'}</p>
+                          {member.linkedin_url ? <a href={member.linkedin_url} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-400 hover:text-blue-300">LinkedIn</a> : null}
+                        </div>
                       </div>
                     </td>
                     <td className="px-6 py-4 text-gray-300">{member.role}</td>
+                    <td className="px-6 py-4 text-gray-300">{member.department || '—'}</td>
                     <td className="px-6 py-4">
-                      <span className="px-3 py-1 bg-purple-900 text-purple-100 rounded-full text-sm">
-                        {member.department || '—'}
-                      </span>
+                      <p className="max-w-xs truncate text-gray-300" title={member.bio || ''}>{member.bio || '—'}</p>
                     </td>
-                    <td className="px-6 py-4"><StatusBadge status={member.status || TEAM_MEMBER_STATUS.ACTIVE} /></td>
+                    <td className="px-6 py-4 text-gray-300">{member.display_order ?? 0}</td>
+                    <td className="px-6 py-4 text-gray-300">{member.featured ? 'Yes' : 'No'}</td>
+                    <td className="px-6 py-4"><StatusBadge status={member.active === false ? TEAM_MEMBER_STATUS.INACTIVE : TEAM_MEMBER_STATUS.ACTIVE} /></td>
                     <td className="px-6 py-4 text-sm">
                       <div className="flex gap-2">
                         <button onClick={() => openEditForm(member)} className="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded transition">Edit</button>
@@ -255,7 +279,8 @@ export default function AdminTeam() {
       <Modal isOpen={showForm} onClose={closeForm} title={editingMember ? 'Edit Team Member' : 'Add Team Member'} size="md">
         <form onSubmit={handleSubmit} className="space-y-4">
           <FormInput label="Full Name" name="name" value={formValues.name} onChange={handleChange} required />
-          <FormInput label="Email" type="email" name="email" value={formValues.email} onChange={handleChange} required />
+          <FormInput label="Profile Image URL" type="url" name="photo_url" value={formValues.photo_url} onChange={handleChange} placeholder="https://..." />
+          <FormInput label="Email" type="email" name="email" value={formValues.email} onChange={handleChange} />
           <FormInput label="Role" name="role" value={formValues.role} onChange={handleChange} required />
           <FormSelect label="Department" name="department" value={formValues.department} onChange={handleChange}>
             <option value="Leadership">Leadership</option>
@@ -268,11 +293,8 @@ export default function AdminTeam() {
           <FormTextarea label="Bio" name="bio" value={formValues.bio} onChange={handleChange} rows="3" />
           <FormInput label="LinkedIn URL" name="linkedin_url" value={formValues.linkedin_url} onChange={handleChange} placeholder="https://linkedin.com/in/..." />
           <FormInput label="Display Order" name="display_order" type="number" value={formValues.display_order} onChange={handleChange} />
-          <FormSelect label="Status" name="status" value={formValues.status} onChange={handleChange}>
-            <option value={TEAM_MEMBER_STATUS.ACTIVE}>Active</option>
-            <option value={TEAM_MEMBER_STATUS.INACTIVE}>Inactive</option>
-            <option value="archived">Archived</option>
-          </FormSelect>
+          <FormCheckbox label="Featured team member" name="featured" checked={formValues.featured} onChange={handleChange} />
+          <FormCheckbox label="Visible on the public website" name="active" checked={formValues.active} onChange={handleChange} />
           <div className="flex gap-3 pt-4 border-t border-gray-700">
             <button type="button" onClick={closeForm} className="flex-1 px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded transition">Cancel</button>
             <button type="submit" disabled={submitting} className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded transition disabled:opacity-50">

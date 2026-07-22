@@ -1,9 +1,7 @@
 import { Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
 import { impactStats } from '../../data/siteContent';
 import SEO from '../../components/common/SEO';
 import SectionHeading from '../../components/common/SectionHeading';
-import TeamCard from '../../components/common/TeamCard';
 import CTASection from '../../components/common/CTASection';
 import AboutHero from '../../components/about/AboutHero';
 import StorySection from '../../components/about/StorySection';
@@ -13,12 +11,8 @@ import ValueCard from '../../components/about/ValueCard';
 import ServiceCard from '../../components/about/ServiceCard';
 import ApproachCard from '../../components/about/ApproachCard';
 import ImpactCounter from '../../components/about/ImpactCounter';
-import { supabase, isSupabaseConfigured } from '../../lib/supabase';
 
 function AboutPage() {
-  const [teamMembers, setTeamMembers] = useState([]);
-  const [teamLoading, setTeamLoading] = useState(true);
-  const [teamError, setTeamError] = useState('');
   const values = [
     { icon: 'fa-solid fa-hand-holding-heart', title: 'Compassion', description: 'We believe health education should be delivered with empathy, understanding, and respect. Every woman’s health journey is unique, and we strive to create a supportive environment where women feel heard and valued.' },
     { icon: 'fa-solid fa-shield-halved', title: 'Integrity', description: 'We are committed to providing trustworthy and responsible health information. Accuracy, honesty, and transparency guide the resources we create and the conversations we facilitate.' },
@@ -175,32 +169,22 @@ function AboutPage() {
         </div>
 
         <div className="soft-card p-8 sm:p-10">
-          <SectionHeading eyebrow="Meet the team" title="The people behind DAHI" description="DAHI is powered by a dedicated team of individuals passionate about improving women’s health through education and community engagement." />
-          <p className="mt-6 text-lg leading-8 text-slate-600">
-            Our team works together across different areas including programme coordination, digital systems, content development, outreach, and community support. Together, we are committed to building meaningful health education experiences that serve women and communities.
-          </p>
-          {teamLoading ? (
-            <div className="mt-8 rounded-[1.25rem] border border-slate-200 bg-slate-50 p-8 text-center text-slate-600">Loading team members...</div>
-          ) : teamError ? (
-            <div className="mt-8 rounded-[1.25rem] border border-rose-200 bg-rose-50 p-8 text-center text-rose-600">Unable to load team members right now.</div>
-          ) : teamMembers.length === 0 ? (
-            <div className="mt-8 rounded-[1.25rem] border border-slate-200 bg-slate-50 p-8 text-center text-slate-600">Team profiles will appear here once content is published.</div>
-          ) : (
-            <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-              {teamMembers.map((member) => {
-                const isFounder = (member.role || '').toLowerCase().includes('founder');
-                return (
-                  <TeamCard
-                    key={member.id || member.name}
-                    name={member.name}
-                    role={member.role}
-                    initials={(member.name || 'DA').split(' ').map((part) => part[0]).join('').slice(0, 2).toUpperCase()}
-                    description={isFounder ? undefined : member.bio || member.description}
-                  />
-                );
-              })}
+          <SectionHeading eyebrow="Meet the team" title="A dedicated team supporting women’s health education" description="Our team brings together health education expertise, digital community support, and community outreach to create reliable resources and meaningful experiences." />
+          <div className="mt-8 grid gap-6 lg:grid-cols-2">
+            <div className="rounded-[1.25rem] border border-slate-200 p-6">
+              <p className="text-lg leading-8 text-slate-600">
+                Every member of DAHI contributes to our mission through teaching, outreach, content development, and compassionate community support. We are united by a shared commitment to helping women access trusted health information.
+              </p>
             </div>
-          )}
+            <div className="rounded-[1.25rem] border border-slate-200 p-6">
+              <p className="text-lg leading-8 text-slate-600">
+                Want to learn more about the people behind DAHI? Visit our full team page to meet the members shaping our work and the community we serve.
+              </p>
+              <Link to="/team" className="mt-6 inline-flex items-center justify-center rounded-full bg-dahiPrimary px-6 py-3 text-sm font-semibold text-white transition hover:bg-dahiSecondary">
+                View All Team Members
+              </Link>
+            </div>
+          </div>
         </div>
 
         <div className="soft-card p-8 sm:p-10">
