@@ -96,13 +96,13 @@ function ResourcesPage() {
 
         <div className="soft-card p-8 sm:p-10">
           <SectionHeading eyebrow="Featured resources" title="Available DAHI eBooks" description="Browse the three trusted DAHI publications currently available in the library." />
-          <div className="mt-8 grid gap-6">
+          <div className="mt-8 grid gap-6 lg:grid-cols-3">
             {isLoading ? (
-              <div className="rounded-[1.25rem] border border-slate-200 p-8"><p>Loading resources...</p></div>
+              <div className="col-span-3"><div className="rounded-[1.25rem] border border-slate-200 p-8"><p>Loading resources...</p></div></div>
             ) : error ? (
-              <div className="rounded-[1.25rem] border border-red-200 bg-red-50 p-8"><p className="text-red-800">Unable to load resources. Showing default resources.</p></div>
+              <div className="col-span-3"><div className="rounded-[1.25rem] border border-red-200 bg-red-50 p-8"><p className="text-red-800">Unable to load resources. Showing default resources.</p></div></div>
             ) : filteredResources.length === 0 ? (
-              <div className="rounded-[1.25rem] border border-slate-200 bg-slate-50 p-8 text-center"><p className="text-slate-600">No resources match your search criteria.</p></div>
+              <div className="col-span-3"><div className="rounded-[1.25rem] border border-slate-200 bg-slate-50 p-8 text-center"><p className="text-slate-600">No resources match your search criteria.</p></div></div>
             ) : (
               filteredResources.map((resource) => (
                 <ResourceCard
@@ -110,9 +110,6 @@ function ResourcesPage() {
                   title={resource?.title || 'Untitled Resource'}
                   category={resource?.category || 'Resource'}
                   description={resource?.description || 'No description available'}
-                  author={resource?.author}
-                  featured={resource?.featured}
-                  status={resource?.status}
                   image={resource?.coverImage || resource?.cover_image || resource?.thumbnail_url || resource?.image || resource?.image_url || '/ebook.svg'}
                   type={resource?.resource_type || resource?.type}
                   price={resource?.price}
