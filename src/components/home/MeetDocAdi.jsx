@@ -14,8 +14,8 @@ function MeetDocAdi() {
               <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
                 <div className="flex justify-center lg:justify-start">
                   <img
-                    src={founder.photo_url || '/docadi-320.webp'}
-                    alt={founder.name}
+                    src={founder.profile_image || founder.photo_url || '/docadi-320.webp'}
+                    alt={founder.full_name || founder.name}
                     width="320"
                     height="320"
                     loading="lazy"
@@ -24,7 +24,7 @@ function MeetDocAdi() {
                 </div>
                 <div>
                   <span className="eyebrow">Meet Doc Adi</span>
-                  <h2 className="mt-4 text-3xl font-black text-slate-900">{founder.name}</h2>
+                  <h2 className="mt-4 text-3xl font-black text-slate-900">{founder.full_name || founder.name}</h2>
                   <p className="mt-2 text-sm font-semibold uppercase tracking-[0.2em] text-dahiSecondary">{founder.position || founder.role}</p>
                   {/* Render bio from any available field and preserve paragraph breaks */}
                   {(() => {

@@ -17,7 +17,7 @@ const CreateEvent = lazy(() => import('../pages/Events/CreateEvent'));
 const EditEvent = lazy(() => import('../pages/Events/EditEvent'));
 const EventDetails = lazy(() => import('../pages/Events/EventDetails'));
 const AdminResources = lazy(() => import('../pages/AdminResources'));
-const AdminTeam = lazy(() => import('../pages/AdminTeam'));
+const TeamMembersPage = lazy(() => import('../pages/TeamMembersPage'));
 const AdminCommunity = lazy(() => import('../pages/AdminCommunity'));
 const AdminMessages = lazy(() => import('../pages/AdminMessages'));
 const AdminVolunteers = lazy(() => import('../pages/AdminVolunteers'));
@@ -46,7 +46,7 @@ export const adminRoutes = [
       <Route path="events/:id" element={<EventDetails />} />
       <Route path="resources" element={<AdminResources />} />
       <Route path="donations" element={<AdminDonations />} />
-      <Route path="team" element={<AdminTeam />} />
+      <Route path="team" element={<TeamMembersPage />} />
       <Route path="community" element={<AdminCommunity />} />
       <Route path="messages" element={<AdminMessages />} />
       <Route path="volunteers" element={<AdminVolunteers />} />

@@ -52,6 +52,12 @@ export const SIDEBAR_MENU = [
     icon: 'Calendar',
   },
   {
+    id: 'team',
+    label: 'Team Members',
+    path: ADMIN_ROUTES.TEAM,
+    icon: 'Users',
+  },
+  {
     id: 'volunteers',
     label: 'Volunteers',
     path: ADMIN_ROUTES.VOLUNTEERS,

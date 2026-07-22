@@ -29,11 +29,15 @@ function TeamPreview() {
       ) : (
         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
           {visibleMembers.map((member) => (
-            <article key={member.id || member.name} className="team-card soft-card p-7">
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-dahiPrimary/10 text-2xl font-black text-dahiPrimary">
-                {(member.name || 'DA').split(' ').map((part) => part[0]).join('').slice(0, 2).toUpperCase()}
-              </div>
-              <h3 className="mt-5 text-xl font-semibold text-slate-900">{member.name}</h3>
+            <article key={member.id || member.full_name || member.name} className="team-card soft-card p-7">
+              {member.profile_image || member.photo_url ? (
+                <img src={member.profile_image || member.photo_url} alt="" className="h-14 w-14 rounded-2xl object-cover" />
+              ) : (
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-dahiPrimary/10 text-2xl font-black text-dahiPrimary">
+                  {(member.full_name || member.name || 'DA').split(' ').map((part) => part[0]).join('').slice(0, 2).toUpperCase()}
+                </div>
+              )}
+              <h3 className="mt-5 text-xl font-semibold text-slate-900">{member.full_name || member.name}</h3>
               <p className="mt-2 text-sm font-semibold uppercase tracking-[0.2em] text-dahiSecondary">{member.role}</p>
             </article>
           ))}

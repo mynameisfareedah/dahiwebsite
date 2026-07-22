@@ -71,7 +71,6 @@ function AboutPage() {
           .from('team_members')
           .select('*')
           .eq('active', true)
-          .eq('status', 'active')
           .order('display_order', { ascending: true })
           .order('created_at', { ascending: false });
 
@@ -191,10 +190,11 @@ function AboutPage() {
                 const isFounder = (member.role || '').toLowerCase().includes('founder');
                 return (
                   <TeamCard
-                    key={member.id || member.name}
-                    name={member.name}
+                    key={member.id || member.full_name || member.name}
+                    name={member.full_name || member.name}
                     role={member.role}
-                    initials={(member.name || 'DA').split(' ').map((part) => part[0]).join('').slice(0, 2).toUpperCase()}
+                    initials={(member.full_name || member.name || 'DA').split(' ').map((part) => part[0]).join('').slice(0, 2).toUpperCase()}
+                    profileImage={member.profile_image || member.photo_url}
                     description={isFounder ? undefined : member.bio || member.description}
                   />
                 );
