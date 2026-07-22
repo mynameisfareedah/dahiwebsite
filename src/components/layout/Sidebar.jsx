@@ -5,6 +5,7 @@ import { Menu, X } from 'lucide-react';
 const sidebarLinks = [
   { to: '/', label: 'Home' },
   { to: '/about', label: 'About' },
+  { to: '/team', label: 'Meet the Team' },
   { to: '/events', label: 'Events' },
   { to: '/resources', label: 'Resources' },
   { to: '/donate', label: 'Donate' },

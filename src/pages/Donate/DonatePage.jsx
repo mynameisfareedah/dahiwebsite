@@ -24,15 +24,17 @@ function DonatePage() {
   });
 
   const donationCampaigns = useMemo(() => {
-    return (donations || []).map((d) => ({
-      ...d,
-      title: d.title || d.name || '',
-      description: d.description || '',
-      image_url: d.image_url || d.image || null,
-      goal_amount: d.goal_amount != null ? Number(d.goal_amount) : 0,
-      amount_raised: d.amount_raised != null ? Number(d.amount_raised) : 0,
-      currency: d.currency || 'NGN',
-    }));
+    // Temporarily hide donation campaigns from the public page until the active campaign is removed from the database.
+    return [];
+    // return (donations || []).map((d) => ({
+    //   ...d,
+    //   title: d.title || d.name || '',
+    //   description: d.description || '',
+    //   image_url: d.image_url || d.image || null,
+    //   goal_amount: d.goal_amount != null ? Number(d.goal_amount) : 0,
+    //   amount_raised: d.amount_raised != null ? Number(d.amount_raised) : 0,
+    //   currency: d.currency || 'NGN',
+    // }));
   }, [donations]);
 
   return (
