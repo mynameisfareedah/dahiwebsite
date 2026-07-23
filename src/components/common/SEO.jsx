@@ -7,6 +7,8 @@ function SEO({ title, description, image = '/logo.jpeg', path = '/' }) {
     const absoluteImage = image.startsWith('http') ? image : `${origin}${image}`;
 
     const siteTitle = 'DAHI — Empowering Muslim Women Through Trusted Health Education';
+    const siteLocale = 'en_US';
+    const siteType = 'website';
     const fullTitle = title ? `${title} | DAHI` : siteTitle;
     document.title = fullTitle;
 
@@ -28,6 +30,12 @@ function SEO({ title, description, image = '/logo.jpeg', path = '/' }) {
     const ogUrl = document.querySelector('meta[property="og:url"]');
     if (ogUrl) ogUrl.setAttribute('content', `${origin}${resolvedPath}`);
 
+    const ogType = document.querySelector('meta[property="og:type"]');
+    if (ogType) ogType.setAttribute('content', siteType);
+
+    const ogLocale = document.querySelector('meta[property="og:locale"]');
+    if (ogLocale) ogLocale.setAttribute('content', siteLocale);
+
     const twitterTitle = document.querySelector('meta[name="twitter:title"]');
     if (twitterTitle) twitterTitle.setAttribute('content', fullTitle);
 
@@ -44,6 +52,7 @@ function SEO({ title, description, image = '/logo.jpeg', path = '/' }) {
       description: description || siteTitle,
       url: `${origin}${resolvedPath}`,
       image: absoluteImage,
+      inLanguage: 'en-US',
       isPartOf: {
         '@type': 'WebSite',
         name: 'Doc Adi Health Initiative',
