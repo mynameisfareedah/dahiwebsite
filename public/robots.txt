@@ -1,3 +1,4 @@
 User-agent: *
 Allow: /
-Sitemap: https://www.dahi.org/sitemap.xml
+
+Sitemap: https://thedahi.org/sitemap.xml

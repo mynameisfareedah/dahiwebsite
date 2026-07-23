@@ -60,14 +60,14 @@ describe('SEO Component - Real Implementation', () => {
       render(<SEO path="/about" />);
 
       const canonical = document.querySelector('link[rel="canonical"]');
-      expect(canonical?.getAttribute('href')).toBe('https://www.dahi.org/about');
+      expect(canonical?.getAttribute('href')).toBe('https://thedahi.org/about');
     });
 
     it('should set canonical URL for root path', () => {
       render(<SEO path="/" />);
 
       const canonical = document.querySelector('link[rel="canonical"]');
-      expect(canonical?.getAttribute('href')).toBe('https://www.dahi.org/');
+      expect(canonical?.getAttribute('href')).toBe('https://thedahi.org/');
     });
 
     it('should use window.location.pathname as fallback', () => {
@@ -81,7 +81,7 @@ describe('SEO Component - Real Implementation', () => {
       render(<SEO path="/" />);
 
       const canonical = document.querySelector('link[rel="canonical"]');
-      expect(canonical?.getAttribute('href')).toContain('www.dahi.org');
+      expect(canonical?.getAttribute('href')).toContain('thedahi.org');
 
       Object.defineProperty(window.location, 'pathname', {
         value: originalPathname,
@@ -110,7 +110,7 @@ describe('SEO Component - Real Implementation', () => {
       render(<SEO image="/custom-image.jpg" />);
 
       const ogImage = document.querySelector('meta[property="og:image"]');
-      expect(ogImage?.getAttribute('content')).toBe('https://www.dahi.org/custom-image.jpg');
+      expect(ogImage?.getAttribute('content')).toBe('https://thedahi.org/custom-image.jpg');
     });
 
     it('should handle absolute image URLs', () => {
@@ -125,7 +125,7 @@ describe('SEO Component - Real Implementation', () => {
       render(<SEO path="/programs" />);
 
       const ogUrl = document.querySelector('meta[property="og:url"]');
-      expect(ogUrl?.getAttribute('content')).toBe('https://www.dahi.org/programs');
+      expect(ogUrl?.getAttribute('content')).toBe('https://thedahi.org/programs');
     });
 
     it('should set OpenGraph type', () => {
@@ -157,7 +157,7 @@ describe('SEO Component - Real Implementation', () => {
       render(<SEO image="/twitter-image.jpg" />);
 
       const twitterImage = document.querySelector('meta[name="twitter:image"]');
-      expect(twitterImage?.getAttribute('content')).toBe('https://www.dahi.org/twitter-image.jpg');
+      expect(twitterImage?.getAttribute('content')).toBe('https://thedahi.org/twitter-image.jpg');
     });
   });
 
@@ -235,10 +235,10 @@ describe('SEO Component - Real Implementation', () => {
         'Full SEO example'
       );
       expect(document.querySelector('meta[property="og:image"]')?.getAttribute('content')).toBe(
-        'https://www.dahi.org/example.jpg'
+        'https://thedahi.org/example.jpg'
       );
       expect(document.querySelector('link[rel="canonical"]')?.getAttribute('href')).toBe(
-        'https://www.dahi.org/example'
+        'https://thedahi.org/example'
       );
     });
   });
@@ -261,7 +261,7 @@ describe('SEO Component - Real Implementation', () => {
       render(<SEO />);
 
       const ogImage = document.querySelector('meta[property="og:image"]');
-      expect(ogImage?.getAttribute('content')).toBe('https://www.dahi.org/logo.jpeg');
+      expect(ogImage?.getAttribute('content')).toBe('https://thedahi.org/logo.jpeg');
     });
   });
 });

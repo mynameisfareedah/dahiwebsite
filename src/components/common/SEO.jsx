@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 function SEO({ title, description, image = '/logo.jpeg', path = '/' }) {
   useEffect(() => {
-    const origin = 'https://www.dahi.org';
+    const origin = 'https://thedahi.org';
     const resolvedPath = path === '/' ? (window.location.pathname || '/') : path;
     const absoluteImage = image.startsWith('http') ? image : `${origin}${image}`;
 
