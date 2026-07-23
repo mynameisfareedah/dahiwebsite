@@ -1,1 +1,0 @@
-const E={DRAFT:"draft",PUBLISHED:"published"},T={DRAFT:"draft"},A={ACTIVE:"active",INACTIVE:"inactive"},t={APPROVED:"approved",REJECTED:"rejected"},a={ACTIVE:"active",INACTIVE:"inactive",PENDING:"pending"};export{E,a as G,T as R,A as T,t as V};

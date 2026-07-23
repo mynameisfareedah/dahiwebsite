@@ -1,23 +1,25 @@
-export const analyticsEnabled = Boolean(import.meta.env.VITE_GA_ID || import.meta.env.VITE_CLARITY_ID);
+import ReactGA from 'react-ga4';
 
-export function trackEvent(eventName, params = {}) {
-  if (typeof window === 'undefined') return;
+const measurementId = import.meta.env.VITE_GA_MEASUREMENT_ID;
+let analyticsInitialized = false;
 
-  if (window.gtag) {
-    window.gtag('event', eventName, params);
+export function initializeAnalytics() {
+  if (!measurementId || analyticsInitialized || typeof window === 'undefined') {
+    return;
   }
 
-  if (window.clarity) {
-    window.clarity('event', eventName);
-  }
+  ReactGA.initialize(measurementId);
+  analyticsInitialized = true;
 }
 
-export function trackPageView(pathname = window.location.pathname) {
-  if (typeof window === 'undefined') return;
-
-  if (window.gtag) {
-    window.gtag('config', import.meta.env.VITE_GA_ID, {
-      page_path: pathname,
-    });
+export function trackPageView(path = window.location.pathname) {
+  if (!measurementId || typeof window === 'undefined') {
+    return;
   }
+
+  if (!analyticsInitialized) {
+    initializeAnalytics();
+  }
+
+  ReactGA.send({ hitType: 'pageview', page: path });
 }

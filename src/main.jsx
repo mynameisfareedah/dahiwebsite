@@ -7,7 +7,7 @@ import './styles/index.css';
 import { queryClient } from './lib/queryClient';
 import ErrorBoundary from './components/common/ErrorBoundary';
 import SkipLink from './components/common/SkipLink';
-import { trackPageView } from './lib/analytics';
+import AnalyticsTracker from './lib/AnalyticsTracker';
 
 function registerServiceWorker() {
   if ('serviceWorker' in navigator) {
@@ -25,11 +25,10 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <ErrorBoundary>
         <BrowserRouter>
           <SkipLink />
+          <AnalyticsTracker />
           <App />
         </BrowserRouter>
       </ErrorBoundary>
     </QueryClientProvider>
   </React.StrictMode>
 );
-
-trackPageView(window.location.pathname);
