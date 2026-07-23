@@ -3,7 +3,7 @@ import { supabase, isSupabaseConfigured } from '../lib/supabase';
 
 function applyTableFilters(query, table) {
   if (table === 'team_members') {
-    return query.eq('active', true).eq('status', 'active');
+    return query.eq('active', true);
   }
 
   if (table === 'resources') {
