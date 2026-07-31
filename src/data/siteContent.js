@@ -65,21 +65,21 @@ export const testimonials = [
 
 // August 2026 Community Outreach Campaign
 export const upcomingOutreach = {
-  title: 'August Community Health Outreach 2026',
-  subtitle: 'Women\'s Health Awareness and Early Detection: Hypertension, Diabetes, Breast Cancer, and Cervical Cancer',
-  description: 'Under the theme "Silent Diseases in Women: Early Detection Saves Lives," this free community outreach will bring evidence-based health education, preventive health screening, and practical wellness guidance directly to women living in Gwagwalada and surrounding communities.',
-  fullDescription: 'The Doc Adi Health Initiative (DAHI) is pleased to present a free community-based Women\'s Health Outreach designed to improve health awareness and promote early detection of common but often overlooked health conditions affecting women.\n\nUnder the theme "Silent Diseases in Women: Early Detection Saves Lives," this outreach will bring evidence-based health education, preventive health screening, and practical wellness guidance directly to women living in Gwagwalada and surrounding communities.\n\nMany serious health conditions develop gradually and may not present obvious symptoms in their early stages. As a result, countless women unknowingly live with conditions such as hypertension, diabetes, breast abnormalities, and cervical disease until complications arise. Through this outreach, DAHI seeks to bridge this gap by creating a welcoming, respectful, and culturally sensitive environment where women can learn about their health, ask questions, receive basic health assessments, and gain the confidence to seek appropriate medical care when necessary.\n\nBeyond the screenings themselves, this initiative is about empowering women with knowledge. We believe that informed women are better equipped to protect their own health, support their families, and contribute to healthier communities.\n\nAll educational sessions, screenings, and materials provided during the outreach will be offered completely free of charge.',
-  registrationStatus: 'coming-soon', // coming-soon, open, closed
+  title: 'Women\'s Health Outreach & Screening',
+  subtitle: 'SILENT DISEASES IN WOMEN; EARLY DETECTION SAVES LIVES',
+  description: 'This free community outreach is open to all women in Gwagwalada and surrounding communities. It offers education, awareness, and supportive health information in a welcoming environment.',
+  fullDescription: 'The Doc Adi Health Initiative (DAHI) is pleased to present a free community-based Women\'s Health Outreach & Screening designed to improve awareness and encourage early detection of common health conditions affecting women.\n\nThe event will take place at Dele Salawudeen Preparatory School, 6, Calvary Tabernacle Church Street, Jimroose, Kutunku, Gwagwalada, Abuja. It is open and free for all women, with no registration required.\n\nThrough this outreach, DAHI seeks to create a welcoming, respectful, and culturally supportive environment where women can learn more about their health, ask questions, and gain confidence to seek appropriate medical care when needed.',
+  registrationStatus: 'open',
   date: 'Saturday, 15 August 2026',
   dateRange: 'Saturday, 15 August 2026',
   time: 'Time To Be Announced',
-  venue: 'Gwagwalada, Abuja, Nigeria',
+  venue: 'Dele Salawudeen Preparatory School, 6, Calvary Tabernacle Church Street, Jimroose, Kutunku, Gwagwalada, Abuja',
   location: 'Gwagwalada and surrounding communities',
-  theme: 'Silent Diseases in Women: Early Detection Saves Lives',
+  theme: 'SILENT DISEASES IN WOMEN; EARLY DETECTION SAVES LIVES',
   category: 'Community Outreach',
-  cost: 'Free Admission',
-  image: '/outreach-poster.jpeg',
-  bannerImage: '/outreach-poster.jpeg',
+  cost: 'Open and Free for All',
+  image: '/outreach-banner.jpeg',
+  bannerImage: '/outreach-banner.jpeg',
   
   objectives: [
     {
@@ -121,27 +121,17 @@ export const upcomingOutreach = {
     { title: 'Breast Health Education', description: 'Guidance on breast self-awareness and breast self-examination techniques.', icon: 'fa-solid fa-stethoscope' },
     { title: 'Cervical Cancer Awareness', description: 'Education on cervical cancer risk factors, prevention, HPV vaccination, and screening.', icon: 'fa-solid fa-ribbon' },
     { title: 'Educational Material Distribution', description: 'Free leaflets, guides, and resource cards for participants to take home and share.', icon: 'fa-solid fa-book' },
-    { title: 'Blood Glucose Screening', description: 'Optional - Subject to resource availability and qualified personnel.', icon: 'fa-solid fa-droplet' },
-    { title: 'HIV & Hepatitis B Screening', description: 'Optional - Subject to resource availability and qualified personnel.', icon: 'fa-solid fa-flask' },
   ],
 
   targetAudience: [
-    'Women aged 40–60 years',
+    'Women of all ages',
     'Women living in Gwagwalada and surrounding communities',
     'Women interested in learning more about preventive healthcare',
     'Women who have never undergone routine health screening',
     'Women seeking reliable health information in a supportive environment',
   ],
 
-  schedule: [
-    { time: '[Time TBA]', activity: 'Registration & Welcome' },
-    { time: '[Time TBA]', activity: 'Opening Remarks' },
-    { time: '[Time TBA]', activity: 'Health Education Session' },
-    { time: '[Time TBA]', activity: 'Health Screening Begins (BP, BMI, Breast Health Education)' },
-    { time: '[Time TBA]', activity: 'Cervical Cancer Awareness Session' },
-    { time: '[Time TBA]', activity: 'Questions & Answers' },
-    { time: '[Time TBA]', activity: 'Closing & Distribution of Materials' },
-  ],
+  schedule: [],
 
   speakers: [
     {

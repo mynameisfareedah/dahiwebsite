@@ -5,9 +5,7 @@ import SectionHeading from '../../components/common/SectionHeading';
 import CTASection from '../../components/common/CTASection';
 import ObjectivesGrid from '../../components/outreach/ObjectivesGrid';
 import ActivityCard from '../../components/outreach/ActivityCard';
-import ProgrammeSchedule from '../../components/outreach/ProgrammeSchedule';
 import SpeakerCard from '../../components/outreach/SpeakerCard';
-import RegistrationSection from '../../components/outreach/RegistrationSection';
 import DonationSection from '../../components/outreach/DonationSection';
 import OutreachFAQSection from '../../components/outreach/OutreachFAQSection';
 import PostEventHighlights from '../../components/outreach/PostEventHighlights';
@@ -17,8 +15,8 @@ function OutreachDetailsPage() {
   return (
     <>
       <SEO
-        title="August Community Health Outreach 2026"
-        description="Join DAHI for the August Community Health Outreach. Free health education, screenings, and community engagement for women."
+        title="Women’s Health Outreach & Screening"
+        description="Join DAHI for the women’s health outreach and screening event. Open and free for all women in Gwagwalada and surrounding communities."
       />
 
       {/* Hero Section */}
@@ -54,7 +52,7 @@ function OutreachDetailsPage() {
                 <Users className="h-5 w-5 text-dahiPrimary flex-shrink-0" />
                 <div>
                   <div className="text-sm font-semibold text-slate-900">Women Ages 40–60</div>
-                  <div className="text-xs text-slate-600">Open to women in this age group</div>
+                  <div className="text-xs text-slate-600">Open to women in the community</div>
                 </div>
               </div>
             </div>
@@ -99,7 +97,7 @@ function OutreachDetailsPage() {
             <div className="rounded-lg border border-dahiPrimary/20 bg-dahiPrimary/5 p-4">
               <div className="flex items-center gap-3 text-dahiPrimary">
                 <Zap size={20} />
-                <span className="font-semibold">Registration opening soon – stay tuned!</span>
+                <span className="font-semibold">Open and free for all – no registration required.</span>
               </div>
             </div>
           </div>
@@ -143,9 +141,6 @@ function OutreachDetailsPage() {
         </div>
       </section>
 
-      {/* Programme Schedule */}
-      <ProgrammeSchedule schedule={upcomingOutreach.schedule} />
-
       {/* Speakers */}
       {upcomingOutreach.speakers && upcomingOutreach.speakers.length > 0 && (
         <section className="section-shell mx-auto max-w-7xl space-y-8">
@@ -168,9 +163,6 @@ function OutreachDetailsPage() {
           </div>
         </section>
       )}
-
-      {/* Registration */}
-      <RegistrationSection registrationStatus={upcomingOutreach.registrationStatus} />
 
       {/* Donation/Support */}
       <DonationSection donationImpact={upcomingOutreach.donationImpact} />

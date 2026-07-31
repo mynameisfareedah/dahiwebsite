@@ -5,7 +5,6 @@ import { upcomingOutreach } from '../../data/siteContent';
 import { useEffect, useState } from 'react';
 import { getUpcomingEvents } from '../../services/supabase/eventsService';
 import LoadingState from '../common/LoadingState';
-import { resolveRegistrationState } from '../../utils/registration';
 
 function UpcomingOutreachSection() {
   const [event, setEvent] = useState(null);
@@ -33,9 +32,6 @@ function UpcomingOutreachSection() {
     };
   }, []);
 
-  const source = event || upcomingOutreach;
-  const registrationState = resolveRegistrationState(source, 'Register Now');
-
   if (loading) {
     return <LoadingState />;
   }
@@ -59,12 +55,10 @@ function UpcomingOutreachSection() {
               className="h-[300px] w-full rounded-[1.25rem] object-contain bg-white sm:h-[400px]"
             />
           </picture>
-          {!registrationState.enabled && (
-            <div className="absolute right-4 top-4 rounded-full bg-dahiPrimary px-4 py-2 text-center backdrop-blur">
-              <div className="text-sm font-bold text-white">Registration</div>
-              <div className="text-xs font-semibold text-white">{registrationState.label}</div>
-            </div>
-          )}
+          <div className="absolute right-4 top-4 rounded-full bg-dahiPrimary px-4 py-2 text-center backdrop-blur">
+            <div className="text-sm font-bold text-white">Open & Free</div>
+            <div className="text-xs font-semibold text-white">No registration required</div>
+          </div>
         </div>
 
         <div className="flex w-full min-w-0 flex-col justify-between space-y-6 sm:w-[52%]">
@@ -104,24 +98,6 @@ function UpcomingOutreachSection() {
               >
                 Learn More About the Outreach Event
               </Link>
-              {registrationState.enabled ? (
-                <a
-                  href={registrationState.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center rounded-full bg-dahiSecondary px-6 py-3 text-sm font-semibold text-white transition hover:bg-dahiPrimary"
-                >
-                  {registrationState.label}
-                </a>
-              ) : (
-                <button
-                  type="button"
-                  disabled
-                  className="inline-flex cursor-not-allowed items-center justify-center rounded-full bg-slate-300 px-6 py-3 text-sm font-semibold text-slate-600"
-                >
-                  {registrationState.label}
-                </button>
-              )}
               <button
                 type="button"
                 onClick={() => document.getElementById('support-section')?.scrollIntoView({ behavior: 'smooth' })}
