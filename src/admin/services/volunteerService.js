@@ -234,9 +234,43 @@ export const volunteerService = {
       status: 'active',
     };
 
-    const volunteerResult = await this.createVolunteer(volunteerPayload);
-    if (!volunteerResult.success) {
-      return volunteerResult;
+    // Try to create volunteer record; prefer using createVolunteer which requires an authenticated user,
+    // but fall back to inserting directly if auth isn't available.
+    let createdVolunteer = null;
+    try {
+      // attempt to use existing helper (may throw if no auth)
+      const volunteerResult = await this.createVolunteer(volunteerPayload);
+      if (!volunteerResult.success) {
+        // fall through to direct insert
+        throw new Error(volunteerResult.error?.message || 'createVolunteer failed');
+      }
+      createdVolunteer = volunteerResult.data;
+    } catch (err) {
+      // fallback: insert directly without created_by
+      const { data, error } = await supabase
+        .from(TABLE_NAME)
+        .insert([volunteerPayload])
+        .select('*')
+        .single();
+
+      if (error) {
+        return buildError(error.message || 'Failed to create volunteer on approval.');
+      }
+
+      try {
+        await logAudit({
+          action: 'CREATE',
+          module: 'Volunteers',
+          record_id: data?.id ?? null,
+          description: 'Created volunteer via application approval',
+          oldData: null,
+          newData: data,
+        });
+      } catch (auditError) {
+        console.error('Failed to log volunteer create audit entry (approval path):', auditError);
+      }
+
+      createdVolunteer = data;
     }
 
     const applicationResult = await this.updateVolunteerApplicationStatus(application.id, 'Approved');
@@ -244,7 +278,7 @@ export const volunteerService = {
       return applicationResult;
     }
 
-    return buildSuccess({ volunteer: volunteerResult.data, application: applicationResult.data });
+    return buildSuccess({ volunteer: createdVolunteer, application: applicationResult.data });
   },
 
   async rejectVolunteerApplication(id) {

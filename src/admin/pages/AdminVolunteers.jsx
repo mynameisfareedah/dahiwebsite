@@ -65,6 +65,16 @@ export default function AdminVolunteers() {
     };
 
     loadVolunteers();
+
+    const onCreated = (e) => {
+      const v = e?.detail;
+      if (v) {
+        setVolunteers((prev) => [v, ...(prev || [])]);
+      }
+    };
+
+    window.addEventListener('volunteer:created', onCreated);
+    return () => window.removeEventListener('volunteer:created', onCreated);
   }, []);
 
   const { addToast } = useToast();

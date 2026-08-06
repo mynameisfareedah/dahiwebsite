@@ -99,6 +99,15 @@ export default function AdminVolunteerApplications() {
       if (result.success) {
         updateApplicationStatus(application.id, 'Approved');
         addToast('Application approved and volunteer record created.', 'success');
+        // notify other admin pages a volunteer was created so they can refresh
+        try {
+          const createdVolunteer = result.data?.volunteer;
+          if (createdVolunteer) {
+            window.dispatchEvent(new CustomEvent('volunteer:created', { detail: createdVolunteer }));
+          }
+        } catch (e) {
+          // ignore
+        }
       } else {
         addToast(result.error?.message || 'Failed to approve application.', 'error');
       }
