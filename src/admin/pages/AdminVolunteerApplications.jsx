@@ -36,6 +36,7 @@ export default function AdminVolunteerApplications() {
   const [fetchError, setFetchError] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [rejectModalOpen, setRejectModalOpen] = useState(false);
+  const [detailsModalOpen, setDetailsModalOpen] = useState(false);
   const [selectedApplication, setSelectedApplication] = useState(null);
 
   const { addToast } = useToast();
@@ -110,6 +111,16 @@ export default function AdminVolunteerApplications() {
   const handleOpenRejectModal = (application) => {
     setSelectedApplication(application);
     setRejectModalOpen(true);
+  };
+
+  const handleOpenDetails = (application) => {
+    setSelectedApplication(application);
+    setDetailsModalOpen(true);
+  };
+
+  const handleCloseDetails = () => {
+    setDetailsModalOpen(false);
+    setSelectedApplication(null);
   };
 
   const handleConfirmReject = async () => {
@@ -232,7 +243,13 @@ export default function AdminVolunteerApplications() {
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-300">{formatDate(application.created_at)}</td>
                     <td className="px-6 py-4 text-sm">
-                      <div className="flex flex-wrap gap-2">
+                        <div className="flex flex-wrap gap-2">
+                        <button
+                          onClick={() => handleOpenDetails(application)}
+                          className="rounded-full bg-slate-600 px-4 py-2 text-xs font-semibold text-white transition hover:bg-slate-500"
+                        >
+                          Details
+                        </button>
                         <button
                           onClick={() => handleApprove(application)}
                           disabled={isSubmitting || application.status !== 'Pending'}
@@ -294,6 +311,58 @@ export default function AdminVolunteerApplications() {
             >
               {isSubmitting ? 'Rejecting...' : 'Reject Application'}
             </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={detailsModalOpen}
+        onClose={handleCloseDetails}
+        title="Volunteer Application Details"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div className="rounded-lg border border-gray-800 bg-gray-900 p-4">
+            <p className="text-sm font-semibold text-white">Applicant</p>
+            <p className="text-gray-300">{selectedApplication?.full_name}</p>
+            <p className="text-gray-300">{selectedApplication?.email}</p>
+            {selectedApplication?.phone && (
+              <p className="text-gray-300">{selectedApplication.phone}</p>
+            )}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="rounded-lg border border-gray-800 bg-gray-900 p-4">
+              <p className="text-sm font-semibold text-white">Occupation</p>
+              <p className="text-gray-300">{selectedApplication?.occupation || '—'}</p>
+            </div>
+
+            <div className="rounded-lg border border-gray-800 bg-gray-900 p-4">
+              <p className="text-sm font-semibold text-white">Availability</p>
+              <p className="text-gray-300">{selectedApplication?.availability || '—'}</p>
+            </div>
+          </div>
+
+          <div className="rounded-lg border border-gray-800 bg-gray-900 p-4">
+            <p className="text-sm font-semibold text-white">Skills & Interests</p>
+            <p className="text-gray-300 whitespace-pre-wrap">{(selectedApplication?.skills || '') + '\n' + (selectedApplication?.interest || '')}</p>
+          </div>
+
+          <div className="rounded-lg border border-gray-800 bg-gray-900 p-4">
+            <p className="text-sm font-semibold text-white">Additional Information</p>
+            <p className="text-gray-300 whitespace-pre-wrap">{(selectedApplication?.experience || '') + '\n' + (selectedApplication?.motivation || '')}</p>
+          </div>
+
+          <div className="flex justify-between items-center">
+            <div className="text-sm text-gray-400">Submitted: {formatDate(selectedApplication?.created_at)}</div>
+            <div className="flex gap-3">
+              <button
+                onClick={handleCloseDetails}
+                className="rounded-full border border-gray-700 px-4 py-2 text-sm font-semibold text-gray-200 hover:bg-gray-800"
+              >
+                Close
+              </button>
+            </div>
           </div>
         </div>
       </Modal>
