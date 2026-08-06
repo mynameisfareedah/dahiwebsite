@@ -140,7 +140,7 @@ export default function AdminVolunteerApplications() {
         Submitted: formatDate(app.created_at),
       }));
 
-      import('xlsx')
+      import(/* @vite-ignore */ 'xlsx')
         .then((mod) => {
           const XLSX = mod.default ?? mod;
           const ws = XLSX.utils.json_to_sheet(data);
@@ -172,8 +172,8 @@ export default function AdminVolunteerApplications() {
     try {
       const element = tableRef.current || document.body;
       const [html2canvasMod, jspdfMod] = await Promise.all([
-        import('html2canvas').catch((e) => ({ error: e })),
-        import('jspdf').catch((e) => ({ error: e })),
+        import(/* @vite-ignore */ 'html2canvas').catch((e) => ({ error: e })),
+        import(/* @vite-ignore */ 'jspdf').catch((e) => ({ error: e })),
       ]);
       if (html2canvasMod.error || jspdfMod.error) {
         console.error('pdf import failed', html2canvasMod.error || jspdfMod.error);
