@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Users } from 'lucide-react';
 import {
   PageHeader,
@@ -38,6 +38,7 @@ export default function AdminVolunteerApplications() {
   const [rejectModalOpen, setRejectModalOpen] = useState(false);
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
   const [selectedApplication, setSelectedApplication] = useState(null);
+  const tableRef = useRef(null);
 
   const { addToast } = useToast();
   const { searchQuery, setSearchQuery, filtered: searchedApplications } = useSearch(
@@ -123,6 +124,79 @@ export default function AdminVolunteerApplications() {
     setSelectedApplication(null);
   };
 
+  const exportToExcel = () => {
+    try {
+      const data = applications.map((app) => ({
+        Name: app.full_name,
+        Email: app.email,
+        Phone: app.phone || '',
+        Occupation: app.occupation || '',
+        Availability: app.availability || '',
+        Skills: app.skills || '',
+        Interest: app.interest || '',
+        Experience: app.experience || '',
+        Motivation: app.motivation || '',
+        Status: app.status || 'Pending',
+        Submitted: formatDate(app.created_at),
+      }));
+
+      import('xlsx')
+        .then((mod) => {
+          const XLSX = mod.default ?? mod;
+          const ws = XLSX.utils.json_to_sheet(data);
+          const wb = XLSX.utils.book_new();
+          XLSX.utils.book_append_sheet(wb, ws, 'Applications');
+          const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+          const blob = new Blob([wbout], { type: 'application/octet-stream' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `volunteer-applications-${new Date().toISOString().slice(0, 10)}.xlsx`;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          URL.revokeObjectURL(url);
+          addToast('Exported Excel successfully.', 'success');
+        })
+        .catch((err) => {
+          console.error('xlsx import failed', err);
+          addToast('Install dependencies (npm install) to enable Excel export.', 'error');
+        });
+    } catch (error) {
+      console.error('Export Excel failed', error);
+      addToast('Failed to export Excel.', 'error');
+    }
+  };
+
+  const exportToPDF = async () => {
+    try {
+      const element = tableRef.current || document.body;
+      const [html2canvasMod, jspdfMod] = await Promise.all([
+        import('html2canvas').catch((e) => ({ error: e })),
+        import('jspdf').catch((e) => ({ error: e })),
+      ]);
+      if (html2canvasMod.error || jspdfMod.error) {
+        console.error('pdf import failed', html2canvasMod.error || jspdfMod.error);
+        addToast('Install dependencies (npm install) to enable PDF export.', 'error');
+        return;
+      }
+      const html2canvas = html2canvasMod.default ?? html2canvasMod;
+      const jsPDF = jspdfMod.default ?? jspdfMod;
+      const canvas = await html2canvas(element, { scale: 2 });
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('l', 'mm', 'a4');
+      const imgProps = pdf.getImageProperties(imgData);
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`volunteer-applications-${new Date().toISOString().slice(0, 10)}.pdf`);
+      addToast('Exported PDF successfully.', 'success');
+    } catch (error) {
+      console.error('Export PDF failed', error);
+      addToast('Failed to export PDF.', 'error');
+    }
+  };
+
   const handleConfirmReject = async () => {
     if (!selectedApplication) return;
 
@@ -202,6 +276,21 @@ export default function AdminVolunteerApplications() {
         />
       </div>
 
+      <div className="flex justify-end gap-3">
+        <button
+          onClick={exportToExcel}
+          className="rounded-full bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-500"
+        >
+          Export Excel
+        </button>
+        <button
+          onClick={exportToPDF}
+          className="rounded-full bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500"
+        >
+          Export PDF
+        </button>
+      </div>
+
       {isFetching ? (
         <div className="rounded-lg border border-gray-800 bg-gray-900 p-6">
           <LoadingSpinner text="Loading volunteer applications..." />
@@ -218,7 +307,7 @@ export default function AdminVolunteerApplications() {
         />
       ) : (
         <div className="bg-gray-900 border border-gray-800 rounded-lg overflow-hidden">
-          <div className="overflow-x-auto">
+          <div ref={tableRef} className="overflow-x-auto">
             <table className="w-full min-w-[900px]">
               <thead className="bg-gray-800 border-b border-gray-700">
                 <tr>
