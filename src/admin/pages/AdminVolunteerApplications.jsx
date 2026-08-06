@@ -48,7 +48,7 @@ export default function AdminVolunteerApplications() {
 
   const filteredApplications = searchedApplications.filter((application) => {
     if (!statusFilter) return true;
-    return application.status === statusFilter;
+    return (application.status || '').toLowerCase() === (statusFilter || '').toLowerCase();
   });
 
   const { sorted: sortedApplications } = useSorting(filteredApplications);
@@ -124,6 +124,54 @@ export default function AdminVolunteerApplications() {
     setSelectedApplication(null);
   };
 
+  const dynamicImport = (specifier) => new Function('return import(specifier)')();
+
+  const exportToCSV = () => {
+    try {
+      const headers = [
+        'Name',
+        'Email',
+        'Phone',
+        'Occupation',
+        'Availability',
+        'Skills',
+        'Interest',
+        'Experience',
+        'Motivation',
+        'Status',
+        'Submitted',
+      ];
+      const rows = applications.map((app) => [
+        app.full_name || '',
+        app.email || '',
+        app.phone || '',
+        app.occupation || '',
+        app.availability || '',
+        app.skills || '',
+        app.interest || '',
+        app.experience || '',
+        app.motivation || '',
+        app.status || 'Pending',
+        formatDate(app.created_at),
+      ]);
+      const escape = (value) => `"${String(value).replace(/"/g, '""')}"`;
+      const csv = [headers.map(escape).join(','), ...rows.map((row) => row.map(escape).join(','))].join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `volunteer-applications-${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      addToast('Exported CSV successfully.', 'success');
+    } catch (error) {
+      console.error('Export CSV failed', error);
+      addToast('Failed to export CSV.', 'error');
+    }
+  };
+
   const exportToExcel = () => {
     try {
       const data = applications.map((app) => ({
@@ -140,7 +188,7 @@ export default function AdminVolunteerApplications() {
         Submitted: formatDate(app.created_at),
       }));
 
-      import(/* @vite-ignore */ 'xlsx')
+      dynamicImport('xlsx')
         .then((mod) => {
           const XLSX = mod.default ?? mod;
           const ws = XLSX.utils.json_to_sheet(data);
@@ -277,6 +325,12 @@ export default function AdminVolunteerApplications() {
       </div>
 
       <div className="flex justify-end gap-3">
+        <button
+          onClick={exportToCSV}
+          className="rounded-full bg-cyan-600 px-4 py-2 text-sm font-semibold text-white hover:bg-cyan-500"
+        >
+          Export CSV
+        </button>
         <button
           onClick={exportToExcel}
           className="rounded-full bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-500"
