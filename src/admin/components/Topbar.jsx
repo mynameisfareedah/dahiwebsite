@@ -45,7 +45,7 @@ export function Topbar({ onSidebarToggle, sidebarOpen }) {
         {/* Left Section - Menu Toggle */}
         <button
           onClick={onSidebarToggle}
-          className="lg:hidden p-2 hover:bg-gray-100 rounded-lg transition"
+          className="p-2 hover:bg-gray-100 rounded-lg transition fixed left-4 top-4 z-50 lg:static lg:p-2"
           aria-label="Toggle sidebar"
         >
           {sidebarOpen ? (
