@@ -8,7 +8,6 @@ const sidebarLinks = [
   { to: '/team', label: 'Meet the Team' },
   { to: '/events', label: 'Events' },
   { to: '/resources', label: 'Resources' },
-  { to: '/donate', label: 'Donate' },
   { to: '/volunteer', label: 'Volunteer' },
   { to: '/contact', label: 'Contact' },
 ];
@@ -30,11 +29,11 @@ function Sidebar() {
     <>
       {/* Hamburger Button */}
       <div className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between border-b border-slate-200 bg-white/90 backdrop-blur px-4 py-4">
-        <NavLink to="/" className="flex items-center gap-2">
-          <img src="/logo.jpeg" alt="DAHI logo" loading="lazy" className="h-10 w-auto rounded-lg" />
+        <NavLink to="/" className="flex items-center gap-3">
+          <img src="/logo.jpeg" alt="DAHI logo" loading="lazy" className="h-14 w-auto rounded-lg" />
           <div className="leading-tight">
-            <div className="text-lg font-black text-dahiPrimary">DAHI</div>
-            <div className="text-xs font-medium text-slate-500">Health Initiative</div>
+            <div className="text-2xl font-extrabold text-dahiPrimary">DAHI</div>
+            <div className="text-sm font-semibold text-slate-500">Doc Adi Health Initiative</div>
           </div>
         </NavLink>
         <button
@@ -65,10 +64,10 @@ function Sidebar() {
         <div className="flex flex-col h-full pt-20">
           {/* Logo Section */}
           <div className="flex items-center gap-3 px-6 py-6 border-b border-slate-200">
-            <img src="/logo.jpeg" alt="DAHI logo" loading="lazy" className="h-12 w-auto rounded-lg" />
+            <img src="/logo.jpeg" alt="DAHI logo" loading="lazy" className="h-14 w-auto rounded-lg" />
             <div className="leading-tight">
-              <div className="text-lg font-black text-dahiPrimary">DAHI</div>
-              <div className="text-xs font-medium text-slate-500">Doc Adi Health Initiative</div>
+              <div className="text-2xl font-extrabold text-dahiPrimary">DAHI</div>
+              <div className="text-sm font-medium text-slate-500">Doc Adi Health Initiative</div>
             </div>
           </div>
 

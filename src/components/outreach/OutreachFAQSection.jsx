@@ -6,7 +6,7 @@ function OutreachFAQSection({ faqs }) {
   const [expandedIndex, setExpandedIndex] = useState(null);
 
   return (
-    <section className="section-shell max-w-7xl space-y-8">
+    <section className="section-shell max-w-7xl space-y-6">
       <SectionHeading
         eyebrow="Have Questions?"
         title="Frequently Asked Questions"

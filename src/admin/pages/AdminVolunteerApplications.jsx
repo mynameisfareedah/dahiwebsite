@@ -40,6 +40,8 @@ export default function AdminVolunteerApplications() {
   const [selectedApplication, setSelectedApplication] = useState(null);
   const tableRef = useRef(null);
 
+  const VOLUNTEER_CREATED_EVENT = 'admin:volunteer:created';
+
   const { addToast } = useToast();
   const { searchQuery, setSearchQuery, filtered: searchedApplications } = useSearch(
     applications,
@@ -103,7 +105,18 @@ export default function AdminVolunteerApplications() {
         try {
           const createdVolunteer = result.data?.volunteer;
           if (createdVolunteer) {
-            window.dispatchEvent(new CustomEvent('volunteer:created', { detail: createdVolunteer }));
+            window.dispatchEvent(
+              new CustomEvent(VOLUNTEER_CREATED_EVENT, { detail: createdVolunteer })
+            );
+            try {
+              window.localStorage.setItem(
+                VOLUNTEER_CREATED_EVENT,
+                JSON.stringify({ id: createdVolunteer.id, ts: Date.now() })
+              );
+              window.localStorage.removeItem(VOLUNTEER_CREATED_EVENT);
+            } catch (storageError) {
+              console.warn('Unable to set localStorage sync event', storageError);
+            }
           }
         } catch (e) {
           // ignore
@@ -134,6 +147,36 @@ export default function AdminVolunteerApplications() {
   };
 
   const dynamicImport = (specifier) => new Function('return import(specifier)')();
+
+  const createPdfHeader = (titleText, metaText) => {
+    const header = document.createElement('div');
+    header.style.display = 'flex';
+    header.style.justifyContent = 'space-between';
+    header.style.alignItems = 'center';
+    header.style.marginBottom = '8px';
+
+    const org = document.createElement('div');
+    const orgTitle = document.createElement('strong');
+    orgTitle.textContent = 'DAHI';
+    org.appendChild(orgTitle);
+
+    const orgSubtitle = document.createElement('div');
+    orgSubtitle.textContent = titleText;
+    orgSubtitle.style.fontSize = '12px';
+    orgSubtitle.style.color = '#666';
+    orgSubtitle.style.marginTop = '2px';
+    org.appendChild(orgSubtitle);
+
+    const meta = document.createElement('div');
+    meta.style.textAlign = 'right';
+    meta.style.fontSize = '12px';
+    meta.style.color = '#444';
+    meta.textContent = metaText;
+
+    header.appendChild(org);
+    header.appendChild(meta);
+    return header;
+  };
 
   const exportToCSV = () => {
     try {
@@ -181,53 +224,14 @@ export default function AdminVolunteerApplications() {
     }
   };
 
-  const exportToExcel = () => {
-    try {
-      const data = applications.map((app) => ({
-        Name: app.full_name,
-        Email: app.email,
-        Phone: app.phone || '',
-        Occupation: app.occupation || '',
-        Availability: app.availability || '',
-        Skills: app.skills || '',
-        Interest: app.interest || '',
-        Experience: app.experience || '',
-        Motivation: app.motivation || '',
-        Status: app.status || 'Pending',
-        Submitted: formatDate(app.created_at),
-      }));
-
-      dynamicImport('xlsx')
-        .then((mod) => {
-          const XLSX = mod.default ?? mod;
-          const ws = XLSX.utils.json_to_sheet(data);
-          const wb = XLSX.utils.book_new();
-          XLSX.utils.book_append_sheet(wb, ws, 'Applications');
-          const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-          const blob = new Blob([wbout], { type: 'application/octet-stream' });
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = `volunteer-applications-${new Date().toISOString().slice(0, 10)}.xlsx`;
-          document.body.appendChild(a);
-          a.click();
-          a.remove();
-          URL.revokeObjectURL(url);
-          addToast('Exported Excel successfully.', 'success');
-        })
-        .catch((err) => {
-          console.error('xlsx import failed', err);
-          addToast('Install dependencies (npm install) to enable Excel export.', 'error');
-        });
-    } catch (error) {
-      console.error('Export Excel failed', error);
-      addToast('Failed to export Excel.', 'error');
-    }
-  };
 
   const exportToPDF = async () => {
     try {
-      const element = tableRef.current || document.body;
+      if (!applications || applications.length === 0) {
+        addToast('No applications to export.', 'info');
+        return;
+      }
+
       const [html2canvasMod, jspdfMod] = await Promise.all([
         import(/* @vite-ignore */ 'html2canvas').catch((e) => ({ error: e })),
         import(/* @vite-ignore */ 'jspdf').catch((e) => ({ error: e })),
@@ -237,20 +241,170 @@ export default function AdminVolunteerApplications() {
         addToast('Install dependencies (npm install) to enable PDF export.', 'error');
         return;
       }
+
       const html2canvas = html2canvasMod.default ?? html2canvasMod;
       const jsPDF = jspdfMod.default ?? jspdfMod;
-      const canvas = await html2canvas(element, { scale: 2 });
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('l', 'mm', 'a4');
-      const imgProps = pdf.getImageProperties(imgData);
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      let firstPage = true;
+
+      // Render each application as its own print-friendly card and add as a PDF page
+      for (const app of applications) {
+        const allKeys = Array.from(new Set(Object.keys(app)));
+        const container = document.createElement('div');
+        container.style.padding = '24px';
+        container.style.background = '#ffffff';
+        container.style.color = '#000000';
+        container.style.fontFamily = 'Arial, Helvetica, sans-serif';
+        container.style.fontSize = '13px';
+        container.style.lineHeight = '1.4';
+        container.style.maxWidth = '800px';
+        container.style.margin = '0 auto 12px auto';
+        container.style.border = '1px solid #e5e7eb';
+
+        const header = createPdfHeader('Volunteer Application', formatDate(app.created_at));
+
+        container.appendChild(header);
+
+        const title = document.createElement('h2');
+        title.textContent = `${app.full_name || app.name || ''}`;
+        title.style.fontSize = '18px';
+        title.style.margin = '0 0 8px 0';
+        container.appendChild(title);
+
+        const dl = document.createElement('dl');
+        dl.style.display = 'block';
+        dl.style.width = '100%';
+
+        allKeys.forEach((k) => {
+          const dt = document.createElement('dt');
+          dt.textContent = k.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+          dt.style.fontWeight = '700';
+          dt.style.marginTop = '8px';
+          dt.style.fontSize = '13px';
+          const dd = document.createElement('dd');
+          let v = app[k];
+          if (Array.isArray(v)) v = v.join('; ');
+          else if (v && typeof v === 'object') v = JSON.stringify(v);
+          dd.textContent = v ?? '';
+          dd.style.margin = '4px 0 6px 0';
+          dd.style.fontSize = '13px';
+          dd.style.color = '#111827';
+          dl.appendChild(dt);
+          dl.appendChild(dd);
+        });
+
+        container.appendChild(dl);
+
+        document.body.appendChild(container);
+        // render per-application card
+        // eslint-disable-next-line no-await-in-loop
+        const canvas = await html2canvas(container, { scale: 2 });
+        const imgData = canvas.toDataURL('image/png');
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const imgProps = pdf.getImageProperties(imgData);
+        const ratio = Math.min(pageWidth / imgProps.width, (pdf.internal.pageSize.getHeight()) / imgProps.height);
+        const imgWidth = imgProps.width * ratio;
+        const imgHeight = imgProps.height * ratio;
+
+        if (!firstPage) pdf.addPage();
+        pdf.addImage(imgData, 'PNG', (pageWidth - imgWidth) / 2, 10, imgWidth, imgHeight);
+        firstPage = false;
+        document.body.removeChild(container);
+      }
+
       pdf.save(`volunteer-applications-${new Date().toISOString().slice(0, 10)}.pdf`);
       addToast('Exported PDF successfully.', 'success');
     } catch (error) {
       console.error('Export PDF failed', error);
       addToast('Failed to export PDF.', 'error');
+    }
+  };
+
+  const exportApplicationToPDF = async (application) => {
+    try {
+      if (!application) {
+        addToast('No application selected for export.', 'info');
+        return;
+      }
+
+      const [html2canvasMod, jspdfMod] = await Promise.all([
+        import(/* @vite-ignore */ 'html2canvas').catch((e) => ({ error: e })),
+        import(/* @vite-ignore */ 'jspdf').catch((e) => ({ error: e })),
+      ]);
+      if (html2canvasMod.error || jspdfMod.error) {
+        console.error('pdf import failed', html2canvasMod.error || jspdfMod.error);
+        addToast('Install dependencies (npm install) to enable PDF export.', 'error');
+        return;
+      }
+
+      const html2canvas = html2canvasMod.default ?? html2canvasMod;
+      const jsPDF = jspdfMod.default ?? jspdfMod;
+
+      const allKeys = Array.from(new Set(Object.keys(application)));
+      const container = document.createElement('div');
+      container.style.padding = '28px';
+      container.style.background = '#ffffff';
+      container.style.color = '#000000';
+      container.style.fontFamily = 'Arial, Helvetica, sans-serif';
+      container.style.fontSize = '13px';
+      container.style.lineHeight = '1.4';
+      container.style.maxWidth = '800px';
+      container.style.margin = '0 auto';
+      container.style.border = '1px solid #e5e7eb';
+      container.style.boxShadow = '0 2px 6px rgba(0,0,0,0.06)';
+
+const header = createPdfHeader('Volunteer Application', new Date().toLocaleDateString());
+
+      container.appendChild(header);
+
+      const title = document.createElement('h1');
+      title.textContent = `${application.full_name || application.name || ''}`;
+      title.style.fontSize = '20px';
+      title.style.margin = '0 0 10px 0';
+      container.appendChild(title);
+
+      const dl = document.createElement('dl');
+      dl.style.display = 'block';
+      dl.style.width = '100%';
+
+      allKeys.forEach((k) => {
+        const dt = document.createElement('dt');
+        dt.textContent = k.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+        dt.style.fontWeight = '700';
+        dt.style.marginTop = '10px';
+        dt.style.fontSize = '14px';
+        const dd = document.createElement('dd');
+        let v = application[k];
+        if (Array.isArray(v)) v = v.join('; ');
+        else if (v && typeof v === 'object') v = JSON.stringify(v);
+        dd.textContent = v ?? '';
+        dd.style.margin = '4px 0 8px 0';
+        dd.style.fontSize = '13px';
+        dd.style.color = '#111827';
+        dl.appendChild(dt);
+        dl.appendChild(dd);
+      });
+
+      container.appendChild(dl);
+      document.body.appendChild(container);
+
+      const canvas = await html2canvas(container, { scale: 2 });
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const imgProps = pdf.getImageProperties(imgData);
+      const ratio = Math.min(pageWidth / imgProps.width, (pdf.internal.pageSize.getHeight()) / imgProps.height);
+      const imgWidth = imgProps.width * ratio;
+      const imgHeight = imgProps.height * ratio;
+      pdf.addImage(imgData, 'PNG', (pageWidth - imgWidth) / 2, 10, imgWidth, imgHeight);
+      pdf.save(`application-${application.id || application.email || Date.now()}.pdf`);
+
+      document.body.removeChild(container);
+      addToast('Exported application PDF successfully.', 'success');
+    } catch (err) {
+      console.error('Export application PDF failed', err);
+      addToast('Failed to export application PDF.', 'error');
     }
   };
 
@@ -339,12 +493,6 @@ export default function AdminVolunteerApplications() {
           className="rounded-full bg-cyan-600 px-4 py-2 text-sm font-semibold text-white hover:bg-cyan-500"
         >
           Export CSV
-        </button>
-        <button
-          onClick={exportToExcel}
-          className="rounded-full bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-500"
-        >
-          Export Excel
         </button>
         <button
           onClick={exportToPDF}
@@ -508,6 +656,12 @@ export default function AdminVolunteerApplications() {
           <div className="flex justify-between items-center">
             <div className="text-sm text-gray-400">Submitted: {formatDate(selectedApplication?.created_at)}</div>
             <div className="flex gap-3">
+              <button
+                onClick={() => exportApplicationToPDF(selectedApplication)}
+                className="rounded-full bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500"
+              >
+                Export PDF
+              </button>
               <button
                 onClick={handleCloseDetails}
                 className="rounded-full border border-gray-700 px-4 py-2 text-sm font-semibold text-gray-200 hover:bg-gray-800"

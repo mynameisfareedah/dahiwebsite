@@ -16,7 +16,7 @@ function VolunteerPage() {
   return (
     <>
       <SEO title="Volunteer" description="Learn about volunteering with DAHI, available opportunities, benefits, and how to apply." />
-      <main className="space-y-24">
+      <main className="space-y-16">
         <VolunteerHero />
         <WhyVolunteer />
         <VolunteerOpportunitiesSection />

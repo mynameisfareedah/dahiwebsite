@@ -1,5 +1,4 @@
 import Hero from '../../components/home/Hero';
-import OutreachAnnouncementBar from '../../components/home/OutreachAnnouncementBar';
 import UpcomingOutreachSection from '../../components/home/UpcomingOutreachSection';
 import AboutPreview from '../../components/home/AboutPreview';
 import FeaturedPrograms from '../../components/home/FeaturedPrograms';
@@ -16,9 +15,6 @@ function HomePage() {
   return (
     <>
       <SEO title="Home" description="DAHI empowers Muslim women through trusted health education, practical resources, and supportive community programmes." path="/" />
-
-      {/* 0. Outreach Announcement Banner */}
-      <OutreachAnnouncementBar />
 
       {/* 1. Hero Section */}
       <Hero />

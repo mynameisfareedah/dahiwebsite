@@ -1,7 +1,15 @@
 import { Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { getUpcomingEvents } from '../../services/supabase/eventsService';
 import { resolveRegistrationState } from '../../utils/registration';
+
+function getDaysUntil(dateString) {
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const targetDate = new Date(`${dateString}T00:00:00`);
+  const msPerDay = 24 * 60 * 60 * 1000;
+  return Math.max(0, Math.ceil((targetDate.getTime() - today.getTime()) / msPerDay));
+}
 
 function Hero() {
   const [event, setEvent] = useState(null);
@@ -35,12 +43,9 @@ function Hero() {
             <h1 className="mt-5 text-3xl font-black leading-tight sm:text-4xl lg:text-5xl">Empowering Muslim Women Through Trusted Health Education</h1>
             <p className="mt-5 max-w-2xl text-lg leading-8 text-white/90">DAHI is dedicated to providing evidence-based health education, practical resources, and a supportive community that empowers women to make informed decisions about their health and well-being.</p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              {registrationState.enabled ? (
+              {registrationState.enabled && (
                 <a href={registrationState.href} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-semibold text-dahiPrimary transition hover:-translate-y-0.5">{registrationState.label}</a>
-              ) : (
-                <button type="button" disabled className="inline-flex cursor-not-allowed items-center justify-center rounded-full bg-slate-200 px-6 py-3 text-sm font-semibold text-slate-600">{registrationState.label}</button>
               )}
-              <Link to="/donate" className="inline-flex items-center justify-center rounded-full border border-white/70 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10">Donate</Link>
               <Link to="/resources" className="inline-flex items-center justify-center rounded-full border border-white/70 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10">Explore Resources</Link>
             </div>
 
@@ -53,9 +58,10 @@ function Hero() {
                 <div className="text-2xl font-black">5</div>
                 <div className="mt-1 text-sm text-white/80">Webinars hosted</div>
               </div>
-              <div className="rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur">
-                <div className="text-2xl font-black">3</div>
-                <div className="mt-1 text-sm text-white/80">Resources published</div>
+              <div className="rounded-2xl border border-white/20 bg-dahiPrimary/20 p-4 backdrop-blur">
+                <div className="text-sm uppercase tracking-[0.18em] text-white/80">Outreach in</div>
+                <div className="mt-2 text-4xl font-black text-white">{getDaysUntil('2026-08-15')}</div>
+                <div className="mt-1 text-sm text-white/90">days</div>
               </div>
             </div>
           </div>

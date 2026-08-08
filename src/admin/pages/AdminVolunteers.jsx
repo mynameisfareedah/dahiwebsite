@@ -38,43 +38,62 @@ export default function AdminVolunteers() {
   }, []);
 
   // Load volunteers from Supabase
-  useEffect(() => {
-    const loadVolunteers = async () => {
-      setIsFetching(true);
-      setFetchError(null);
-      try {
-        const result = await volunteerService.getVolunteers();
-        if (!isMountedRef.current) return;
-        
-        if (result.success) {
-          setVolunteers(result.data || []);
-        } else {
-          setFetchError(result.error?.message || 'Failed to load volunteers');
-          setVolunteers([]);
-        }
-      } catch (err) {
-        if (isMountedRef.current) {
-          setFetchError(err.message || 'An error occurred while loading volunteers');
-          setVolunteers([]);
-        }
-      } finally {
-        if (isMountedRef.current) {
-          setIsFetching(false);
-        }
-      }
-    };
+  const VOLUNTEER_CREATED_EVENT = 'admin:volunteer:created';
 
+  const loadVolunteers = async () => {
+    setIsFetching(true);
+    setFetchError(null);
+    try {
+      const result = await volunteerService.getVolunteers();
+      if (!isMountedRef.current) return;
+      
+      if (result.success) {
+        setVolunteers(result.data || []);
+      } else {
+        setFetchError(result.error?.message || 'Failed to load volunteers');
+        setVolunteers([]);
+      }
+    } catch (err) {
+      if (isMountedRef.current) {
+        setFetchError(err.message || 'An error occurred while loading volunteers');
+        setVolunteers([]);
+      }
+    } finally {
+      if (isMountedRef.current) {
+        setIsFetching(false);
+      }
+    }
+  };
+
+  useEffect(() => {
     loadVolunteers();
 
     const onCreated = (e) => {
       const v = e?.detail;
       if (v) {
-        setVolunteers((prev) => [v, ...(prev || [])]);
+        loadVolunteers();
       }
     };
 
-    window.addEventListener('volunteer:created', onCreated);
-    return () => window.removeEventListener('volunteer:created', onCreated);
+    const onStorage = (event) => {
+      if (event.key === VOLUNTEER_CREATED_EVENT && event.newValue) {
+        loadVolunteers();
+      }
+    };
+
+    const onFocus = () => {
+      loadVolunteers();
+    };
+
+    window.addEventListener(VOLUNTEER_CREATED_EVENT, onCreated);
+    window.addEventListener('storage', onStorage);
+    window.addEventListener('focus', onFocus);
+
+    return () => {
+      window.removeEventListener(VOLUNTEER_CREATED_EVENT, onCreated);
+      window.removeEventListener('storage', onStorage);
+      window.removeEventListener('focus', onFocus);
+    };
   }, []);
 
   const { addToast } = useToast();
@@ -103,6 +122,44 @@ export default function AdminVolunteers() {
     ],
     email: [(val) => validators.email(val)],
     skills: [(val) => validators.required(val, 'Skills')],
+  };
+
+  const dynamicImport = (specifier) => new Function('return import(specifier)')();
+
+  const exportVolunteersToCSV = () => {
+    try {
+      const items = volunteers || [];
+      if (items.length === 0) {
+        addToast('No volunteers to export.', 'info');
+        return;
+      }
+
+      const allKeys = Array.from(new Set(items.flatMap((i) => Object.keys(i))));
+      const headers = allKeys;
+      const escape = (value) => `"${String(value ?? '').replace(/"/g, '""')}"`;
+      const rows = items.map((item) =>
+        allKeys.map((k) => {
+          const v = item[k];
+          if (Array.isArray(v)) return v.join('; ');
+          if (v && typeof v === 'object') return JSON.stringify(v);
+          return v ?? '';
+        })
+      );
+      const csv = [headers.map(escape).join(','), ...rows.map((r) => r.map(escape).join(','))].join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `volunteers-${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      addToast('Exported CSV successfully.', 'success');
+    } catch (err) {
+      console.error('Export volunteers CSV failed', err);
+      addToast('Failed to export CSV.', 'error');
+    }
   };
 
   const initialFormValues = editingId
@@ -225,6 +282,15 @@ export default function AdminVolunteers() {
         onSearch={setSearchQuery}
       />
 
+      <div className="flex justify-end gap-3">
+        <button
+          onClick={exportVolunteersToCSV}
+          className="rounded-full bg-cyan-600 px-4 py-2 text-sm font-semibold text-white hover:bg-cyan-500"
+        >
+          Export CSV
+        </button>
+      </div>
+
       {currentItems.length === 0 && searchQuery === '' ? (
         <EmptyState
           icon={Users}
@@ -282,7 +348,7 @@ export default function AdminVolunteers() {
                         {volunteer.skills}
                       </td>
                       <td className="px-6 py-4 text-gray-300">
-                        {volunteer.hoursLogged}h
+                        {(volunteer.hours_logged ?? volunteer.hoursLogged ?? 0)}h
                       </td>
                       <td className="px-6 py-4">
                         <StatusBadge status={volunteer.status} />

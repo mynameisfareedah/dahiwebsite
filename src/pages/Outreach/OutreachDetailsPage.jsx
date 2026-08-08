@@ -20,11 +20,11 @@ function OutreachDetailsPage() {
       />
 
       {/* Hero Section */}
-      <section className="section-shell max-w-7xl space-y-8">
+      <section className="section-shell max-w-7xl space-y-8" style={{ paddingTop: '1.5rem', paddingBottom: '2rem' }}>
         <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] items-center">
           <div className="space-y-6">
             <div>
-              <span className="eyebrow bg-dahiPrimary/10 text-dahiPrimary">August 2026</span>
+              <span className="eyebrow bg-dahiPrimary/10 text-dahiPrimary">August 15, 2026</span>
               <h1 className="mt-4 text-4xl font-black leading-tight sm:text-5xl">
                 {upcomingOutreach.title}
               </h1>
@@ -87,7 +87,7 @@ function OutreachDetailsPage() {
       </section>
 
       {/* About Section */}
-      <section className="section-shell max-w-7xl">
+      <section className="section-shell max-w-7xl" style={{ paddingTop: '1rem', paddingBottom: '2rem' }}>
         <div className="grid gap-8 lg:grid-cols-[1fr_1.2fr]">
           <div className="soft-card p-8 sm:p-10">
             <h2 className="text-2xl font-bold text-slate-900 mb-4">About This Outreach</h2>
@@ -123,7 +123,7 @@ function OutreachDetailsPage() {
       <ObjectivesGrid objectives={upcomingOutreach.objectives} />
 
       {/* Planned Activities */}
-      <section className="section-shell mx-auto max-w-7xl space-y-8">
+      <section className="section-shell mx-auto max-w-7xl space-y-6" style={{ paddingTop: '1.5rem', paddingBottom: '1.5rem' }}>
         <SectionHeading
           eyebrow="What We'll Offer"
           title="Planned Activities"
@@ -143,7 +143,7 @@ function OutreachDetailsPage() {
 
       {/* Speakers */}
       {upcomingOutreach.speakers && upcomingOutreach.speakers.length > 0 && (
-        <section className="section-shell mx-auto max-w-7xl space-y-8">
+        <section className="section-shell mx-auto max-w-7xl space-y-6" style={{ paddingTop: '1.5rem', paddingBottom: '1.5rem' }}>
           <SectionHeading
             eyebrow="Meet the Team"
             title="Speakers & Facilitators"

@@ -176,8 +176,8 @@ export function PageHeader({ title, subtitle, action, actionLabel = 'Add New' })
   return (
     <div className="mb-6 flex justify-between items-start">
       <div>
-        <h1 className="text-3xl font-bold text-white mb-2">{title}</h1>
-        {subtitle && <p className="text-gray-400">{subtitle}</p>}
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">{title}</h1>
+        {subtitle && <p className="text-gray-500">{subtitle}</p>}
       </div>
       {action && (
         <button

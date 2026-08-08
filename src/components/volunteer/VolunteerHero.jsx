@@ -36,14 +36,14 @@ function VolunteerHero() {
             </div>
           </div>
 
-          <div className="rounded-[1.5rem] border border-white/20 bg-white/10 p-4 backdrop-blur">
-            <img
-              src="/COMMUNITY SUPPORT GROUP.jpg"
-              alt="DAHI volunteers in action"
-              loading="lazy"
-              className="h-[320px] w-full rounded-[1.2rem] object-cover sm:h-[420px]"
-            />
-            <div className="mt-4 rounded-[1rem] bg-white/95 p-4 text-slate-700">
+          <div className="rounded-[1.5rem] border border-white/20 bg-white/10 p-6 backdrop-blur sm:p-8">
+            <div className="text-slate-900">
+              <h2 className="text-xl font-semibold">Volunteer with DAHI</h2>
+              <p className="mt-4 text-sm leading-7 text-slate-600">
+                Join a community of women who support trusted health education in flexible volunteer roles, make meaningful impact, and use their skills to help others.
+              </p>
+            </div>
+            <div className="mt-6 rounded-[1rem] bg-white p-4 text-slate-700 shadow-sm">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-full bg-dahiAccent/20 text-lg text-dahiPrimary">
                   <i className="fa-solid fa-hands-helping"></i>

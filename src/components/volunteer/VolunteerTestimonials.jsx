@@ -1,20 +1,20 @@
 function VolunteerTestimonials() {
   const testimonials = [
     {
-      name: 'Amira Hassan',
-      role: 'Volunteer - Content Creator',
+      name: 'OYEBAMIJI HAJAR',
+      role: 'MEDICAL WRITER',
       text: 'Volunteering with DAHI has been an incredible experience. I\'ve learned so much about women\'s health and had the opportunity to create content that truly makes a difference in our community.',
       image: '/testimonial-1.jpg',
     },
     {
-      name: 'Zainab Ahmed',
-      role: 'Volunteer - Event Coordinator',
+      name: 'FAADHILAH HUSSAIN',
+      role: 'PROGRAMS COORDINATOR',
       text: 'The team at DAHI is so welcoming and supportive. I love organizing events and seeing how our work empowers women to take control of their health.',
       image: '/testimonial-2.jpg',
     },
     {
-      name: 'Fatima Okafor',
-      role: 'Volunteer - Health Advocate',
+      name: 'MUHAMMAD HARUN',
+      role: 'COMMUNITY VISIBILITY',
       text: 'As a volunteer, I\'ve discovered my passion for health education. Working alongside the DAHI team has given me purpose and meaningful connections with amazing women.',
       image: '/testimonial-3.jpg',
     },

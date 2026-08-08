@@ -46,55 +46,6 @@ function AboutPage() {
     { icon: 'fa-solid fa-lightbulb', title: 'Continuous Learning', description: 'Improving based on feedback, lived experience, and community needs.' },
   ];
 
-  useEffect(() => {
-    let isMounted = true;
-
-    const loadTeamMembers = async () => {
-      if (!isSupabaseConfigured || !supabase) {
-        setTeamMembers([]);
-        setTeamError('');
-        setTeamLoading(false);
-        return;
-      }
-
-      setTeamLoading(true);
-      setTeamError('');
-
-      try {
-        const { data, error } = await supabase
-          .from('team_members')
-          .select('*')
-          .eq('active', true)
-          .eq('status', 'active')
-          .order('display_order', { ascending: true })
-          .order('created_at', { ascending: false });
-
-        if (!isMounted) return;
-
-        if (error) {
-          setTeamError(error.message || 'Unable to load team members.');
-          setTeamMembers([]);
-        } else {
-          setTeamMembers(data || []);
-        }
-      } catch (err) {
-        if (!isMounted) return;
-        setTeamError(err?.message || 'Unable to load team members.');
-        setTeamMembers([]);
-      } finally {
-        if (isMounted) {
-          setTeamLoading(false);
-        }
-      }
-    };
-
-    loadTeamMembers();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
   return (
     <>
       <SEO title="About Doc Adi Health Initiative" description="Learn about DAHI's mission, story, values, impact, and how to get involved in women’s health education." />
@@ -210,7 +161,6 @@ function AboutPage() {
         } actions={[
           <Link key="resources" to="/resources" className="inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-semibold text-dahiPrimary transition hover:-translate-y-0.5">Join the Community</Link>,
           <Link key="volunteer" to="/volunteer" className="inline-flex items-center justify-center rounded-full border border-white/70 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10">Volunteer</Link>,
-          <Link key="donate" to="/donate" className="inline-flex items-center justify-center rounded-full border border-white/70 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10">Support DAHI</Link>,
           <Link key="contact" to="/contact" className="inline-flex items-center justify-center rounded-full border border-white/70 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10">Contact Us</Link>,
         ]} />
       </section>

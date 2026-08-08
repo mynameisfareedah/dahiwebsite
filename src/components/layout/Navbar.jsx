@@ -10,7 +10,6 @@ const navLinks = [
   { to: '/resources', label: 'Resources' },
   { to: '/blog', label: 'Blog' },
   { to: '/volunteer', label: 'Volunteer' },
-  { to: '/donate', label: 'Donate' },
   { to: '/contact', label: 'Contact' },
 ];
 
@@ -21,11 +20,11 @@ function Navbar() {
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-slate-200/80 bg-white/90 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
         <NavLink to="/" className="flex items-center gap-3">
-          <img src="/logo.jpeg" alt="DAHI logo" loading="lazy" className="h-12 w-auto rounded-lg" />
-          <div className="leading-tight">
-            <div className="text-xl font-black text-dahiPrimary">DAHI</div>
-            <div className="text-xs font-medium text-slate-500">Doc Adi Health Initiative</div>
-          </div>
+            <img src="/logo.jpeg" alt="DAHI logo" loading="lazy" className="h-16 w-auto rounded-lg" />
+            <div className="leading-tight">
+            <div className="text-3xl font-extrabold text-dahiPrimary">DAHI</div>
+              <div className="text-sm font-semibold text-slate-500">Doc Adi Health Initiative</div>
+            </div>
         </NavLink>
 
         <nav className="hidden items-center gap-6 md:flex" aria-label="Primary navigation">
@@ -47,13 +46,6 @@ function Navbar() {
           >
             <i className="fa-solid fa-heart mr-1.5"></i>
             Support Outreach
-          </NavLink>
-          <NavLink
-            to="/donate"
-            className="rounded-full border border-dahiPrimary px-4 py-2 text-sm font-semibold text-dahiPrimary transition hover:bg-dahiPrimary/10"
-          >
-            <i className="fa-solid fa-hand-holding-heart mr-1.5"></i>
-            Donate
           </NavLink>
           <a href="https://forms.gle/joTjf3VYW9anCA9MA" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-full bg-dahiPrimary px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-dahiSecondary">Join Our Community</a>
         </div>
@@ -89,14 +81,6 @@ function Navbar() {
           >
             <i className="fa-solid fa-heart mr-1.5"></i>
             Support Outreach
-          </NavLink>
-          <NavLink
-            to="/donate"
-            className="rounded-xl px-3 py-2 text-sm font-semibold text-dahiPrimary hover:bg-dahiPrimary/10"
-            onClick={() => setMobileOpen(false)}
-          >
-            <i className="fa-solid fa-hand-holding-heart mr-1.5"></i>
-            Donate
           </NavLink>
           <a href="https://forms.gle/joTjf3VYW9anCA9MA" target="_blank" rel="noopener noreferrer" className="mt-2 inline-flex items-center justify-center rounded-full bg-dahiPrimary px-5 py-2.5 text-sm font-semibold text-white">Join Our Community</a>
         </div>

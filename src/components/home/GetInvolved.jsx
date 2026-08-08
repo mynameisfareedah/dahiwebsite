@@ -10,13 +10,6 @@ function GetInvolved() {
       buttonText: 'Learn More About Volunteering',
     },
     {
-      icon: 'fa-solid fa-heart',
-      title: 'Donate',
-      description: 'Support our health education initiatives and expand our reach to more communities.',
-      link: '/donate',
-      buttonText: 'Support Us',
-    },
-    {
       icon: 'fa-solid fa-users',
       title: 'Join Our Community',
       description: 'Become part of our growing network of women committed to health and wellness.',

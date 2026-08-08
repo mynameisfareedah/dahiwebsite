@@ -27,8 +27,8 @@ function Footer() {
         <div className="flex max-w-7xl flex-col gap-8 px-4 sm:px-6 lg:flex-row lg:justify-between lg:px-0">
           <div className="max-w-xl">
             <Link to="/" className="flex items-center gap-3">
-              <img src="/logo.jpeg" alt="DAHI logo" loading="lazy" className="h-10 w-auto rounded-lg" />
-              <span className="text-lg font-semibold text-white">DAHI</span>
+              <img src="/logo.jpeg" alt="DAHI logo" loading="lazy" className="h-16 w-auto rounded-lg" />
+              <span className="text-3xl font-extrabold text-white">DAHI</span>
             </Link>
             <p className="mt-4 text-slate-400">Empowering Muslim women through trusted health education, community, and evidence-based resources.</p>
           </div>
@@ -41,7 +41,6 @@ function Footer() {
               <a href="https://www.instagram.com/docadihealthintiative_?igsh=YmtnbW1hZnp6MWFz" target="_blank" rel="noopener noreferrer" className="text-slate-300 transition hover:text-white">Instagram</a>
               <a href="https://youtube.com/@dahi-01?si=b54Rt5TiEc5Yvb7q" target="_blank" rel="noopener noreferrer" className="text-slate-300 transition hover:text-white">YouTube</a>
               <Link to="/volunteer" className="text-slate-300 transition hover:text-white">Volunteer</Link>
-              <Link to="/donate" className="text-slate-300 transition hover:text-white">Donate</Link>
               <Link to="/contact" className="text-slate-300 transition hover:text-white">Contact</Link>
             </div>
             <p className="text-sm text-slate-300">© 2026 Doc Adi Health Initiative. All rights reserved.</p>

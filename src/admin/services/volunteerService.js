@@ -234,22 +234,36 @@ export const volunteerService = {
       status: 'active',
     };
 
-    // Try to create volunteer record; prefer using createVolunteer which requires an authenticated user,
-    // but fall back to inserting directly if auth isn't available.
     let createdVolunteer = null;
+    let authUserId = null;
+
     try {
-      // attempt to use existing helper (may throw if no auth)
+      const {
+        data: { user },
+        error: authError,
+      } = await supabase.auth.getUser();
+
+      if (!authError && user?.id) {
+        authUserId = user.id;
+      }
+    } catch (authCheckError) {
+      console.warn('approveVolunteerApplication auth check failed:', authCheckError);
+    }
+
+    try {
       const volunteerResult = await this.createVolunteer(volunteerPayload);
       if (!volunteerResult.success) {
-        // fall through to direct insert
         throw new Error(volunteerResult.error?.message || 'createVolunteer failed');
       }
       createdVolunteer = volunteerResult.data;
     } catch (err) {
-      // fallback: insert directly without created_by
+      const insertPayload = authUserId
+        ? { ...volunteerPayload, created_by: authUserId }
+        : volunteerPayload;
+
       const { data, error } = await supabase
         .from(TABLE_NAME)
-        .insert([volunteerPayload])
+        .insert([insertPayload])
         .select('*')
         .single();
 
