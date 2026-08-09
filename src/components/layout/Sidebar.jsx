@@ -6,6 +6,7 @@ const sidebarLinks = [
   { to: '/', label: 'Home' },
   { to: '/about', label: 'About' },
   { to: '/team', label: 'Meet the Team' },
+  { to: '/blog', label: 'Blog' },
   { to: '/events', label: 'Events' },
   { to: '/resources', label: 'Resources' },
   { to: '/volunteer', label: 'Volunteer' },

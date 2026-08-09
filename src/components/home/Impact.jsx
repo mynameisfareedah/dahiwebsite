@@ -19,7 +19,7 @@ function Impact() {
         ))}
       </div>
 
-      <p className="mt-8 max-w-4xl text-lg leading-8 text-slate-600">Through educational webinars, interactive Q&amp;A sessions, community quizzes, and digital health resources, DAHI continues to equip women with practical, evidence-based knowledge while fostering a supportive learning community.</p>
+      <p className="mt-8 w-full text-lg leading-8 text-slate-600">Through educational webinars, interactive Q&A sessions, community quizzes, and digital health resources, DAHI continues to equip women with practical, evidence-based knowledge while fostering a supportive learning community.</p>
     </section>
   );
 }

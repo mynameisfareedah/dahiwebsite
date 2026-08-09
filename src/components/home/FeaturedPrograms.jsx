@@ -3,7 +3,7 @@ import { focusAreas } from '../../data/siteContent';
 function FeaturedPrograms() {
   return (
     <section id="our-focus-areas" className="section-shell max-w-7xl">
-      <div className="mb-8 max-w-3xl">
+      <div className="mb-8 w-full max-w-full">
         <span className="eyebrow">Our Focus Areas</span>
         <h2 className="mt-4 section-title">Our Focus Areas</h2>
         <p className="mt-4 text-lg leading-8 text-slate-600">DAHI helps women and young girls understand their bodies, make informed health decisions, and navigate every stage of life with confidence through trusted education and community engagement.</p>

@@ -48,7 +48,7 @@ function UpcomingOutreachSection() {
             loading="lazy"
             className="w-full max-w-full rounded-[1.25rem] object-contain bg-white h-auto"
           />
-          <div className="absolute right-4 top-4 rounded-full bg-dahiPrimary px-4 py-2 text-center backdrop-blur">
+          <div className="absolute left-4 bottom-4 rounded-full bg-dahiPrimary px-4 py-2 text-center backdrop-blur">
             <div className="text-sm font-bold text-white">Open & Free</div>
             <div className="text-xs font-semibold text-white">No registration required</div>
           </div>

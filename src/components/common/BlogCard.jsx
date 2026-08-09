@@ -27,7 +27,7 @@ function BlogCard({ title, excerpt, category, author, date, image, href = '#', r
         {isInternalRoute ? (
           <Link to={href} className="mt-6 inline-flex rounded-full bg-dahiPrimary px-4 py-2 text-sm font-semibold text-white transition hover:bg-dahiSecondary">Read More</Link>
         ) : (
-          <a href={href} className="mt-6 inline-flex rounded-full bg-dahiPrimary px-4 py-2 text-sm font-semibold text-white transition hover:bg-dahiSecondary">Read More</a>
+          <a href={href} target="_blank" rel="noopener noreferrer" className="mt-6 inline-flex rounded-full bg-dahiPrimary px-4 py-2 text-sm font-semibold text-white transition hover:bg-dahiSecondary">Read More</a>
         )}
       </div>
     </article>

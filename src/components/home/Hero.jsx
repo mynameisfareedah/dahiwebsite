@@ -2,14 +2,8 @@ import { Link } from 'react-router-dom';
 import { useEffect, useMemo, useState } from 'react';
 import { getUpcomingEvents } from '../../services/supabase/eventsService';
 import { resolveRegistrationState } from '../../utils/registration';
+import { getDaysUntil, OUTREACH_TARGET_ISO } from '../../utils/dateHelpers';
 
-function getDaysUntil(dateString) {
-  const now = new Date();
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const targetDate = new Date(`${dateString}T00:00:00`);
-  const msPerDay = 24 * 60 * 60 * 1000;
-  return Math.max(0, Math.ceil((targetDate.getTime() - today.getTime()) / msPerDay));
-}
 
 function Hero() {
   const [event, setEvent] = useState(null);
@@ -60,7 +54,7 @@ function Hero() {
               </div>
               <div className="rounded-2xl border border-white/20 bg-dahiPrimary/20 p-4 backdrop-blur">
                 <div className="text-sm uppercase tracking-[0.18em] text-white/80">Outreach in</div>
-                <div className="mt-2 text-4xl font-black text-white">{getDaysUntil('2026-08-15')}</div>
+                <div className="mt-2 text-4xl font-black text-white">{getDaysUntil(OUTREACH_TARGET_ISO)}</div>
                 <div className="mt-1 text-sm text-white/90">days</div>
               </div>
             </div>

@@ -6,7 +6,8 @@ import SectionHeading from '../../components/common/SectionHeading';
 import BlogCard from '../../components/common/BlogCard';
 import CTASection from '../../components/common/CTASection';
 
-const substackFeedProxyUrl = '/.netlify/functions/fetchSubstackFeed';
+const netlifyDevOrigin = import.meta.env.VITE_NETLIFY_DEV_ORIGIN || (typeof window !== 'undefined' && window.location.port === '3001' ? 'http://localhost:8888' : '');
+const substackFeedProxyUrl = (netlifyDevOrigin ? `${netlifyDevOrigin}` : '') + '/.netlify/functions/fetch-substack-feed';
 
 function decodeEntities(value) {
   return value
@@ -32,6 +33,57 @@ function stripHtml(value) {
     .trim();
 }
 
+// legacy XML-to-DOM parser removed: feed parsing is handled server-side by
+// the Netlify function `/.netlify/functions/fetch-substack-feed` which returns
+// a JSON `{ posts: [...] }` payload. Keeping decode/strip helpers only.
+
+function isHtmlResponse(responseText, contentType) {
+  return contentType?.includes('text/html') || responseText.trim().startsWith('<!doctype html') || responseText.trim().startsWith('<html');
+}
+
+function parseFeedDate(pubDate) {
+  const time = Date.parse(pubDate || '');
+  return Number.isFinite(time) ? time : 0;
+}
+
+async function fetchSubstackPosts() {
+  try {
+    const response = await fetch(substackFeedProxyUrl, { cache: 'no-store' });
+    const contentType = response.headers.get('content-type') || '';
+    const text = await response.text();
+
+    if (!response.ok) {
+      console.error('Netlify function returned non-OK status', { status: response.status, text });
+      throw new Error('Unable to load Substack feed');
+    }
+
+    if (isHtmlResponse(text, contentType)) {
+      console.error('Netlify function returned HTML instead of JSON', { contentType, textSnippet: text.slice(0, 200) });
+      throw new Error('Invalid response from feed proxy');
+    }
+
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch (err) {
+      console.error('Failed to parse JSON from Netlify function', err, { textSnippet: text.slice(0, 200) });
+      throw new Error('Invalid JSON from feed proxy');
+    }
+
+    if (!data || !Array.isArray(data.posts)) {
+      console.error('[Blog] Invalid function response:', text);
+      throw new Error('Unexpected feed data shape');
+    }
+
+    console.log('[Blog] Function response:', data);
+    console.log('[Blog] Posts received:', data.posts);
+
+    return data.posts;
+  } catch (err) {
+    throw err;
+  }
+}
+
 function BlogPage() {
   const [posts, setPosts] = useState([]);
   const [topics, setTopics] = useState([]);
@@ -43,39 +95,35 @@ function BlogPage() {
 
     async function loadPosts() {
       try {
-        const response = await fetch(substackFeedProxyUrl);
-        if (!response.ok) {
-          throw new Error('Unable to load Substack feed');
-        }
-
-        const data = await response.json();
+        const postItems = await fetchSubstackPosts();
 
         if (!isMounted) {
           return;
         }
 
-        if (Array.isArray(data.posts)) {
-          const normalizedPosts = data.posts
-            .filter((post) => post.title && post.link)
-            .map((item) => ({
-              title: item.title,
-              excerpt: stripHtml(item.description || item.content || '' ) || 'Read the full article on Substack for more details.',
-              category: item.categories?.[0] || 'Featured',
-              author: item.author || 'DAHI',
-              date: item.pubDate ? new Date(item.pubDate).toLocaleDateString('en', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Recently published',
-              image: item.image || '/community-768.jpg',
-              href: item.link,
-            }))
-            .slice(0, 5);
+        const sortedPosts = postItems
+          .filter((post) => post.title && post.link)
+          .sort((a, b) => parseFeedDate(b.pubDate) - parseFeedDate(a.pubDate));
 
-          setPosts(normalizedPosts);
-          const uniqueTopics = Array.from(new Set(normalizedPosts.map((post) => post.category).filter(Boolean))).slice(0, 6);
-          setTopics(uniqueTopics);
-          setError(false);
-        } else {
-          setError(true);
-        }
-      } catch (err) {
+        console.log('[Blog] Sorted posts:', sortedPosts);
+
+        const normalizedPosts = sortedPosts
+          .map((item) => ({
+            title: item.title,
+            excerpt: stripHtml(item.summary || item.description || item.content || '' ) || 'Read the full article on Substack for more details.',
+            category: item.categories?.[0] || 'Featured',
+            author: item.author || 'DAHI',
+            date: item.pubDate ? new Date(item.pubDate).toLocaleDateString('en', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Recently published',
+            image: item.image || '/community-768.jpg',
+            href: item.link,
+          }))
+          .slice(0, 10);
+
+        setPosts(normalizedPosts);
+        const uniqueTopics = Array.from(new Set(normalizedPosts.map((post) => post.category).filter(Boolean))).slice(0, 6);
+        setTopics(uniqueTopics);
+        setError(false);
+      } catch (error) {
         if (isMounted) {
           setError(true);
         }
@@ -93,8 +141,7 @@ function BlogPage() {
     };
   }, []);
 
-  const featuredArticle = posts[0] || null;
-  const latestArticles = posts.slice(1);
+  const latestArticles = posts;
 
   return (
     <>
@@ -116,19 +163,6 @@ function BlogPage() {
           <div className="soft-card p-8 text-center text-slate-600">Loading the latest articles from the DAHI Substack publication…</div>
         ) : null}
 
-        {!loading && featuredArticle ? (
-          <div className="soft-card overflow-hidden">
-            <div className="p-8 sm:p-10">
-              <SectionHeading eyebrow="Featured article" title={featuredArticle.title} description={featuredArticle.excerpt} />
-              <div className="mt-4 flex flex-wrap items-center gap-2 text-sm text-slate-500">
-                <span>{featuredArticle.author}</span>
-                <span>•</span>
-                <span>{featuredArticle.date}</span>
-              </div>
-              <a href={featuredArticle.href} target="_blank" rel="noopener noreferrer" className="mt-6 inline-flex rounded-full bg-dahiPrimary px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-dahiSecondary">Read More on Substack</a>
-            </div>
-          </div>
-        ) : null}
 
         {!loading && error ? (
           <div className="soft-card p-8 text-center text-slate-600">
@@ -136,11 +170,18 @@ function BlogPage() {
           </div>
         ) : null}
 
-        <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
+        <div className="space-y-8">
           <div className="space-y-6">
-            <SectionHeading eyebrow="Recent articles" title="Fresh perspectives and practical ideas" description="The latest five posts from DAHI’s Substack publication are shown here for quick reading." />
+            <SectionHeading eyebrow="Recent articles" title="Fresh perspectives and practical ideas" description="The latest ten posts from DAHI’s Substack publication are shown here for quick reading." />
+            <div className="soft-card p-8">
+              <div className="rounded-[1.25rem] border border-slate-200 p-6">
+                <h3 className="text-lg font-semibold text-slate-900">Stay connected</h3>
+                <p className="mt-3 text-slate-600">Receive updates when new articles are published and be the first to hear about upcoming programs and events.</p>
+                <a href="https://womenshealthwithdocadi.substack.com" target="_blank" rel="noopener noreferrer" className="mt-6 inline-flex text-sm font-semibold text-dahiPrimary">Explore the publication →</a>
+              </div>
+            </div>
             {!loading && latestArticles.length > 0 ? (
-              <div className="grid gap-6">
+              <div className="grid gap-6 lg:grid-cols-2">
                 {latestArticles.map((article) => (
                   <BlogCard key={article.href} title={article.title} excerpt={article.excerpt} category={article.category} author={article.author} date={article.date} image={article.image} href={article.href} />
                 ))}
@@ -150,21 +191,6 @@ function BlogPage() {
               <div className="rounded-[1.25rem] border border-slate-200 p-6 text-slate-600">New posts will appear here as soon as they are published on the Substack feed.</div>
             ) : null}
           </div>
-          <aside className="soft-card p-8">
-            <SectionHeading eyebrow="Popular topics" title="Browse by theme" description="Explore the main topics our readers engage with most often." />
-            <div className="mt-6 flex flex-wrap gap-2">
-              {topics.length > 0 ? topics.map((topic) => (
-                <span key={topic} className="rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700">{topic}</span>
-              )) : (
-                <span className="rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700">Health Education</span>
-              )}
-            </div>
-            <div className="mt-8 rounded-[1.25rem] border border-slate-200 p-6">
-              <h3 className="text-lg font-semibold text-slate-900">Stay connected</h3>
-              <p className="mt-3 text-slate-600">Receive updates when new articles are published and be the first to hear about upcoming programs and events.</p>
-              <a href="https://womenshealthwithdocadi.substack.com" target="_blank" rel="noopener noreferrer" className="mt-6 inline-flex text-sm font-semibold text-dahiPrimary">Explore the publication →</a>
-            </div>
-          </aside>
         </div>
 
         <CTASection eyebrow="Stay informed" title="Join DAHI for more stories and updates" description="Subscribe for new articles, event announcements, and community moments that support women’s health education." actions={[

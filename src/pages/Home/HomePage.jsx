@@ -7,6 +7,7 @@ import Impact from '../../components/home/Impact';
 import ResourcesPreview from '../../components/home/ResourcesPreview';
 import Testimonials from '../../components/home/Testimonials';
 import GetInvolved from '../../components/home/GetInvolved';
+import FeaturedSubstackArticle from '../../components/home/FeaturedSubstackArticle';
 import NewsletterSection from '../../components/home/NewsletterSection';
 import FAQ from '../../components/home/FAQ';
 import SEO from '../../components/common/SEO';
@@ -28,13 +29,16 @@ function HomePage() {
       {/* 4. Featured Programs / Meet the Founder */}
       <MeetDocAdi />
 
-      {/* 5. Impact & Achievements */}
+      {/* 6. Impact & Achievements */}
       <Impact />
 
-      {/* 5.5. Upcoming Outreach Section */}
+      {/* 6.5. Featured Substack Article */}
+      <FeaturedSubstackArticle />
+
+      {/* 6.5. Upcoming Outreach Section */}
       <UpcomingOutreachSection />
 
-      {/* 6. Featured Health Resources */}
+      {/* 7. Featured Health Resources */}
       <ResourcesPreview />
 
       {/* 7. Testimonials */}

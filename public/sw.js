@@ -15,7 +15,31 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
+
+  const requestUrl = new URL(event.request.url);
+  // Allow cross-origin requests to pass through
+  if (requestUrl.origin !== self.location.origin) {
+    return;
+  }
+
+  // Don't intercept Netlify Functions API requests - let them hit the network
+  if (requestUrl.pathname.startsWith('/.netlify/functions/')) {
+    return;
+  }
+
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request).catch(() => caches.match('/') )
+    );
+    return;
+  }
+
+  const shellFiles = APP_SHELL.concat(['/index.html']);
+  if (!shellFiles.includes(requestUrl.pathname)) {
+    return;
+  }
+
   event.respondWith(
-    fetch(event.request).catch(() => caches.match(event.request).then((cached) => cached || caches.match('/')))
+    caches.match(event.request).then((cached) => cached || fetch(event.request))
   );
 });
