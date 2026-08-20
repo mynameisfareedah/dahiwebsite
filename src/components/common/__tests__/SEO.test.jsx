@@ -173,12 +173,12 @@ describe('SEO Component - Real Implementation', () => {
 
       const script = document.querySelector('script[type="application/ld+json"][data-seo-ld="page"]');
       const data = JSON.parse(script?.textContent || '{}');
+      const page = data['@graph'].find((item) => item['@type'] === 'WebPage');
 
       expect(data['@context']).toBe('https://schema.org');
-      expect(data['@type']).toBe('WebPage');
-      expect(data.name).toContain('Programs');
-      expect(data.description).toBe('Our programs');
-      expect(data.url).toContain('/programs');
+      expect(page.name).toContain('Programs');
+      expect(page.description).toBe('Our programs');
+      expect(page.url).toContain('/programs');
     });
 
     it('should include organization data in structured markup', () => {
@@ -186,18 +186,10 @@ describe('SEO Component - Real Implementation', () => {
 
       const script = document.querySelector('script[type="application/ld+json"][data-seo-ld="page"]');
       const data = JSON.parse(script?.textContent || '{}');
+      const page = data['@graph'].find((item) => item['@type'] === 'WebPage');
 
-      expect(data['@type']).toBe('WebPage');
-      expect(data.isPartOf?.name).toBe('Doc Adi Health Initiative');
-      expect(data.publisher?.name).toBe('Doc Adi Health Initiative');
-
-      render(<SEO path="/" />);
-      const homepageScript = document.querySelector('script[type="application/ld+json"][data-seo-ld="page"]');
-      const homepageData = JSON.parse(homepageScript?.textContent || '{}');
-      expect(homepageData['@graph']).toEqual(expect.arrayContaining([
-        expect.objectContaining({ '@type': 'Organization', name: 'Doc Adi Health Initiative', alternateName: 'DAHI' }),
-        expect.objectContaining({ '@type': 'WebSite', name: 'Doc Adi Health Initiative' }),
-      ]));
+      expect(page.about?.['@id']).toBe('https://thedahi.org/#organization');
+      expect(page.isPartOf?.['@id']).toBe('https://thedahi.org/#website');
     });
 
     it('should update structured data when props change', () => {
@@ -205,13 +197,13 @@ describe('SEO Component - Real Implementation', () => {
 
       let script = document.querySelector('script[type="application/ld+json"][data-seo-ld="page"]');
       let data = JSON.parse(script?.textContent || '{}');
-      expect(data.name).toContain('Original');
+      expect(data['@graph'].find((item) => item['@type'] === 'WebPage').name).toContain('Original');
 
       rerender(<SEO title="Updated" path="/programs" />);
 
       script = document.querySelector('script[type="application/ld+json"][data-seo-ld="page"]');
       data = JSON.parse(script?.textContent || '{}');
-      expect(data.name).toContain('Updated');
+      expect(data['@graph'].find((item) => item['@type'] === 'WebPage').name).toContain('Updated');
     });
   });
 

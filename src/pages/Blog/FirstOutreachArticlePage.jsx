@@ -33,7 +33,7 @@ function FirstOutreachArticlePage() {
           </section>
           <section>
             <SectionHeading eyebrow="Event details" title="Gwagwalada, Abuja" />
-            <p className="mt-4">The outreach took place at Dele Salawudeen Preparatory School in Gwagwalada, Abuja, beginning at 10:00 AM. Its theme was “Silent Diseases in Women: Early Detection Saves Lives.”</p>
+            <p className="mt-4">The outreach took place at Dele Salawudeen Preparatory School in Gwagwalada, Abuja, Nigeria, beginning at 10:00 AM. Its theme was “Silent Diseases in Women: Early Detection Saves Lives.”</p>
           </section>
           <section>
             <SectionHeading eyebrow="What happened during the outreach" title="Education, screening, and engagement" />

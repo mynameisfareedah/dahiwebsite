@@ -53,29 +53,6 @@ function SEO({ title, description, image = '/logo.jpeg', path = '/' }) {
     const twitterImage = document.querySelector('meta[name="twitter:image"]');
     if (twitterImage) twitterImage.setAttribute('content', absoluteImage);
 
-    const organization = {
-      '@type': 'Organization',
-      '@id': `${origin}/#organization`,
-      name: 'Doc Adi Health Initiative',
-      alternateName: 'DAHI',
-      url: `${origin}/`,
-      logo: `${origin}/logo.jpeg`,
-      description: siteDescription,
-      sameAs: [
-        'https://www.facebook.com/share/1A8VVfnJyr',
-        'https://www.instagram.com/docadihealthintiative_/',
-        'https://youtube.com/@dahi-01',
-      ],
-    };
-    const website = {
-      '@type': 'WebSite',
-      '@id': `${origin}/#website`,
-      name: 'Doc Adi Health Initiative',
-      alternateName: 'DAHI',
-      url: `${origin}/`,
-      publisher: { '@id': `${origin}/#organization` },
-      inLanguage: 'en-US',
-    };
     const page = {
       '@type': 'WebPage',
       name: fullTitle,
@@ -83,12 +60,14 @@ function SEO({ title, description, image = '/logo.jpeg', path = '/' }) {
       url: canonicalUrl,
       image: absoluteImage,
       inLanguage: 'en-US',
+      about: { '@id': `${origin}/#organization` },
       isPartOf: { '@id': `${origin}/#website` },
       publisher: { '@id': `${origin}/#organization` },
     };
-    const structuredData = normalizedPath === '/'
-      ? { '@context': 'https://schema.org', '@graph': [organization, website, page] }
-      : { '@context': 'https://schema.org', ...page, publisher: organization, isPartOf: website };
+    if (normalizedPath === '/blog/first-community-outreach') {
+      page.author = { '@id': `${origin}/#doc-adi` };
+    }
+    const structuredData = { '@context': 'https://schema.org', '@graph': [page] };
 
     let scriptTag = document.querySelector('script[data-seo-ld="page"]');
     if (!scriptTag) {

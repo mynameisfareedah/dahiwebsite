@@ -58,7 +58,7 @@ function AboutPage() {
           <div className="mt-8 grid gap-6 lg:grid-cols-2">
             <div className="rounded-[1.25rem] border border-slate-200 p-6">
               <p className="text-lg leading-8 text-slate-600">
-                We recognise that good health begins with awareness, understanding, and the ability to make informed choices. Through our programmes and resources, we aim to support women at different stages of life by providing education on important health topics in a simple, respectful, and accessible way.
+                Doc Adi Health Initiative (DAHI) was founded by Dr. Adiyat Olamide Dele-Salawu (Doc Adi) to provide women and girls with trusted, evidence-based health education, practical resources, and supportive community learning.
               </p>
             </div>
             <div className="rounded-[1.25rem] border border-slate-200 p-6">
