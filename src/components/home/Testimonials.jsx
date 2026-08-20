@@ -10,9 +10,8 @@ function Testimonials() {
 
       <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
         {testimonials.slice(0, 3).map((item, index) => (
-          <article key={index} className="soft-card p-7">
-            <div className="text-dahiAccent"><i className="fa-solid fa-star"></i><i className="fa-solid fa-star"></i><i className="fa-solid fa-star"></i><i className="fa-solid fa-star"></i><i className="fa-solid fa-star"></i></div>
-            <p className="mt-4 text-lg leading-8 text-slate-600">&quot;{item.quote}&quot;</p>
+          <article key={index} className="border-t border-slate-200 pt-5">
+            <p className="text-base leading-7 text-slate-600">&quot;{item.quote}&quot;</p>
             {item.name || item.role ? <p className="mt-5 text-sm font-semibold text-slate-900">{item.name || item.role}</p> : null}
           </article>
         ))}

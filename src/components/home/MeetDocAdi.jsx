@@ -16,7 +16,7 @@ function MeetDocAdi() {
               <div className="space-y-5">
                 <div>
                   <span className="eyebrow">Meet Doc Adi</span>
-                  <h2 className="mt-4 section-title">{founder.name}</h2>
+                  <h2 className="mt-4 section-title">Dr. Adiyat Olamide Dele-Salawu (Doc Adi)</h2>
                   <p className="mt-2 text-sm font-semibold uppercase tracking-[0.2em] text-dahiSecondary">Founder &amp; Medical Lead</p>
                 </div>
 
@@ -28,7 +28,7 @@ function MeetDocAdi() {
                     );
                   }
 
-                  return <p className="text-lg leading-8 text-slate-600">{rawBio.split('\n\n').slice(0, 2).join(' ')}</p>;
+                  return rawBio.split('\n\n').slice(0, 2).map((paragraph) => <p key={paragraph} className="text-lg leading-8 text-slate-600">{paragraph}</p>);
                 })()}
                 <Link to="/about" className="inline-flex items-center justify-center rounded-full border border-dahiPrimary px-6 py-3 text-sm font-semibold text-dahiPrimary transition hover:bg-dahiPrimary/5">Meet Doc Adi</Link>
               </div>

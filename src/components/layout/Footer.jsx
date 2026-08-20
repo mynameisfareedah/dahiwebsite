@@ -28,9 +28,10 @@ function Footer() {
           <div className="max-w-xl">
             <Link to="/" className="flex items-center gap-3">
               <img src="/logo.jpeg" alt="DAHI logo" loading="lazy" className="h-16 w-auto rounded-lg" />
-              <span className="text-3xl font-extrabold text-white">DAHI</span>
+              <span className="text-lg font-extrabold uppercase tracking-wide text-white">Doc Adi Health Initiative (DAHI)</span>
             </Link>
             <p className="mt-4 text-slate-400">Empowering Muslim women through trusted health education, community, and evidence-based resources.</p>
+            <p className="mt-2 text-sm text-slate-500">Website: https://thedahi.org/</p>
           </div>
           <div className="space-y-3">
             <div className="font-semibold text-white">Connect with us</div>

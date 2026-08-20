@@ -18,11 +18,11 @@ function GetInvolved() {
       buttonText: 'Join Our Community',
     },
     {
-      icon: 'fa-solid fa-handshake',
-      title: 'Partner with DAHI',
-      description: "Collaborate with us to advance women's health education and community outreach.",
+      icon: 'fa-solid fa-envelope',
+      title: 'Contact Us',
+      description: "Have questions or want to collaborate? We would love to hear from you.",
       link: '/contact',
-      buttonText: 'Partner with DAHI',
+      buttonText: 'Get in Touch',
     },
   ];
 
