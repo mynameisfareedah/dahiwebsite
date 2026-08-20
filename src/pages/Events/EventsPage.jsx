@@ -88,8 +88,8 @@ function EventsPage() {
         }
 
         const published = (res.data || []).filter((e) => e.status === EVENT_STATUS.PUBLISHED);
-        // sort ascending by event_date
-        published.sort((a, b) => new Date(a.event_date || a.date || 0) - new Date(b.event_date || b.date || 0));
+        // Show the most recent published events first.
+        published.sort((a, b) => new Date(b.event_date || b.date || 0) - new Date(a.event_date || a.date || 0));
         setEvents(published);
       })
       .catch((err) => {
@@ -179,7 +179,9 @@ function EventsPage() {
                   time={event.start_time || event.time}
                   speaker={event.speaker || 'DAHI Team'}
                   description={event.description}
-                  image={event.poster_url || event.image || '/WEBINARS.jpg'}
+                  image={event.category?.toLowerCase().includes('outreach') || event.title?.toLowerCase().includes('outreach')
+                    ? '/OUTREACH/Cross-Section of Participants.jfif'
+                    : event.poster_url || event.image || '/WEBINARS.jpg'}
                   buttonLabel={event.buttonLabel || event.registrationButtonText || event.registration_button_text || 'Register Now'}
                   buttonHref={event.buttonHref || null}
                   registrationEnabled={event.registrationEnabled ?? event.registration_enabled ?? true}
