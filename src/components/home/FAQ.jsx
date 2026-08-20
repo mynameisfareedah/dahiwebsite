@@ -13,7 +13,7 @@ function FAQ() {
       answer: "Yes, most of our resources are available for free. Some premium guides and specialized courses may have a small cost to support our mission and ensure high-quality content.",
     },
     {
-      question: "How can I volunteer with DAHI?",
+      question: "How can I volunteer?",
       answer: "Visit our Volunteer page to learn about available opportunities and submit your application. We welcome volunteers with diverse skills and backgrounds who are passionate about women's health education.",
     },
     {
@@ -21,7 +21,7 @@ function FAQ() {
       answer: "You can support DAHI by donating, volunteering your time or skills, joining our community, sharing our resources with others, or partnering with us on initiatives. Every contribution helps us reach more women.",
     },
     {
-      question: "How do I contact DAHI?",
+      question: "How can I contact DAHI?",
       answer: "You can reach us through our Contact page, via email at docadi.healthinitiative@gmail.com, or through our social media channels. We typically respond within 1-2 business days.",
     },
   ];

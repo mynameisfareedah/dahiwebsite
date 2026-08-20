@@ -47,7 +47,7 @@ function ResourcesPage() {
 
   return (
     <>
-      <SEO title="Resources" description="Browse DAHI's resource centre for women’s health education, guides, and downloadable materials." />
+      <SEO title="Women's Health Resources | Doc Adi Health Initiative" description="Browse DAHI's practical women's health resources, guides, and educational materials for Muslim women and girls." />
       <PageHero
         eyebrow="Resource centre"
         title="Health Resources"

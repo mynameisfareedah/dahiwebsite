@@ -33,15 +33,6 @@ function stripHtml(value) {
     .trim();
 }
 
-function formatParagraphs(value) {
-  if (!value) return [];
-  return value
-    .split(/\n{2,}/)
-    .map((paragraph) => paragraph.trim())
-    .filter(Boolean)
-    .slice(0, 11);
-}
-
 function FeaturedSubstackArticle() {
   const [featured, setFeatured] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -96,16 +87,8 @@ function FeaturedSubstackArticle() {
       <div className="soft-card overflow-hidden">
         <div className="grid gap-8 lg:grid-cols-[0.95fr_0.75fr] items-stretch">
           <div className="p-8">
-            <SectionHeading
-              eyebrow="Featured article"
-              title={featured.title}
-              description=""
-            />
-            <div className="mt-4 text-sm text-slate-600 space-y-4">
-              {formatParagraphs(featured.excerpt).map((paragraph, index) => (
-                <p key={index}>{stripHtml(paragraph)}</p>
-              ))}
-            </div>
+            <SectionHeading eyebrow="Featured from DAHI" title={featured.title} description="" />
+            <p className="mt-4 line-clamp-3 text-base leading-7 text-slate-600">{stripHtml(featured.excerpt).slice(0, 300)}</p>
             <div className="mt-6 flex flex-wrap items-center gap-3">
               <a
                 href={featured.href}
@@ -113,13 +96,13 @@ function FeaturedSubstackArticle() {
                 rel="noopener noreferrer"
                 className="inline-flex rounded-full bg-dahiPrimary px-6 py-3 text-sm font-semibold text-white transition hover:bg-dahiSecondary"
               >
-                Read the full article on Substack
+                Read Article
               </a>
               <a
                 href="/blog"
                 className="inline-flex rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-50"
               >
-                See all blog posts
+                See All Blog Posts
               </a>
             </div>
             <div className="mt-4 flex flex-wrap items-center gap-2 text-sm text-slate-500">

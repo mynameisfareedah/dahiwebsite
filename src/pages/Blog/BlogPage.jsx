@@ -118,7 +118,7 @@ function BlogPage() {
 
   return (
     <>
-      <SEO title="Blog" description="Read DAHI's latest articles, reflections, and educational insights for women’s health and community support." />
+      <SEO title="DAHI Blog | Women's Health Education & Insights" description="Read Doc Adi Health Initiative's latest women's health education articles, reflections, and practical insights for Muslim women and girls." />
       <PageHero
         eyebrow="Blog"
         title="Stories, reflections, and educational insights"

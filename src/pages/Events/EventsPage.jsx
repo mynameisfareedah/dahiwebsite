@@ -129,7 +129,7 @@ function EventsPage() {
 
   return (
     <>
-      <SEO title="Events & Activities" description="Explore DAHI's educational events, masterclasses, webinars, community activities, and resources." />
+      <SEO title="Events & Activities | Doc Adi Health Initiative" description="Explore DAHI webinars, health education events, community activities, and outreach programmes for women and girls." />
       <PageHero
         eyebrow="Events & activities"
         title="DAHI's educational events and activities"

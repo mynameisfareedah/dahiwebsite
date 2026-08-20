@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { resolveResourceAccess } from '../../utils/resourceAccess';
 
 function ResourceCard({
@@ -15,26 +15,23 @@ function ResourceCard({
   platform,
   externalUrl,
   buttonText,
+  compact = false,
 }) {
   const action = resolveResourceAccess({
     externalUrl,
     buttonText,
   });
 
-  const [imageSrc, setImageSrc] = useState(image || '/ebook.svg');
-
-  useEffect(() => {
-    setImageSrc(image || '/ebook.svg');
-  }, [image]);
+  const [imageSrc, setImageSrc] = useState(() => image || '/ebook.svg');
 
   const parsedPrice = Number(price ?? 0);
   const hasPrice = Number.isFinite(parsedPrice) && parsedPrice > 0;
   const displayCurrency = String(currency || 'NGN').toUpperCase();
 
   return (
-    <article className="group overflow-hidden rounded-2xl bg-white shadow-sm transition duration-300 hover:-translate-y-0.5 hover:shadow-xl">
-      <div className="flex min-h-[320px] flex-col lg:flex-row lg:items-stretch">
-        <div className="relative h-80 w-full overflow-hidden bg-slate-100 lg:h-auto lg:w-[38%] lg:shrink-0">
+    <article className="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-0.5 hover:shadow-md">
+      <div className={`flex flex-col ${compact ? '' : 'min-h-[320px] lg:flex-row lg:items-stretch'}`}>
+        <div className={`relative w-full overflow-hidden bg-slate-100 ${compact ? 'h-48' : 'h-80 lg:h-auto lg:w-[38%] lg:shrink-0'}`}>
           <img
             src={imageSrc}
             alt={title || 'Resource'}
@@ -44,7 +41,7 @@ function ResourceCard({
           />
         </div>
 
-        <div className="flex flex-1 flex-col gap-6 p-7 lg:p-8">
+        <div className={`flex flex-1 flex-col ${compact ? 'gap-4 p-5' : 'gap-6 p-7 lg:p-8'}`}>
           <div className="flex flex-wrap gap-2">
             {featured ? (
               <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-amber-900">Featured</span>
@@ -56,9 +53,9 @@ function ResourceCard({
           </div>
 
           <div className="flex-1">
-            <h3 className="text-3xl font-semibold text-slate-900 sm:text-4xl">{title || 'Untitled Resource'}</h3>
+            <h3 className={`${compact ? 'text-xl' : 'text-3xl sm:text-4xl'} font-semibold text-slate-900`}>{title || 'Untitled Resource'}</h3>
             {author ? <p className="mt-3 text-sm text-slate-500">By {author}</p> : null}
-            <p className="mt-5 text-slate-600 line-clamp-3">{description || 'No description available'}</p>
+            <p className={`${compact ? 'mt-3 line-clamp-2 text-sm' : 'mt-5 line-clamp-3'} text-slate-600`}>{description || 'No description available'}</p>
           </div>
 
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">

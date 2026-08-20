@@ -14,6 +14,7 @@ export const focusAreas = [
   { title: 'Contraception & Family Planning', description: 'Reliable, evidence-based education on contraception options and faith-conscious family planning.', icon: 'fa-solid fa-heart-pulse', accent: 'bg-dahiAccent/20 text-dahiAccent' },
   { title: 'Menopause & Ageing', description: 'Practical guidance on symptoms, healthy ageing, and support across later life stages.', icon: 'fa-solid fa-person-cane', accent: 'bg-dahiPrimary/10 text-dahiPrimary' },
   { title: 'Emotional Wellbeing', description: 'Support for mental wellbeing, stress, hormones, and healthy habits that strengthen overall resilience.', icon: 'fa-solid fa-brain', accent: 'bg-dahiSecondary/10 text-dahiSecondary' },
+  { title: 'Preventive Health', description: 'Understanding prevention, screening, early detection, and when to seek appropriate care.', icon: 'fa-solid fa-shield-heart', accent: 'bg-dahiAccent/20 text-dahiAccent' },
 ];
 
 export const impactThemes = [

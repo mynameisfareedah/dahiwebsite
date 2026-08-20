@@ -7,7 +7,7 @@ function FirstOutreachArticlePage() {
   return (
     <>
       <SEO
-        title="DAHI First Community Outreach in Gwagwalada"
+        title="First Community Health Outreach in Gwagwalada | Doc Adi Health Initiative"
         description="Doc Adi Health Initiative’s first community health outreach in Gwagwalada, Abuja, focused on women’s health awareness, early detection, and preventive healthcare."
         image="/OUTREACH/Community Audience & Participants.jfif"
         path="/blog/first-community-outreach"

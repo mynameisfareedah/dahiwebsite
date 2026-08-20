@@ -23,8 +23,8 @@ function TeamPage() {
   return (
     <>
       <SEO
-        title="Meet the Team"
-        description="Meet the DAHI team dedicated to empowering women through trusted health education and community support."
+        title="Meet the DAHI Team | Doc Adi Health Initiative"
+        description="Meet the Doc Adi Health Initiative team supporting trusted women's health education, community outreach, and practical resources."
         path="/team"
       />
 

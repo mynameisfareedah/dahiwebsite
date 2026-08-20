@@ -7,9 +7,9 @@ function ResourcesPreview() {
     <section id="resources" className="section-shell max-w-7xl">
       <div className="mb-8 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
         <div className="max-w-3xl">
-          <span className="eyebrow">Educational Resources</span>
-          <h2 className="mt-4 section-title">Featured resources for women’s health education</h2>
-          <p className="mt-4 text-lg leading-8 text-slate-600">Explore practical guides, eBooks, and trusted materials created to support women with clear and accessible health education.</p>
+          <span className="eyebrow">Learn with DAHI</span>
+          <h2 className="mt-4 section-title">Educational Resources</h2>
+          <p className="mt-4 text-lg leading-8 text-slate-600">Practical guides and trusted materials to support women’s health education.</p>
         </div>
         <Link to="/resources" className="inline-flex items-center justify-center rounded-full bg-dahiPrimary px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-dahiSecondary">Browse All Resources</Link>
       </div>
@@ -35,6 +35,7 @@ function ResourcesPreview() {
                 platform={resource?.platform}
                 externalUrl={resource?.external_url || resource?.externalUrl || resource?.selar_url || resource?.file_url}
                 buttonText={resource?.button_text || resource?.buttonText}
+                compact
               />
             ))}
           </div>

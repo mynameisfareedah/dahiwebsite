@@ -46,7 +46,7 @@ function AboutPage() {
 
   return (
     <>
-      <SEO title="About Doc Adi Health Initiative" description="Learn about DAHI's mission, story, values, impact, and how to get involved in women’s health education." />
+      <SEO title="About Doc Adi Health Initiative | DAHI" description="Learn about Doc Adi Health Initiative (DAHI), its mission, values, and evidence-based women's health education for Muslim women and girls." />
       <AboutHero />
 
       <section className="section-shell max-w-7xl space-y-8">

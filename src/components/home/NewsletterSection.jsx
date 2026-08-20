@@ -4,8 +4,8 @@ function NewsletterSection() {
       <div className="soft-card overflow-hidden p-8 sm:p-10">
         <div className="max-w-3xl">
           <span className="eyebrow">Stay Connected</span>
-          <h2 className="mt-4 text-3xl font-black text-slate-900">Subscribe for updates from DAHI</h2>
-          <p className="mt-4 text-lg leading-8 text-slate-600">Receive news about webinars, community events, health education resources, and opportunities to grow with DAHI.</p>
+          <h2 className="mt-4 text-3xl font-black text-slate-900">Stay informed. Stay empowered.</h2>
+          <p className="mt-4 text-lg leading-8 text-slate-600">Receive updates about webinars, community events, health education resources, and opportunities to grow with DAHI.</p>
         </div>
         <form className="mt-8 max-w-2xl rounded-[1.25rem] border border-slate-200 bg-slate-50 p-4 sm:flex sm:items-center sm:gap-3">
           <label htmlFor="newsletter-email" className="sr-only">Email address</label>

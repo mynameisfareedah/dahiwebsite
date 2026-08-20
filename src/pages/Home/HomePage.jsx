@@ -15,7 +15,7 @@ import SEO from '../../components/common/SEO';
 function HomePage() {
   return (
     <>
-      <SEO title="Home" description="DAHI empowers Muslim women through trusted health education, practical resources, and supportive community programmes." path="/" />
+      <SEO title="Doc Adi Health Initiative | Trusted Health Education for Muslim Women" description="Doc Adi Health Initiative (DAHI) provides trusted, evidence-based health education, practical resources and community outreach for Muslim women and girls." image="/community-1200.jpg" path="/" />
 
       {/* 1. Hero Section */}
       <Hero />

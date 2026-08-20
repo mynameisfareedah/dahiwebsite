@@ -72,7 +72,7 @@ function ContactPage() {
 
   return (
     <>
-      <SEO title="Contact" description="Get in touch with DAHI for enquiries, partnerships, volunteering, resources, and community support." />
+      <SEO title="Contact Doc Adi Health Initiative" description="Contact Doc Adi Health Initiative (DAHI) about women's health education, partnerships, volunteering, resources, and community outreach." />
       <section id="top" className="section-shell max-w-7xl space-y-8">
         <ContactHero
           eyebrow="Contact"

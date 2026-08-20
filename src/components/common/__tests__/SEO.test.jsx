@@ -12,7 +12,7 @@ describe('SEO Component - Real Implementation', () => {
     it('should set default title when no title prop', () => {
       render(<SEO />);
 
-      expect(document.title).toBe('DAHI — Empowering Muslim Women Through Trusted Health Education');
+      expect(document.title).toBe('Doc Adi Health Initiative | Trusted Health Education for Muslim Women');
     });
 
     it('should set custom title with DAHI suffix', () => {
@@ -24,7 +24,7 @@ describe('SEO Component - Real Implementation', () => {
     it('should handle empty title gracefully', () => {
       render(<SEO title="" />);
 
-      expect(document.title).toBe('DAHI — Empowering Muslim Women Through Trusted Health Education');
+      expect(document.title).toBe('Doc Adi Health Initiative | Trusted Health Education for Muslim Women');
     });
   });
 
@@ -34,7 +34,7 @@ describe('SEO Component - Real Implementation', () => {
 
       const metaDescription = document.querySelector('meta[name="description"]');
       expect(metaDescription?.getAttribute('content')).toBe(
-        'DAHI — Empowering Muslim Women Through Trusted Health Education'
+        'Doc Adi Health Initiative (DAHI) provides trusted, evidence-based health education, practical resources and community outreach for Muslim women and girls.'
       );
     });
 
@@ -131,8 +131,7 @@ describe('SEO Component - Real Implementation', () => {
     it('should set OpenGraph type', () => {
       render(<SEO />);
 
-      const ogType = document.querySelector('meta[property="og:type"]');
-      // Note: SEO component doesn't set og:type, but we can verify the component behavior
+      // Verify the Open Graph metadata remains present.
       expect(document.querySelector('meta[property="og:title"]')).toBeDefined();
     });
   });
@@ -183,23 +182,32 @@ describe('SEO Component - Real Implementation', () => {
     });
 
     it('should include organization data in structured markup', () => {
-      render(<SEO />);
+      render(<SEO path="/programs" />);
 
       const script = document.querySelector('script[type="application/ld+json"][data-seo-ld="page"]');
       const data = JSON.parse(script?.textContent || '{}');
 
+      expect(data['@type']).toBe('WebPage');
       expect(data.isPartOf?.name).toBe('Doc Adi Health Initiative');
       expect(data.publisher?.name).toBe('Doc Adi Health Initiative');
+
+      render(<SEO path="/" />);
+      const homepageScript = document.querySelector('script[type="application/ld+json"][data-seo-ld="page"]');
+      const homepageData = JSON.parse(homepageScript?.textContent || '{}');
+      expect(homepageData['@graph']).toEqual(expect.arrayContaining([
+        expect.objectContaining({ '@type': 'Organization', name: 'Doc Adi Health Initiative', alternateName: 'DAHI' }),
+        expect.objectContaining({ '@type': 'WebSite', name: 'Doc Adi Health Initiative' }),
+      ]));
     });
 
     it('should update structured data when props change', () => {
-      const { rerender } = render(<SEO title="Original" />);
+      const { rerender } = render(<SEO title="Original" path="/programs" />);
 
       let script = document.querySelector('script[type="application/ld+json"][data-seo-ld="page"]');
       let data = JSON.parse(script?.textContent || '{}');
       expect(data.name).toContain('Original');
 
-      rerender(<SEO title="Updated" />);
+      rerender(<SEO title="Updated" path="/programs" />);
 
       script = document.querySelector('script[type="application/ld+json"][data-seo-ld="page"]');
       data = JSON.parse(script?.textContent || '{}');

@@ -5,7 +5,7 @@ function GetInvolved() {
     {
       icon: 'fa-solid fa-hands-helping',
       title: 'Volunteer',
-      description: 'Help us educate and empower more women by sharing your skills and time.',
+      description: 'Share your skills and time to help educate and empower more women.',
       link: '/volunteer',
       buttonText: 'Learn More About Volunteering',
     },
@@ -15,14 +15,14 @@ function GetInvolved() {
       description: 'Become part of our growing network of women committed to health and wellness.',
       href: 'https://forms.gle/joTjf3VYW9anCA9MA',
       external: true,
-      buttonText: 'Join Now',
+      buttonText: 'Join Our Community',
     },
     {
-      icon: 'fa-solid fa-envelope',
-      title: 'Contact Us',
-      description: 'Have questions or want to collaborate? We would love to hear from you.',
+      icon: 'fa-solid fa-handshake',
+      title: 'Partner with DAHI',
+      description: "Collaborate with us to advance women's health education and community outreach.",
       link: '/contact',
-      buttonText: 'Get in Touch',
+      buttonText: 'Partner with DAHI',
     },
   ];
 
@@ -31,10 +31,10 @@ function GetInvolved() {
       <div className="mb-12 text-center">
         <span className="eyebrow">Ways to Engage</span>
         <h2 className="mt-4 section-title">Get Involved with DAHI</h2>
-        <p className="mx-auto mt-4 max-w-2xl text-lg leading-8 text-slate-600">There are many ways to support women's health education. Choose how you want to make an impact.</p>
+        <p className="mx-auto mt-4 max-w-2xl text-lg leading-8 text-slate-600">There are many ways to support women&apos;s health education. Choose how you want to make an impact.</p>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-6 md:grid-cols-3">
         {actions.map((action) => (
           <article key={action.title} className="soft-card flex flex-col p-6 transition hover:shadow-lg">
             <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-dahiPrimary/10 text-xl text-dahiPrimary">

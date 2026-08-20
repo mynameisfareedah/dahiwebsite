@@ -15,7 +15,7 @@ function VolunteerPage() {
 
   return (
     <>
-      <SEO title="Volunteer" description="Learn about volunteering with DAHI, available opportunities, benefits, and how to apply." />
+      <SEO title="Volunteer with Doc Adi Health Initiative" description="Learn how to volunteer with DAHI and support trusted women's health education and community outreach." />
       <main className="space-y-16">
         <VolunteerHero />
         <WhyVolunteer />

@@ -62,7 +62,7 @@ const audienceGroups = [
 function ProgramsPage() {
   return (
     <>
-      <SEO title="Programs" description="Explore DAHI's programmes in women’s health education, community outreach, awareness campaigns, webinars, and educational resources." />
+      <SEO title="Women’s Health Programmes | Doc Adi Health Initiative" description="Explore DAHI programmes in women's health education, community outreach, awareness campaigns, webinars, and practical resources." />
       <PageHero
         eyebrow="Programs & focus areas"
         title="Our Programs"

@@ -1,56 +1,21 @@
 /* eslint-disable react/no-unknown-property */
 import { Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import { getUpcomingEvents } from '../../services/supabase/eventsService';
-import { resolveRegistrationState } from '../../utils/registration';
-
 
 function Hero() {
-  const [event, setEvent] = useState(null);
-
-  useEffect(() => {
-    let mounted = true;
-
-    getUpcomingEvents(1)
-      .then((res) => {
-        if (!mounted) return;
-        setEvent((res.data && res.data[0]) || null);
-      })
-      .catch(() => {
-        if (!mounted) return;
-        setEvent(null);
-      });
-
-    return () => {
-      mounted = false;
-    };
-  }, []);
-
-  const registrationState = resolveRegistrationState(event, 'Register Now');
-
   return (
     <section id="hero" className="w-full px-4 pb-12 pt-6 sm:px-6 lg:px-0 lg:pb-20">
       <div className="hero-glow overflow-hidden rounded-[2rem] px-6 py-10 shadow-2xl sm:px-8 lg:px-12 lg:py-14">
         <div className="grid items-center gap-10 lg:grid-cols-[1.1fr_0.9fr]">
           <div className="text-white">
-            <span className="eyebrow bg-white/15 text-white">Trusted health education for Muslim women</span>
-            <h1 className="mt-5 text-3xl font-black leading-tight sm:text-4xl lg:text-5xl">Empowering Muslim Women Through Trusted Health Education</h1>
-            <p className="mt-5 max-w-2xl text-lg leading-8 text-white/90">DAHI is dedicated to providing evidence-based health education, practical resources, and a supportive community that empowers women to make informed decisions about their health and well-being.</p>
+            <h1 className="max-w-2xl text-4xl font-black uppercase leading-tight tracking-wide sm:text-5xl lg:text-6xl">Trusted Health Education for Muslim Women</h1>
+            <p className="mt-6 max-w-xl text-lg leading-8 text-white/90">Evidence-based health education, practical resources, and a supportive community helping women make informed decisions about their health.</p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              {registrationState.enabled && (
-                <a href={registrationState.href} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-semibold text-dahiPrimary transition hover:-translate-y-0.5">{registrationState.label}</a>
-              )}
               <Link to="/resources" className="inline-flex items-center justify-center rounded-full border border-white/70 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10">Explore Resources</Link>
-            </div>
-
-            <div className="mt-8 max-w-xl rounded-2xl border border-white/20 bg-white/10 p-5 backdrop-blur">
-              <div className="text-sm font-semibold uppercase tracking-[0.18em] text-white/80">A growing mission</div>
-              <p className="mt-2 text-lg leading-8 text-white">DAHI combines digital health education with community-based outreach that helps women learn, ask questions, and act earlier.</p>
-              <Link to="/outreach" className="mt-4 inline-flex items-center justify-center rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-dahiPrimary transition hover:-translate-y-0.5">Read About Our Outreach</Link>
+              <a href="https://forms.gle/joTjf3VYW9anCA9MA" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-semibold text-dahiPrimary transition hover:-translate-y-0.5">Join Our Community</a>
             </div>
           </div>
 
-          <div className="rounded-[1.5rem] border border-white/20 bg-white/10 p-4 backdrop-blur">
+          <div className="overflow-hidden rounded-[1.5rem] border border-white/20 bg-white/10 p-3 backdrop-blur">
             <picture>
               <source
                 srcSet="/community-480.webp 480w, /community-768.webp 768w, /community-1200.webp 1200w"
@@ -68,15 +33,6 @@ function Hero() {
                 className="h-[320px] w-full rounded-[1.2rem] object-cover sm:h-[420px]"
               />
             </picture>
-            <div className="mt-4 rounded-[1rem] bg-white/95 p-4 text-slate-700">
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-dahiAccent/20 text-lg text-dahiPrimary"><i className="fa-solid fa-heart-pulse"></i></div>
-                <div>
-                  <div className="font-semibold">Evidence-based support</div>
-                  <div className="text-sm text-slate-500">Trusted guidance for every stage of life</div>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>

@@ -9,12 +9,11 @@ function Testimonials() {
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-        {testimonials.map((item, index) => (
+        {testimonials.slice(0, 3).map((item, index) => (
           <article key={index} className="soft-card p-7">
             <div className="text-dahiAccent"><i className="fa-solid fa-star"></i><i className="fa-solid fa-star"></i><i className="fa-solid fa-star"></i><i className="fa-solid fa-star"></i><i className="fa-solid fa-star"></i></div>
-            <p className="mt-4 text-lg leading-8 text-slate-600">"{item.quote}"</p>
-            <p className="mt-5 font-semibold text-slate-900">{item.name || 'DAHI Participant'}</p>
-            {item.role && <p className="text-sm text-slate-500">{item.role}</p>}
+            <p className="mt-4 text-lg leading-8 text-slate-600">&quot;{item.quote}&quot;</p>
+            {item.name || item.role ? <p className="mt-5 text-sm font-semibold text-slate-900">{item.name || item.role}</p> : null}
           </article>
         ))}
       </div>
