@@ -8,6 +8,7 @@ const sidebarLinks = [
   { to: '/team', label: 'Meet the Team' },
   { to: '/blog', label: 'Blog' },
   { to: '/events', label: 'Events' },
+  { to: '/outreach', label: 'Outreach' },
   { to: '/resources', label: 'Resources' },
   { to: '/volunteer', label: 'Volunteer' },
   { to: '/contact', label: 'Contact' },
@@ -23,6 +24,7 @@ function Sidebar() {
 
   // Close sidebar when route changes
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMobileOpen(false);
   }, [location.pathname]);
 

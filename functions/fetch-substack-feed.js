@@ -1,4 +1,4 @@
-const FEED_URL = process.env.SUBSTACK_FEED_URL || 'https://womenshealthwithdocadi.substack.com/feed';
+const DEFAULT_FEED_URL = 'https://womenshealthwithdocadi.substack.com/feed';
 
 import { XMLParser } from 'fast-xml-parser';
 
@@ -87,9 +87,31 @@ export const handler = async (event, context) => {
     };
   }
 
-  const feedUrl = FEED_URL;
+  const configuredFeedUrl = process.env.SUBSTACK_FEED_URL?.trim();
+  const feedUrl = configuredFeedUrl || DEFAULT_FEED_URL;
+
   try {
-    const upstreamResponse = await fetch(feedUrl, { redirect: 'follow' });
+    const parsedFeedUrl = new URL(feedUrl);
+    if (parsedFeedUrl.protocol !== 'https:' || parsedFeedUrl.hostname !== 'womenshealthwithdocadi.substack.com' || parsedFeedUrl.pathname !== '/feed') {
+      throw new Error('SUBSTACK_FEED_URL must be the DAHI Substack /feed URL');
+    }
+  } catch (error) {
+    console.error('[Substack] Invalid feed URL configuration', error.message);
+    return {
+      statusCode: 500,
+      headers: CORS_HEADERS,
+      body: JSON.stringify({ posts: [], error: 'Invalid Substack feed configuration' }),
+    };
+  }
+
+  try {
+    const upstreamResponse = await fetch(feedUrl, {
+      redirect: 'follow',
+      headers: {
+        Accept: 'application/rss+xml, application/xml, text/xml;q=0.9, */*;q=0.8',
+        'User-Agent': 'DAHI-Website-Substack-Feed/1.0 (+https://womenshealthwithdocadi.substack.com/)',
+      },
+    });
 
     console.log('[Substack] URL:', feedUrl);
     console.log('[Substack] Status:', upstreamResponse.status);
@@ -106,6 +128,15 @@ export const handler = async (event, context) => {
         statusCode: upstreamResponse.status,
         headers: CORS_HEADERS,
         body: JSON.stringify({ posts: [] }),
+      };
+    }
+
+    if (!xml.trim()) {
+      console.error('[Substack] Upstream returned an empty response');
+      return {
+        statusCode: 502,
+        headers: CORS_HEADERS,
+        body: JSON.stringify({ posts: [], error: 'Empty RSS response' }),
       };
     }
 
@@ -243,6 +274,14 @@ export const handler = async (event, context) => {
     }
 
     console.log('[Substack] Parsed posts count:', posts.length);
+    if (items.length > 0 && posts.length === 0) {
+      console.error('[Substack] RSS contained items, but none could be normalized');
+      return {
+        statusCode: 502,
+        headers: CORS_HEADERS,
+        body: JSON.stringify({ posts: [], error: 'RSS items could not be normalized' }),
+      };
+    }
     if (posts.length > 0) {
       const first = posts[0];
       console.log('[Substack] First post title:', first.title);
@@ -266,9 +305,9 @@ export const handler = async (event, context) => {
   } catch (err) {
     console.error('[Substack] Unexpected error fetching/parsing feed', err);
     return {
-      statusCode: 500,
+      statusCode: 502,
       headers: CORS_HEADERS,
-      body: JSON.stringify({ posts: [] }),
+      body: JSON.stringify({ posts: [], error: 'Unable to fetch the DAHI Substack feed' }),
     };
   }
 };

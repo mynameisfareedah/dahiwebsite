@@ -7,6 +7,7 @@ const navLinks = [
   { to: '/team', label: 'Meet the Team' },
   { to: '/programs', label: 'Programs' },
   { to: '/events', label: 'Events & Activities' },
+  { to: '/outreach', label: 'Outreach' },
   { to: '/resources', label: 'Resources' },
   { to: '/blog', label: 'Blog' },
   { to: '/volunteer', label: 'Volunteer' },

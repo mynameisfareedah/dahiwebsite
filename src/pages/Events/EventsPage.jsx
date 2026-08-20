@@ -8,8 +8,7 @@ import EventCard from '../../components/common/EventCard';
 import LoadingState from '../../components/common/LoadingState';
 import { getEvents } from '../../services/supabase/eventsService';
 import { EVENT_STATUS } from '../../constants/status';
-import { impactStats, testimonials, upcomingOutreach } from '../../data/siteContent';
-import { resolveRegistrationState } from '../../utils/registration';
+import { testimonials } from '../../data/siteContent';
 
 const quizSeriesHighlights = [
   'DAHI Ramadan Quiz (DRQ) — 28 February to 18 March 2026',
@@ -79,7 +78,6 @@ function EventsPage() {
 
   useEffect(() => {
     let mounted = true;
-    setLoadingEvents(true);
     getEvents()
       .then((res) => {
         if (!mounted) return;
@@ -107,6 +105,7 @@ function EventsPage() {
     };
   }, []);
 
+  // Filter events based on the active filter
   const filteredEvents = useMemo(() => {
     const eventSource = events || [];
 
@@ -127,16 +126,6 @@ function EventsPage() {
       return false;
     });
   }, [activeFilter, events]);
-
-  const topRegistrationEvent = useMemo(
-    () =>
-      (events || []).find(
-        (event) => Boolean(event.registrationUrl || event.registration_url)
-      ) || null,
-    [events]
-  );
-
-  const topRegistrationState = resolveRegistrationState(topRegistrationEvent, 'Register Now');
 
   return (
     <>
@@ -163,11 +152,6 @@ function EventsPage() {
           ) : null}
           <div className="mt-4 flex flex-wrap gap-3">
             <Link to="/outreach" className="inline-flex items-center justify-center rounded-full border border-dahiPrimary px-4 py-2 text-sm font-semibold text-dahiPrimary transition hover:bg-dahiPrimary/5" aria-label="Learn more about outreach programs">Learn More About Outreach Programs</Link>
-            {topRegistrationState.enabled ? (
-              <a href={topRegistrationState.href} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-full bg-dahiPrimary px-4 py-2 text-sm font-semibold text-white transition hover:bg-dahiSecondary">{topRegistrationState.label}</a>
-            ) : (
-              <button type="button" disabled className="inline-flex cursor-not-allowed items-center justify-center rounded-full bg-slate-300 px-4 py-2 text-sm font-semibold text-slate-600">{topRegistrationState.label}</button>
-            )}
           </div>
           <div className="mt-6 flex flex-wrap gap-3">
             {filterOptions.map((option) => (
@@ -303,19 +287,6 @@ function EventsPage() {
               <blockquote key={`${item.quote}-${index}`} className="rounded-[1.25rem] border border-slate-200 p-6 text-slate-600">
                 <p className="italic">“{item.quote}”</p>
               </blockquote>
-            ))}
-          </div>
-        </div>
-
-        <div className="soft-card p-8 sm:p-10">
-          <SectionHeading eyebrow="Event statistics" title="A snapshot of DAHI's ongoing work" description="These indicators reflect the broader reach of DAHI’s educational events and initiatives." />
-          <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-            {impactStats.map((stat) => (
-              <div key={stat.title} className="rounded-[1.25rem] border border-slate-200 p-6">
-                <div className="text-3xl font-black text-dahiPrimary">{stat.value}</div>
-                <h3 className="mt-3 text-lg font-semibold text-slate-900">{stat.title}</h3>
-                <p className="mt-2 text-sm text-slate-600">{stat.description}</p>
-              </div>
             ))}
           </div>
         </div>

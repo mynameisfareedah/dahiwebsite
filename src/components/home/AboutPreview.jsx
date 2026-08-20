@@ -6,6 +6,7 @@ function AboutPreview() {
           <h2 className="section-title">About DAHI</h2>
           <p className="mt-4 text-lg leading-8 text-slate-600">Many women and young girls grow up without clear, reliable education about their own bodies. Questions about menstrual health, fertility, pregnancy, menopause, and emotional wellbeing are often left unanswered or surrounded by confusion and stigma. DAHI exists to change that.</p>
           <p className="mt-4 text-lg leading-8 text-slate-600">DAHI is a women’s health education and empowerment initiative focused on providing accessible, clear, and supportive health information to women and young girls.</p>
+          <p className="mt-4 text-lg leading-8 text-slate-600">Since its inception, DAHI has equipped women with accessible health information and practical resources. In August 2026, DAHI expanded this mission into community-based health outreach, beginning with its first outreach programme in Gwagwalada, Abuja.</p>
         </div>
 
         <div className="soft-card p-8 sm:p-10">

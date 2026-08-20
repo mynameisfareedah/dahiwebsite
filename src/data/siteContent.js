@@ -16,11 +16,11 @@ export const focusAreas = [
   { title: 'Emotional Wellbeing', description: 'Support for mental wellbeing, stress, hormones, and healthy habits that strengthen overall resilience.', icon: 'fa-solid fa-brain', accent: 'bg-dahiSecondary/10 text-dahiSecondary' },
 ];
 
-export const impactStats = [
-  { value: '500+', title: 'Women Reached', description: 'Through webinars, community engagement, and educational outreach.' },
-  { value: '5', title: 'Educational Webinars Conducted', description: 'Delivered with practical, evidence-based information for women across different life stages.' },
-  { value: '2', title: 'Community Quiz Competitions Hosted', description: 'Creating engaging spaces for learning, participation, and connection.' },
-  { value: '3', title: 'Educational Resources Published', description: 'Supporting women with clear and accessible health guidance.' },
+export const impactThemes = [
+  { icon: 'fa-solid fa-people-group', title: 'Community Outreach', description: 'Taking women’s health education beyond the screen and into communities.' },
+  { icon: 'fa-solid fa-book-open', title: 'Health Education', description: 'Providing accessible information that helps women make informed health decisions.' },
+  { icon: 'fa-solid fa-laptop-medical', title: 'Digital Resources', description: 'Creating webinars, educational resources, and practical materials women can access and share.' },
+  { icon: 'fa-solid fa-shield-heart', title: 'Early Detection', description: 'Promoting awareness of preventive healthcare and the importance of seeking care early.' },
 ];
 
 export const teamMembers = [
@@ -63,23 +63,23 @@ export const testimonials = [
   { quote: 'I appreciated the collaborative approach—everyone contributed valuable perspectives throughout the session.' },
 ];
 
-// August 2026 Community Outreach Campaign
-export const upcomingOutreach = {
-  title: 'Women\'s Health Outreach & Screening',
-  subtitle: 'SILENT DISEASES IN WOMEN; EARLY DETECTION SAVES LIVES',
-  description: 'This free community outreach is open to all women in Gwagwalada and surrounding communities. It offers education, awareness, and supportive health information in a welcoming environment.',
-  fullDescription: 'The Doc Adi Health Initiative (DAHI) is pleased to present a free community-based Women\'s Health Outreach & Screening designed to improve awareness and encourage early detection of common health conditions affecting women.\n\nThe event will take place at Dele Salawudeen Preparatory School, 6, Calvary Tabernacle Church Street, Jimroose, Kutunku, Gwagwalada, Abuja. It is open and free for all women, with no registration required.\n\nThrough this outreach, DAHI seeks to create a welcoming, respectful, and culturally supportive environment where women can learn more about their health, ask questions, and gain confidence to seek appropriate medical care when needed.',
-  registrationStatus: 'open',
+// Completed August 2026 Community Outreach
+export const completedOutreach = {
+  title: 'Our First Community Outreach',
+  subtitle: 'Silent Diseases in Women: Early Detection Saves Lives',
+  description: 'On August 15, 2026, Doc Adi Health Initiative successfully held its first community health outreach in Gwagwalada, Abuja, bringing women together for health education, awareness, screening, and meaningful conversations around early detection and preventive healthcare.',
+  fullDescription: 'On August 15, 2026, Doc Adi Health Initiative successfully held its first community health outreach at Dele Salawudeen Preparatory School in Gwagwalada, Abuja. The outreach focused on women’s health awareness and early detection, creating space for education, screening, questions, and supportive conversations.\n\nThe programme marked an important step in DAHI’s growth from primarily online education and webinars into community-based health outreach. It carried the message that awareness, preventive healthcare, and timely support can help women make more informed decisions about their health.',
+  registrationStatus: 'completed',
   date: 'Saturday, 15 August 2026',
   dateRange: 'Saturday, 15 August 2026',
-  time: 'Time To Be Announced',
+  time: '10:00 AM',
   venue: 'Dele Salawudeen Preparatory School, 6, Calvary Tabernacle Church Street, Jimroose, Kutunku, Gwagwalada, Abuja',
-  location: 'Gwagwalada and surrounding communities',
-  theme: 'SILENT DISEASES IN WOMEN; EARLY DETECTION SAVES LIVES',
+  location: 'Gwagwalada, Abuja, Nigeria',
+  theme: 'Women’s Health Awareness and Early Detection',
   category: 'Community Outreach',
-  cost: 'Open and Free for All',
-  image: '/outreach-banner.jpeg',
-  bannerImage: '/outreach-banner.jpeg',
+  cost: 'Completed',
+  image: '/OUTREACH/Dr. Adi alongside Dedicated Community Volunteers.jfif',
+  bannerImage: '/OUTREACH/Dr. Adi alongside Dedicated Community Volunteers.jfif',
   
   objectives: [
     {
@@ -150,7 +150,7 @@ export const upcomingOutreach = {
     },
     {
       question: 'Do I need to register?',
-      answer: 'Yes, registration helps us plan for the event and ensure we have adequate resources and personnel. Registration details will be announced soon.',
+      answer: 'The August 15, 2026 outreach has been completed, so registration is no longer being collected for that event.',
     },
     {
       question: 'Who can attend?',
@@ -170,7 +170,7 @@ export const upcomingOutreach = {
     },
     {
       question: 'How long will the outreach last?',
-      answer: 'The full schedule is still being finalized. We will confirm the duration closer to the event date.',
+      answer: 'The outreach took place on August 15, 2026. Contact the DAHI team to learn more about future community programmes.',
     },
     {
       question: 'What if I have existing health conditions?',
@@ -206,15 +206,14 @@ export const upcomingOutreach = {
     },
   ],
 
-  // Post-event section (hidden until after event)
+  // Post-event content is intentionally limited to verified programme details.
   postEventHighlights: {
-    enabled: false,
+    enabled: true,
     eventDate: 'Saturday, 15 August 2026',
-    totalParticipants: '[Number of women reached]',
     highlights: [
-      '[Event highlight 1 - to be added after event]',
-      '[Event highlight 2 - to be added after event]',
-      '[Event highlight 3 - to be added after event]',
+      'DAHI delivered its first community health outreach in Gwagwalada, Abuja.',
+      'The programme centred on women’s health awareness, screening, and early detection.',
+      'The outreach created space for health education and meaningful community conversations.',
     ],
     photos: [
       // Add photo URIs after event

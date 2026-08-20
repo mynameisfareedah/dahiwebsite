@@ -1,5 +1,4 @@
-const netlifyDevOrigin = import.meta.env.VITE_NETLIFY_DEV_ORIGIN || (typeof window !== 'undefined' && window.location.port === '3001' ? 'http://localhost:8888' : '');
-const substackFeedProxyUrl = (netlifyDevOrigin ? `${netlifyDevOrigin}` : '') + '/.netlify/functions/fetch-substack-feed';
+const substackFeedProxyUrl = '/.netlify/functions/fetch-substack-feed';
 
 function isHtmlResponse(responseText, contentType) {
   return contentType?.includes('text/html') || responseText.trim().startsWith('<!doctype html') || responseText.trim().startsWith('<html');

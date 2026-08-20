@@ -35,7 +35,7 @@ function HomePage() {
       {/* 6.5. Featured Substack Article */}
       <FeaturedSubstackArticle />
 
-      {/* 6.5. Upcoming Outreach Section */}
+      {/* 6.5. Completed First Community Outreach */}
       <UpcomingOutreachSection />
 
       {/* 7. Featured Health Resources */}

@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import { impactStats } from '../../data/siteContent';
 import SEO from '../../components/common/SEO';
 import SectionHeading from '../../components/common/SectionHeading';
 import CTASection from '../../components/common/CTASection';
@@ -10,7 +9,6 @@ import MissionVisionCard from '../../components/about/MissionVisionCard';
 import ValueCard from '../../components/about/ValueCard';
 import ServiceCard from '../../components/about/ServiceCard';
 import ApproachCard from '../../components/about/ApproachCard';
-import ImpactCounter from '../../components/about/ImpactCounter';
 
 function AboutPage() {
   const values = [
@@ -111,12 +109,11 @@ function AboutPage() {
         </div>
 
         <div className="soft-card p-8 sm:p-10">
-          <SectionHeading eyebrow="Our impact" title="Every resource and conversation contributes to meaningful change" description="Through our initiatives, we continue to create opportunities for women to access knowledge, engage with health information, and become more confident in making decisions about their well-being." />
-          <div className="mt-8 grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
-            {impactStats.map((stat) => (
-              <ImpactCounter key={stat.title} value={stat.value} label={stat.title} />
-            ))}
+          <SectionHeading eyebrow="Our growth" title="From digital education to community outreach" description="Since its inception, Doc Adi Health Initiative has worked to equip women with accessible health information and practical resources." />
+          <div className="mt-8 rounded-[1.3rem] border border-slate-200 bg-slate-50 p-7 text-lg leading-8 text-slate-600">
+            In August 2026, DAHI expanded this mission into community-based health outreach, beginning with its first outreach programme in Gwagwalada, Abuja. This growth reflects our commitment to meeting women where they are while continuing to create trustworthy digital learning resources.
           </div>
+          <Link to="/outreach" className="mt-6 inline-flex items-center justify-center rounded-full bg-dahiPrimary px-6 py-3 text-sm font-semibold text-white transition hover:bg-dahiSecondary">Read About Our First Outreach</Link>
         </div>
 
         <div className="soft-card p-8 sm:p-10">

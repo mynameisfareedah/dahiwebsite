@@ -1,8 +1,8 @@
+/* eslint-disable react/no-unknown-property */
 import { Link } from 'react-router-dom';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getUpcomingEvents } from '../../services/supabase/eventsService';
 import { resolveRegistrationState } from '../../utils/registration';
-import { getDaysUntil, OUTREACH_TARGET_ISO } from '../../utils/dateHelpers';
 
 
 function Hero() {
@@ -43,20 +43,10 @@ function Hero() {
               <Link to="/resources" className="inline-flex items-center justify-center rounded-full border border-white/70 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10">Explore Resources</Link>
             </div>
 
-            <div className="mt-8 grid gap-3 sm:grid-cols-3">
-              <div className="rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur">
-                <div className="text-2xl font-black">500+</div>
-                <div className="mt-1 text-sm text-white/80">Women reached</div>
-              </div>
-              <div className="rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur">
-                <div className="text-2xl font-black">5</div>
-                <div className="mt-1 text-sm text-white/80">Webinars hosted</div>
-              </div>
-              <div className="rounded-2xl border border-white/20 bg-dahiPrimary/20 p-4 backdrop-blur">
-                <div className="text-sm uppercase tracking-[0.18em] text-white/80">Outreach in</div>
-                <div className="mt-2 text-4xl font-black text-white">{getDaysUntil(OUTREACH_TARGET_ISO)}</div>
-                <div className="mt-1 text-sm text-white/90">days</div>
-              </div>
+            <div className="mt-8 max-w-xl rounded-2xl border border-white/20 bg-white/10 p-5 backdrop-blur">
+              <div className="text-sm font-semibold uppercase tracking-[0.18em] text-white/80">A growing mission</div>
+              <p className="mt-2 text-lg leading-8 text-white">DAHI combines digital health education with community-based outreach that helps women learn, ask questions, and act earlier.</p>
+              <Link to="/outreach" className="mt-4 inline-flex items-center justify-center rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-dahiPrimary transition hover:-translate-y-0.5">Read About Our Outreach</Link>
             </div>
           </div>
 
@@ -74,7 +64,7 @@ function Hero() {
                 alt="DAHI community members in discussion"
                 width="768"
                 height="437"
-                fetchPriority="high"
+                fetchpriority="high"
                 className="h-[320px] w-full rounded-[1.2rem] object-cover sm:h-[420px]"
               />
             </picture>

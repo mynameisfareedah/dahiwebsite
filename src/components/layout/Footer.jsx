@@ -9,15 +9,15 @@ function Footer() {
           <div className="flex items-center gap-2 sm:gap-4">
             <span className="text-3xl">📅</span>
             <div>
-              <div className="font-bold text-white">August Community Health Outreach 2026</div>
-              <div className="text-xs text-white/90 sm:text-sm">Registration opening soon. Join us for health education & community engagement.</div>
+              <div className="font-bold text-white">Our First Community Outreach</div>
+              <div className="text-xs text-white/90 sm:text-sm">Read about DAHI’s completed outreach in Gwagwalada, Abuja.</div>
             </div>
           </div>
           <Link
             to="/outreach"
             className="flex-shrink-0 rounded-full bg-white px-4 py-2 text-xs font-semibold text-dahiPrimary transition hover:bg-white/90 sm:text-sm"
           >
-            Learn More About Outreach
+            Read About Outreach
           </Link>
         </div>
       </div>

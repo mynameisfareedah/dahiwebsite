@@ -5,9 +5,18 @@ import PageHero from '../../components/common/PageHero';
 import SectionHeading from '../../components/common/SectionHeading';
 import BlogCard from '../../components/common/BlogCard';
 import CTASection from '../../components/common/CTASection';
+import { fetchSubstackPosts } from '../../lib/substackFeed';
 
-const netlifyDevOrigin = import.meta.env.VITE_NETLIFY_DEV_ORIGIN || (typeof window !== 'undefined' && window.location.port === '3001' ? 'http://localhost:8888' : '');
-const substackFeedProxyUrl = (netlifyDevOrigin ? `${netlifyDevOrigin}` : '') + '/.netlify/functions/fetch-substack-feed';
+const firstOutreachArticle = {
+  title: 'Doc Adi Health Initiative Successfully Hosts First Community Health Outreach in Gwagwalada',
+  excerpt: 'On August 15, 2026, DAHI held its first community health outreach in Gwagwalada, Abuja, focused on women’s health awareness, screening, early detection, and preventive healthcare.',
+  category: 'Community Outreach',
+  author: 'DAHI',
+  date: 'Aug 15, 2026',
+  image: '/OUTREACH/Community Audience & Participants.jfif',
+  href: '/blog/first-community-outreach',
+  publishedAt: '2026-08-15T00:00:00.000Z',
+};
 
 function decodeEntities(value) {
   return value
@@ -37,58 +46,14 @@ function stripHtml(value) {
 // the Netlify function `/.netlify/functions/fetch-substack-feed` which returns
 // a JSON `{ posts: [...] }` payload. Keeping decode/strip helpers only.
 
-function isHtmlResponse(responseText, contentType) {
-  return contentType?.includes('text/html') || responseText.trim().startsWith('<!doctype html') || responseText.trim().startsWith('<html');
-}
-
-function parseFeedDate(pubDate) {
-  const time = Date.parse(pubDate || '');
-  return Number.isFinite(time) ? time : 0;
-}
-
-async function fetchSubstackPosts() {
-  try {
-    const response = await fetch(substackFeedProxyUrl, { cache: 'no-store' });
-    const contentType = response.headers.get('content-type') || '';
-    const text = await response.text();
-
-    if (!response.ok) {
-      console.error('Netlify function returned non-OK status', { status: response.status, text });
-      throw new Error('Unable to load Substack feed');
-    }
-
-    if (isHtmlResponse(text, contentType)) {
-      console.error('Netlify function returned HTML instead of JSON', { contentType, textSnippet: text.slice(0, 200) });
-      throw new Error('Invalid response from feed proxy');
-    }
-
-    let data;
-    try {
-      data = JSON.parse(text);
-    } catch (err) {
-      console.error('Failed to parse JSON from Netlify function', err, { textSnippet: text.slice(0, 200) });
-      throw new Error('Invalid JSON from feed proxy');
-    }
-
-    if (!data || !Array.isArray(data.posts)) {
-      console.error('[Blog] Invalid function response:', text);
-      throw new Error('Unexpected feed data shape');
-    }
-
-    console.log('[Blog] Function response:', data);
-    console.log('[Blog] Posts received:', data.posts);
-
-    return data.posts;
-  } catch (err) {
-    throw err;
-  }
+function normalizeTitle(title) {
+  return title.trim().toLowerCase().replace(/[^a-z0-9]+/g, ' ');
 }
 
 function BlogPage() {
-  const [posts, setPosts] = useState([]);
-  const [topics, setTopics] = useState([]);
+  const [posts, setPosts] = useState([firstOutreachArticle]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const [feedStatus, setFeedStatus] = useState('loading');
 
   useEffect(() => {
     let isMounted = true;
@@ -101,13 +66,8 @@ function BlogPage() {
           return;
         }
 
-        const sortedPosts = postItems
+        const normalizedPosts = postItems
           .filter((post) => post.title && post.link)
-          .sort((a, b) => parseFeedDate(b.pubDate) - parseFeedDate(a.pubDate));
-
-        console.log('[Blog] Sorted posts:', sortedPosts);
-
-        const normalizedPosts = sortedPosts
           .map((item) => ({
             title: item.title,
             excerpt: stripHtml(item.summary || item.description || item.content || '' ) || 'Read the full article on Substack for more details.',
@@ -116,16 +76,29 @@ function BlogPage() {
             date: item.pubDate ? new Date(item.pubDate).toLocaleDateString('en', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Recently published',
             image: item.image || '/community-768.jpg',
             href: item.link,
-          }))
+            publishedAt: item.pubDate || '',
+          }));
+
+        const seenTitles = new Set([normalizeTitle(firstOutreachArticle.title)]);
+        const combinedPosts = [firstOutreachArticle, ...normalizedPosts].filter((post) => {
+          const title = normalizeTitle(post.title);
+          if (seenTitles.has(title)) {
+            return post === firstOutreachArticle;
+          }
+          seenTitles.add(title);
+          return true;
+        });
+
+        const publishedPosts = combinedPosts
+          .sort((a, b) => Date.parse(b.publishedAt || '') - Date.parse(a.publishedAt || ''))
           .slice(0, 10);
 
-        setPosts(normalizedPosts);
-        const uniqueTopics = Array.from(new Set(normalizedPosts.map((post) => post.category).filter(Boolean))).slice(0, 6);
-        setTopics(uniqueTopics);
-        setError(false);
-      } catch (error) {
+        setPosts(publishedPosts);
+        setFeedStatus(postItems.length > 0 ? 'ready' : 'empty');
+      } catch {
         if (isMounted) {
-          setError(true);
+          setPosts([firstOutreachArticle]);
+          setFeedStatus('error');
         }
       } finally {
         if (isMounted) {
@@ -164,9 +137,11 @@ function BlogPage() {
         ) : null}
 
 
-        {!loading && error ? (
+        {!loading && feedStatus !== 'ready' ? (
           <div className="soft-card p-8 text-center text-slate-600">
-            The latest posts are temporarily unavailable, but DAHI’s Substack publication is always the most up-to-date source. Visit the publication directly for new stories and updates.
+            {feedStatus === 'empty'
+              ? 'The Substack feed is currently empty. The local DAHI outreach article remains available below.'
+              : 'The latest Substack posts could not be loaded right now. The local DAHI outreach article remains available below.'}
           </div>
         ) : null}
 
@@ -180,14 +155,14 @@ function BlogPage() {
                 <a href="https://womenshealthwithdocadi.substack.com" target="_blank" rel="noopener noreferrer" className="mt-6 inline-flex text-sm font-semibold text-dahiPrimary">Explore the publication →</a>
               </div>
             </div>
-            {!loading && latestArticles.length > 0 ? (
+            {latestArticles.length > 0 ? (
               <div className="grid gap-6 lg:grid-cols-2">
                 {latestArticles.map((article) => (
                   <BlogCard key={article.href} title={article.title} excerpt={article.excerpt} category={article.category} author={article.author} date={article.date} image={article.image} href={article.href} />
                 ))}
               </div>
             ) : null}
-            {!loading && !error && latestArticles.length === 0 ? (
+            {!loading && latestArticles.length === 0 ? (
               <div className="rounded-[1.25rem] border border-slate-200 p-6 text-slate-600">New posts will appear here as soon as they are published on the Substack feed.</div>
             ) : null}
           </div>
