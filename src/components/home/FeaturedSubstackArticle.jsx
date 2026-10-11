@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import SectionHeading from '../common/SectionHeading';
 import { fetchSubstackPosts } from '../../lib/substackFeed';
 
@@ -45,15 +46,16 @@ function FeaturedSubstackArticle() {
       try {
         const posts = await fetchSubstackPosts();
         if (!isMounted) return;
-        if (Array.isArray(posts) && posts.length > 0) {
-          const item = posts[0];
+        const item = Array.isArray(posts) ? posts.find((post) => post.slug) : null;
+        if (item) {
           setFeatured({
             title: item.title,
             excerpt: item.summary || item.description || item.content || '',
             author: item.author || 'DAHI',
             date: item.pubDate ? new Date(item.pubDate).toLocaleDateString('en', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Recently published',
             image: item.image || '/community-1200.jpg',
-            href: item.link,
+            href: `/blog/${item.slug}`,
+            originalHref: item.link,
           });
         }
       } catch (err) {
@@ -90,14 +92,10 @@ function FeaturedSubstackArticle() {
             <SectionHeading eyebrow="Featured from DAHI" title={featured.title} description="" />
             <p className="mt-4 line-clamp-3 text-base leading-7 text-slate-600">{stripHtml(featured.excerpt).slice(0, 300)}</p>
             <div className="mt-6 flex flex-wrap items-center gap-3">
-              <a
-                href={featured.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex rounded-full bg-dahiPrimary px-6 py-3 text-sm font-semibold text-white transition hover:bg-dahiSecondary"
-              >
+              <Link to={featured.href} className="inline-flex rounded-full bg-dahiPrimary px-6 py-3 text-sm font-semibold text-white transition hover:bg-dahiSecondary">
                 Read Article
-              </a>
+              </Link>
+              <a href={featured.originalHref} target="_blank" rel="noopener noreferrer" className="inline-flex rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-50">Read on Substack</a>
               <a
                 href="/blog"
                 className="inline-flex rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-50"

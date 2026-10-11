@@ -14,6 +14,7 @@ const EventsPage = lazy(() => import('./pages/Events/EventsPage'));
 const EventDetailsPage = lazy(() => import('./pages/Events/EventDetailsPage'));
 const OutreachDetailsPage = lazy(() => import('./pages/Outreach/OutreachDetailsPage'));
 const FirstOutreachArticlePage = lazy(() => import('./pages/Blog/FirstOutreachArticlePage'));
+const SubstackArticlePage = lazy(() => import('./pages/Blog/SubstackArticlePage'));
 const ResourcesPage = lazy(() => import('./pages/Resources/ResourcesPage'));
 const BlogPage = lazy(() => import('./pages/Blog/BlogPage'));
 const VolunteerPage = lazy(() => import('./pages/Volunteer/VolunteerPage'));
@@ -40,6 +41,7 @@ function App() {
               <Route path="/resources" element={<ResourcesPage />} />
               <Route path="/blog" element={<BlogPage />} />
               <Route path="/blog/first-community-outreach" element={<FirstOutreachArticlePage />} />
+              <Route path="/blog/:slug" element={<SubstackArticlePage />} />
               <Route path="/volunteer" element={<VolunteerPage />} />
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/privacy" element={<PrivacyPage />} />

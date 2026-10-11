@@ -67,7 +67,7 @@ function BlogPage() {
         }
 
         const normalizedPosts = postItems
-          .filter((post) => post.title && post.link)
+          .filter((post) => post.title && post.link && post.slug)
           .map((item) => ({
             title: item.title,
             excerpt: stripHtml(item.summary || item.description || item.content || '' ) || 'Read the full article on Substack for more details.',
@@ -75,7 +75,7 @@ function BlogPage() {
             author: item.author || 'DAHI',
             date: item.pubDate ? new Date(item.pubDate).toLocaleDateString('en', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Recently published',
             image: item.image || '/community-768.jpg',
-            href: item.link,
+            href: `/blog/${item.slug}`,
             publishedAt: item.pubDate || '',
           }));
 

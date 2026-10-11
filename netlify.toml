@@ -14,36 +14,6 @@
   targetPort = 3001
 
 [[redirects]]
-  from = "/@vite/*"
-  to = "http://localhost:3001/@vite/:splat"
-  status = 200
-  force = true
-
-[[redirects]]
-  from = "/src/*"
-  to = "http://localhost:3001/src/:splat"
-  status = 200
-  force = true
-
-[[redirects]]
-  from = "/node_modules/*"
-  to = "http://localhost:3001/node_modules/:splat"
-  status = 200
-  force = true
-
-[[redirects]]
-  from = "/@react-refresh"
-  to = "http://localhost:3001/@react-refresh"
-  status = 200
-  force = true
-
-[[redirects]]
-  from = "/@react-refresh/*"
-  to = "http://localhost:3001/@react-refresh/:splat"
-  status = 200
-  force = true
-
-[[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200

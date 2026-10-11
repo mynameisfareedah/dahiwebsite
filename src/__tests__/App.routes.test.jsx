@@ -18,6 +18,12 @@ describe('App Router - Real Routes', () => {
     expect(await screen.findByRole('heading', { name: /privacy policy/i })).toBeInTheDocument();
   });
 
+  it('keeps the manually authored outreach article route available', async () => {
+    renderAppAt('/blog/first-community-outreach');
+
+    expect(await screen.findByRole('heading', { name: /first community health outreach in gwagwalada/i })).toBeInTheDocument();
+  });
+
   it('renders admin login route', async () => {
     renderAppAt('/admin/login');
 

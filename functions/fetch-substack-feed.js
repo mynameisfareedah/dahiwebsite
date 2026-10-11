@@ -1,6 +1,30 @@
+import { createHash } from 'node:crypto';
+import { XMLParser } from 'fast-xml-parser';
+
 const DEFAULT_FEED_URL = 'https://womenshealthwithdocadi.substack.com/feed';
 
-import { XMLParser } from 'fast-xml-parser';
+function createArticleSlug(link) {
+  const parsedUrl = new URL(link);
+  const pathSlug = parsedUrl.pathname
+    .split('/')
+    .filter(Boolean)
+    .pop()
+    ?.toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '') || 'article';
+  const linkHash = createHash('sha256').update(link).digest('hex');
+
+  return `${pathSlug}-${linkHash}`;
+}
+
+function safeHttpUrl(value) {
+  try {
+    const url = new URL(value);
+    return url.protocol === 'http:' || url.protocol === 'https:' ? url.href : '';
+  } catch {
+    return '';
+  }
+}
 
 function stripHtml(value = '') {
   return value
@@ -215,7 +239,8 @@ export const handler = async (event, context) => {
       const pubDate = firstString(item.pubDate) || firstString(item.pubdate) || firstString(item.updated) || firstString(item.published) || '';
 
       const descriptionRaw = firstString(item.description) || '';
-      const contentRaw = firstString(item['content:encoded']) || firstString(item.content) || firstString(item.summary) || '';
+      const fullContent = firstString(item['content:encoded']) || firstString(item.content) || '';
+      const contentRaw = fullContent || firstString(item.summary) || '';
 
       const description = descriptionRaw || contentRaw || '';
       const content = contentRaw || descriptionRaw || '';
@@ -246,13 +271,17 @@ export const handler = async (event, context) => {
       if (!image) {
         image = findImageFromContent(content) || findImageFromContent(description) || '';
       }
+      image = safeHttpUrl(image);
+      link = safeHttpUrl(link);
 
       const post = {
         title: stripHtml(title) || '',
         link: link || '',
+        slug: link ? createArticleSlug(link) : '',
         pubDate: pubDate || '',
         description: description || '',
         content: content || '',
+        fullContent: fullContent || '',
         summary: summary || '',
         author: author || '',
         image: image || '',
@@ -296,6 +325,16 @@ export const handler = async (event, context) => {
       const dateB = new Date(b.pubDate).getTime() || 0;
       return dateB - dateA;
     });
+
+    const requestedSlug = event?.queryStringParameters?.slug?.trim();
+    if (requestedSlug) {
+      const post = posts.find((item) => item.slug === requestedSlug) || null;
+      return {
+        statusCode: post ? 200 : 404,
+        headers: CORS_HEADERS,
+        body: JSON.stringify({ post }),
+      };
+    }
 
     return {
       statusCode: 200,
