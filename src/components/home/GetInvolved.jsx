@@ -11,11 +11,11 @@ function GetInvolved() {
     },
     {
       icon: 'fa-solid fa-users',
-      title: 'Join Our Community',
-      description: 'Become part of our growing network of women committed to health and wellness.',
-      href: 'https://forms.gle/joTjf3VYW9anCA9MA',
+      title: 'Stay Connected',
+      description: 'Receive DAHI health and community updates by email.',
+      href: '#newsletter',
       external: true,
-      buttonText: 'Join Our Community',
+      buttonText: 'Subscribe for Updates',
     },
     {
       icon: 'fa-solid fa-envelope',
@@ -45,8 +45,6 @@ function GetInvolved() {
             {action.external ? (
               <a
                 href={action.href}
-                target="_blank"
-                rel="noopener noreferrer"
                 className="mt-4 inline-flex items-center justify-center rounded-full bg-dahiPrimary px-4 py-2 text-sm font-semibold text-white transition hover:bg-dahiSecondary"
                 aria-label={action.buttonText}
               >

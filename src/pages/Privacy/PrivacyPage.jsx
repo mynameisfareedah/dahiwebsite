@@ -26,6 +26,10 @@ function PrivacyPage() {
           <p className="mt-3 text-slate-700 leading-7">
             Your information may be shared only with members of the DAHI team who need it to respond to your enquiry. We take reasonable steps to protect your data and keep it secure.
           </p>
+          <h2 className="mt-6 text-lg font-semibold text-slate-900">Newsletter subscriptions</h2>
+          <p className="mt-3 text-slate-700 leading-7">
+            If you subscribe to DAHI email updates, we collect your email address and any optional first name you provide, with your consent, and use EmailOctopus to manage the list and send updates. Your subscription remains pending until you confirm it using the link in EmailOctopus&apos;s confirmation email. You can unsubscribe using the link included in newsletter emails. We do not add contact, volunteer, event, or community records to the newsletter list without a separate subscription.
+          </p>
           <h2 className="mt-6 text-lg font-semibold text-slate-900">Questions or updates</h2>
           <p className="mt-3 text-slate-700 leading-7">
             If you have questions about this policy or would like to update your information, please <Link to="/contact" className="font-semibold text-dahiPrimary underline underline-offset-2">contact DAHI</Link>.
