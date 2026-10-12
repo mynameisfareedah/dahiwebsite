@@ -1,11 +1,15 @@
-import { createHash } from 'node:crypto';
-
 const EMAILOCTOPUS_API = 'https://api.emailoctopus.com';
-const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000;
-const RATE_LIMIT_MAX_REQUESTS = 5;
-const MAX_RATE_LIMIT_ENTRIES = 5000;
 const MAX_BODY_BYTES = 4096;
-const rateLimitBuckets = new Map();
+
+export const config = {
+  path: '/.netlify/functions/subscribe-newsletter',
+  rateLimit: {
+    action: 'rate_limit',
+    aggregateBy: ['ip', 'domain'],
+    windowSize: 60,
+    windowLimit: 10,
+  },
+};
 
 function jsonResponse(statusCode, payload, extraHeaders = {}) {
   return {
@@ -23,30 +27,6 @@ function jsonResponse(statusCode, payload, extraHeaders = {}) {
 function headerValue(headers, name) {
   const matchingKey = Object.keys(headers || {}).find((key) => key.toLowerCase() === name);
   return matchingKey ? headers[matchingKey] : '';
-}
-
-function getTrustedClientIp(headers) {
-  const clientIp = headerValue(headers, 'x-nf-client-connection-ip');
-  return typeof clientIp === 'string' && clientIp.trim() ? clientIp.trim() : 'unknown';
-}
-
-function isRateLimited(clientIp, now = Date.now()) {
-  const key = createHash('sha256').update(clientIp || 'unknown').digest('hex');
-  const recentRequests = (rateLimitBuckets.get(key) || [])
-    .filter((timestamp) => now - timestamp < RATE_LIMIT_WINDOW_MS);
-
-  if (recentRequests.length >= RATE_LIMIT_MAX_REQUESTS) {
-    rateLimitBuckets.set(key, recentRequests);
-    return true;
-  }
-
-  if (!rateLimitBuckets.has(key) && rateLimitBuckets.size >= MAX_RATE_LIMIT_ENTRIES) {
-    const oldestKey = rateLimitBuckets.keys().next().value;
-    if (oldestKey) rateLimitBuckets.delete(oldestKey);
-  }
-
-  rateLimitBuckets.set(key, [...recentRequests, now]);
-  return false;
 }
 
 function getDuplicateContact(error, details) {
@@ -80,11 +60,6 @@ export const handler = async (event) => {
   const bodyText = event.body || '';
   if (Buffer.byteLength(bodyText, 'utf8') > MAX_BODY_BYTES) {
     return jsonResponse(413, { error: 'request_too_large' });
-  }
-
-  const clientIp = getTrustedClientIp(event.headers);
-  if (isRateLimited(clientIp)) {
-    return jsonResponse(429, { error: 'rate_limited' }, { 'Retry-After': '900' });
   }
 
   let body;
@@ -162,4 +137,18 @@ export const handler = async (event) => {
   } catch {
     return jsonResponse(502, { error: 'newsletter_unavailable' });
   }
+};
+
+export default async (request) => {
+  const event = {
+    httpMethod: request.method,
+    headers: Object.fromEntries(request.headers.entries()),
+    body: await request.text(),
+  };
+  const result = await handler(event);
+
+  return new Response(result.body, {
+    status: result.statusCode,
+    headers: result.headers,
+  });
 };

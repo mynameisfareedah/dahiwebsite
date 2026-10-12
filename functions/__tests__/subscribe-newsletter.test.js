@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { handler } from '../subscribe-newsletter.js';
+import newsletterFunction, { config, handler } from '../subscribe-newsletter.js';
 
 const originalApiKey = process.env.EMAILOCTOPUS_API_KEY;
 const originalListId = process.env.EMAILOCTOPUS_LIST_ID;
@@ -51,6 +51,43 @@ afterEach(() => {
 });
 
 describe('subscribe-newsletter Netlify Function', () => {
+  it('declares Netlify per-IP rate limiting on the existing endpoint', () => {
+    expect(config).toEqual({
+      path: '/.netlify/functions/subscribe-newsletter',
+      rateLimit: {
+        action: 'rate_limit',
+        aggregateBy: ['ip', 'domain'],
+        windowSize: 60,
+        windowLimit: 10,
+      },
+    });
+  });
+
+  it('adapts modern Netlify requests to the existing handler response semantics', async () => {
+    const response = await newsletterFunction(new Request(
+      'https://example.net/.netlify/functions/subscribe-newsletter',
+      { method: 'GET' },
+    ));
+
+    expect(response.status).toBe(405);
+    expect(response.headers.get('allow')).toBe('POST');
+    expect(await response.json()).toEqual({ error: 'method_not_allowed' });
+  });
+
+  it('rejects invalid request content through the deployed request handler', async () => {
+    const response = await newsletterFunction(new Request(
+      'https://example.net/.netlify/functions/subscribe-newsletter',
+      {
+        method: 'POST',
+        headers: { 'content-type': 'text/plain' },
+        body: 'invalid',
+      },
+    ));
+
+    expect(response.status).toBe(415);
+    expect(await response.json()).toEqual({ error: 'unsupported_media_type' });
+  });
+
   it('creates a consented contact on a double-opt-in list', async () => {
     const fetchMock = mockProvider();
     const response = await handler(makeEvent({
@@ -242,30 +279,4 @@ describe('subscribe-newsletter Netlify Function', () => {
     expect(response.body).not.toContain('Sensitive provider diagnostic');
   });
 
-  it('limits repeated requests from the same client IP', async () => {
-    const fetchMock = vi.fn();
-    vi.stubGlobal('fetch', fetchMock);
-
-    for (let attempt = 0; attempt < 5; attempt += 1) {
-      await handler(makeEvent({ email: 'not-an-email', consent: true }, { ip: '198.51.100.10' }));
-    }
-    const response = await handler(makeEvent({ email: 'not-an-email', consent: true }, { ip: '198.51.100.10' }));
-
-    expect(response.statusCode).toBe(429);
-    expect(JSON.parse(response.body)).toEqual({ error: 'rate_limited' });
-    expect(fetchMock).not.toHaveBeenCalled();
-  });
-
-  it('uses a shared fallback bucket when the trusted Netlify IP header is absent', async () => {
-    const fetchMock = vi.fn();
-    vi.stubGlobal('fetch', fetchMock);
-
-    for (let attempt = 0; attempt < 5; attempt += 1) {
-      await handler(makeEvent('{', { ip: null }));
-    }
-    const response = await handler(makeEvent('{', { ip: null }));
-
-    expect(response.statusCode).toBe(429);
-    expect(fetchMock).not.toHaveBeenCalled();
-  });
 });
