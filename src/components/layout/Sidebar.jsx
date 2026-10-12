@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
+import NewsletterLink from './NewsletterLink';
 
 const sidebarLinks = [
   { to: '/', label: 'Home' },
@@ -18,15 +19,13 @@ const externalLinks = [
   { href: 'https://forms.gle/joTjf3VYW9anCA9MA', label: 'Join Us', icon: 'fa-arrow-right' },
 ];
 
-function Sidebar() {
-  const [mobileOpen, setMobileOpen] = useState(false);
+function Sidebar({ mobileOpen, setMobileOpen }) {
   const location = useLocation();
 
   // Close sidebar when route changes
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMobileOpen(false);
-  }, [location.pathname]);
+  }, [location.pathname, setMobileOpen]);
 
   return (
     <>
@@ -41,7 +40,7 @@ function Sidebar() {
         </NavLink>
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
-          className="rounded-lg border border-slate-200 p-2 text-slate-700 hover:bg-slate-100"
+          className="rounded-lg border border-slate-200 p-2 text-slate-700 hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dahiPrimary"
           aria-expanded={mobileOpen}
           aria-label="Toggle navigation"
         >
@@ -93,6 +92,14 @@ function Sidebar() {
                   </NavLink>
                 </li>
               ))}
+              <li>
+                <NewsletterLink
+                  onClick={() => setMobileOpen(false)}
+                  className="block rounded-lg px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-dahiPrimary"
+                >
+                  Newsletter
+                </NewsletterLink>
+              </li>
             </ul>
           </nav>
 

@@ -53,7 +53,11 @@ function NewsletterSection() {
   };
 
   return (
-    <section id="newsletter" className="section-shell max-w-7xl scroll-mt-24">
+    <section
+      id="newsletter"
+      tabIndex={-1}
+      className="section-shell max-w-7xl scroll-mt-24 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-dahiPrimary"
+    >
       <div className="soft-card overflow-hidden p-8 sm:p-10">
         <div className="max-w-3xl">
           <span className="eyebrow">Stay Connected</span>
