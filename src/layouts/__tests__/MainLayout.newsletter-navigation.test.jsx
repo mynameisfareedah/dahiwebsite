@@ -15,7 +15,7 @@ function DelayedNewsletter() {
   }, []);
 
   return isVisible ? (
-    <section id="newsletter" tabIndex={-1}>
+    <section id="newsletter" tabIndex={-1} className="scroll-mt-24">
       <h1>Newsletter subscription</h1>
     </section>
   ) : null;
@@ -30,7 +30,7 @@ function renderLayout(initialPath = '/blog', delayedNewsletter = false) {
           <Route path="/" element={delayedNewsletter ? <DelayedNewsletter /> : (
             <>
               <a href="#newsletter">Subscribe for Updates</a>
-              <section id="newsletter" tabIndex={-1}>
+              <section id="newsletter" tabIndex={-1} className="scroll-mt-24">
                 <h1>Newsletter subscription</h1>
               </section>
             </>
@@ -134,13 +134,31 @@ describe('MainLayout newsletter navigation', () => {
     await waitFor(() => expect(scrollIntoView).toHaveBeenCalledWith({ behavior: 'smooth', block: 'start' }));
   });
 
-  it('preserves the existing Join Us community registration destination', () => {
-    renderLayout();
+  it.each(['/', '/blog'])('routes Join Us from %s to the community section and closes the drawer', async (initialPath) => {
+    const scrollIntoView = vi.fn();
+    originalScrollIntoViewDescriptor = Object.getOwnPropertyDescriptor(window.HTMLElement.prototype, 'scrollIntoView');
+    Object.defineProperty(window.HTMLElement.prototype, 'scrollIntoView', {
+      configurable: true,
+      value: scrollIntoView,
+    });
+    renderLayout(initialPath);
 
-    expect(screen.getByRole('link', { name: 'Join Us' })).toHaveAttribute(
-      'href',
-      'https://forms.gle/joTjf3VYW9anCA9MA'
-    );
+    fireEvent.click(screen.getByRole('button', { name: 'Toggle navigation' }));
+    expect(screen.getByRole('button', { name: 'Toggle navigation' })).toHaveAttribute('aria-expanded', 'true');
+
+    const joinUsLink = screen.getByRole('link', { name: 'Join Us' });
+    expect(joinUsLink).toHaveAttribute('href', '/#newsletter');
+    expect(joinUsLink).not.toHaveAttribute('target');
+    expect(joinUsLink.getAttribute('href')).not.toMatch(/^https:/);
+    fireEvent.click(joinUsLink);
+
+    const newsletterHeading = await screen.findByRole('heading', { name: 'Newsletter subscription' });
+    expect(newsletterHeading.parentElement).toHaveClass('scroll-mt-24');
+    await waitFor(() => {
+      expect(document.activeElement).toBe(newsletterHeading.parentElement);
+      expect(scrollIntoView).toHaveBeenCalledWith({ behavior: 'smooth', block: 'start' });
+      expect(screen.getByRole('button', { name: 'Toggle navigation' })).toHaveAttribute('aria-expanded', 'false');
+    });
   });
 
   it('hides the floating CTA when the newsletter section enters and leaves view', async () => {

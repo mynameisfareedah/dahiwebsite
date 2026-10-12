@@ -15,10 +15,6 @@ const sidebarLinks = [
   { to: '/contact', label: 'Contact' },
 ];
 
-const externalLinks = [
-  { href: 'https://forms.gle/joTjf3VYW9anCA9MA', label: 'Join Us', icon: 'fa-arrow-right' },
-];
-
 function Sidebar({ mobileOpen, setMobileOpen }) {
   const location = useLocation();
 
@@ -105,18 +101,13 @@ function Sidebar({ mobileOpen, setMobileOpen }) {
 
           {/* External Links & CTA Section */}
           <div className="border-t border-slate-200 px-4 py-4 space-y-3">
-            {externalLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 rounded-lg bg-dahiPrimary px-4 py-3 font-semibold text-white transition hover:bg-dahiSecondary"
-              >
-                {link.label}
-                <i className={`fa-solid ${link.icon}`}></i>
-              </a>
-            ))}
+            <NewsletterLink
+              onClick={() => setMobileOpen(false)}
+              className="flex items-center justify-center gap-2 rounded-lg bg-dahiPrimary px-4 py-3 font-semibold text-white transition hover:bg-dahiSecondary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dahiPrimary"
+            >
+              Join Us
+              <i className="fa-solid fa-arrow-right" aria-hidden="true"></i>
+            </NewsletterLink>
           </div>
         </div>
       </aside>
