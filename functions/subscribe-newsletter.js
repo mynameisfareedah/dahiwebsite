@@ -47,7 +47,7 @@ async function readProviderResponse(response) {
   }
 }
 
-export const handler = async (event) => {
+export const handleNewsletterEvent = async (event) => {
   if (event.httpMethod !== 'POST') {
     return jsonResponse(405, { error: 'method_not_allowed' }, { Allow: 'POST' });
   }
@@ -145,7 +145,7 @@ export default async (request) => {
     headers: Object.fromEntries(request.headers.entries()),
     body: await request.text(),
   };
-  const result = await handler(event);
+  const result = await handleNewsletterEvent(event);
 
   return new Response(result.body, {
     status: result.statusCode,
