@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 function NewsletterSection() {
   const [firstName, setFirstName] = useState('');
   const [email, setEmail] = useState('');
+  const [updateCategories, setUpdateCategories] = useState([]);
+  const [healthInterests, setHealthInterests] = useState([]);
   const [website, setWebsite] = useState('');
   const [consent, setConsent] = useState(false);
   const [status, setStatus] = useState(null);
@@ -20,7 +22,14 @@ function NewsletterSection() {
       const response = await fetch('/.netlify/functions/subscribe-newsletter', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ firstName, email, consent, website }),
+        body: JSON.stringify({
+          firstName,
+          email,
+          consent,
+          website,
+          updateCategories,
+          healthInterests,
+        }),
       });
       const result = await response.json();
 
@@ -36,6 +45,8 @@ function NewsletterSection() {
 
       setFirstName('');
       setEmail('');
+      setUpdateCategories([]);
+      setHealthInterests([]);
       setWebsite('');
       setConsent(false);
       setStatus({
@@ -61,8 +72,10 @@ function NewsletterSection() {
       <div className="soft-card overflow-hidden p-8 sm:p-10">
         <div className="max-w-3xl">
           <span className="eyebrow">Stay Connected</span>
-          <h2 className="mt-4 text-3xl font-black text-slate-900">Stay Connected</h2>
-          <p className="mt-4 text-lg leading-8 text-slate-600">Receive updates about DAHI webinars, community health initiatives, educational resources, and opportunities to get involved.</p>
+          <h2 className="mt-4 text-3xl font-black text-slate-900">Join the DAHI Community</h2>
+          <p className="mt-4 text-lg leading-8 text-slate-600">
+            Stay informed with practical health education, webinar invitations, community outreach updates, and opportunities to participate in DAHI initiatives.
+          </p>
         </div>
         <form onSubmit={handleSubmit} className="mt-8 max-w-2xl space-y-4 rounded-[1.25rem] border border-slate-200 bg-slate-50 p-4 sm:p-6">
           <div className="grid gap-4 sm:grid-cols-2">
@@ -98,6 +111,42 @@ function NewsletterSection() {
               />
             </label>
           </div>
+
+          <PreferenceGroup
+            id="newsletter-update-categories"
+            title="Updates and activities"
+            description="Choose any types of DAHI updates you would like to receive."
+            options={[
+              'Health tips and educational resources',
+              'Webinars and events',
+              'Community outreach updates',
+              'Volunteering and participation opportunities',
+            ]}
+            selected={updateCategories}
+            onChange={setUpdateCategories}
+            disabled={isSubmitting}
+          />
+
+          <PreferenceGroup
+            id="newsletter-health-interests"
+            title="Health interests"
+            description="Choose any topics you would like DAHI to cover. These preferences are not medical information."
+            options={[
+              'Menstrual health',
+              'Fertility and conception',
+              'Pregnancy and childbirth',
+              'Breast health',
+              'Family planning',
+              'Menopause',
+              'Mental health and wellbeing',
+              'Nutrition and healthy living',
+              'Sexual and reproductive health',
+              'Preventive healthcare',
+            ]}
+            selected={healthInterests}
+            onChange={setHealthInterests}
+            disabled={isSubmitting}
+          />
 
           <label htmlFor="newsletter-consent" className="flex items-start gap-3 text-sm leading-6 text-slate-600">
             <input
@@ -145,6 +194,50 @@ function NewsletterSection() {
         <p className="mt-3 text-sm text-slate-500">New subscriptions remain pending until you confirm by email. You can unsubscribe at any time.</p>
       </div>
     </section>
+  );
+}
+
+function PreferenceGroup({ id, title, description, options, selected, onChange, disabled }) {
+  const handleChange = (option) => {
+    onChange((current) => (
+      current.includes(option)
+        ? current.filter((value) => value !== option)
+        : [...current, option]
+    ));
+  };
+
+  return (
+    <details className="rounded-xl border border-slate-200 bg-white">
+      <summary className="cursor-pointer rounded-xl px-4 py-3 font-semibold text-slate-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dahiPrimary">
+        {title} <span className="font-normal text-slate-500">(optional)</span>
+      </summary>
+      <fieldset className="space-y-3 border-t border-slate-100 px-4 py-4">
+        <legend className="sr-only">Select {title.toLowerCase()}</legend>
+        <p id={`${id}-description`} className="text-sm leading-6 text-slate-600">
+          {description}
+        </p>
+        <div className="grid gap-3 sm:grid-cols-2">
+          {options.map((option, index) => {
+            const inputId = `${id}-${index}`;
+            return (
+              <label key={option} htmlFor={inputId} className="flex min-h-11 items-start gap-3 text-sm leading-6 text-slate-700">
+                <input
+                  id={inputId}
+                  type="checkbox"
+                  value={option}
+                  checked={selected.includes(option)}
+                  onChange={() => handleChange(option)}
+                  disabled={disabled}
+                  aria-describedby={`${id}-description`}
+                  className="mt-1 h-4 w-4 shrink-0 accent-dahiPrimary"
+                />
+                {option}
+              </label>
+            );
+          })}
+        </div>
+      </fieldset>
+    </details>
   );
 }
 

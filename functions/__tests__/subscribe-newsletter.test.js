@@ -104,9 +104,132 @@ describe('subscribe-newsletter Netlify Function', () => {
     expect(fetchMock.mock.calls[1][0]).toBe('https://api.emailoctopus.com/lists/test-list-id/contacts');
     expect(JSON.parse(fetchMock.mock.calls[1][1].body)).toEqual({
       email_address: 'reader@example.com',
-      fields: { FirstName: 'Ada' },
+      fields: {
+        FirstName: 'Ada',
+      },
     });
     expect(JSON.parse(fetchMock.mock.calls[1][1].body).status).toBeUndefined();
+  });
+
+  it('maps multiple approved preferences to the exact EmailOctopus fields', async () => {
+    const fetchMock = mockProvider();
+    const response = await handleNewsletterEvent(makeEvent({
+      email: 'reader@example.com',
+      consent: true,
+      updateCategories: [
+        'Webinars and events',
+        'Community outreach updates',
+      ],
+      healthInterests: [
+        'Menstrual health',
+        'Nutrition and healthy living',
+      ],
+    }));
+
+    expect(response.statusCode).toBe(200);
+    expect(fetchMock.mock.calls[1][1].method).toBe('POST');
+    expect(JSON.parse(fetchMock.mock.calls[1][1].body)).toEqual({
+      email_address: 'reader@example.com',
+      fields: {
+        UpdateCategories: ['Webinars and events', 'Community outreach updates'],
+        HealthInterests: ['Menstrual health', 'Nutrition and healthy living'],
+      },
+    });
+    expect(JSON.parse(fetchMock.mock.calls[1][1].body)).not.toHaveProperty('status');
+  });
+
+  it('omits optional preference fields when no choices are selected', async () => {
+    const fetchMock = mockProvider();
+    const response = await handleNewsletterEvent(makeEvent({
+      email: 'reader@example.com',
+      consent: true,
+      updateCategories: [],
+      healthInterests: [],
+    }));
+
+    expect(response.statusCode).toBe(200);
+    expect(JSON.parse(fetchMock.mock.calls[1][1].body)).toEqual({
+      email_address: 'reader@example.com',
+    });
+  });
+
+  it('sends a single selection as a one-item array and omits the other preference field', async () => {
+    const fetchMock = mockProvider();
+    const response = await handleNewsletterEvent(makeEvent({
+      email: 'reader@example.com',
+      consent: true,
+      updateCategories: ['Webinars and events'],
+      healthInterests: [],
+    }));
+
+    expect(response.statusCode).toBe(200);
+    expect(JSON.parse(fetchMock.mock.calls[1][1].body)).toEqual({
+      email_address: 'reader@example.com',
+      fields: {
+        UpdateCategories: ['Webinars and events'],
+      },
+    });
+  });
+
+  it.each([
+    [{ updateCategories: 'Webinars and events' }, 'string instead of an array'],
+    [{ healthInterests: [null] }, 'non-string choices'],
+    [{ updateCategories: ['Unknown category'] }, 'unknown categories'],
+    [{ healthInterests: ['Unknown topic'] }, 'unknown health topics'],
+    [{ updateCategories: ['Webinars and events', 'Webinars and events'] }, 'duplicate categories'],
+    [{ healthInterests: ['Menstrual health', 'Menstrual health'] }, 'duplicate health topics'],
+    [{
+      updateCategories: [
+        'Health tips and educational resources',
+        'Webinars and events',
+        'Community outreach updates',
+        'Volunteering and participation opportunities',
+        'extra',
+      ],
+    }, 'excessive category selections'],
+    [{
+      healthInterests: [
+        'Menstrual health',
+        'Fertility and conception',
+        'Pregnancy and childbirth',
+        'Breast health',
+        'Family planning',
+        'Menopause',
+        'Mental health and wellbeing',
+        'Nutrition and healthy living',
+        'Sexual and reproductive health',
+        'Preventive healthcare',
+        'extra',
+      ],
+    }, 'excessive health selections'],
+  ])('rejects %s', async (preferences) => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal('fetch', fetchMock);
+
+    const response = await handleNewsletterEvent(makeEvent({
+      email: 'reader@example.com',
+      consent: true,
+      ...preferences,
+    }));
+
+    expect(response.statusCode).toBe(400);
+    expect(JSON.parse(response.body)).toEqual({ error: 'invalid_preferences' });
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it('rejects unexpected request properties such as a caller-supplied status', async () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal('fetch', fetchMock);
+
+    const response = await handleNewsletterEvent(makeEvent({
+      email: 'reader@example.com',
+      consent: true,
+      status: 'subscribed',
+    }));
+
+    expect(response.statusCode).toBe(400);
+    expect(JSON.parse(response.body)).toEqual({ error: 'invalid_request' });
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 
   it.each(['EMAILOCTOPUS_API_KEY', 'EMAILOCTOPUS_LIST_ID'])(
@@ -116,7 +239,12 @@ describe('subscribe-newsletter Netlify Function', () => {
       const fetchMock = vi.fn();
       vi.stubGlobal('fetch', fetchMock);
 
-      const response = await handleNewsletterEvent(makeEvent({ email: 'reader@example.com', consent: true }));
+      const response = await handleNewsletterEvent(makeEvent({
+        email: 'reader@example.com',
+        consent: true,
+        updateCategories: ['Webinars and events'],
+        healthInterests: ['Menstrual health'],
+      }));
 
       expect(response.statusCode).toBe(503);
       expect(fetchMock).not.toHaveBeenCalled();
@@ -229,13 +357,22 @@ describe('subscribe-newsletter Netlify Function', () => {
         }), { status: 409 }));
       vi.stubGlobal('fetch', fetchMock);
 
-      const response = await handleNewsletterEvent(makeEvent({ email: 'reader@example.com', consent: true }));
+      const response = await handleNewsletterEvent(makeEvent({
+        email: 'reader@example.com',
+        consent: true,
+        updateCategories: ['Webinars and events'],
+        healthInterests: ['Menstrual health'],
+      }));
 
       expect(response.statusCode).toBe(200);
       expect(JSON.parse(response.body)).toEqual({ accepted: true });
       expect(fetchMock).toHaveBeenCalledTimes(2);
       expect(fetchMock.mock.calls[1][1].method).toBe('POST');
       expect(fetchMock.mock.calls[1][1].method).not.toBe('PUT');
+      expect(JSON.parse(fetchMock.mock.calls[1][1].body).fields).toEqual({
+        UpdateCategories: ['Webinars and events'],
+        HealthInterests: ['Menstrual health'],
+      });
     },
   );
 
@@ -277,6 +414,27 @@ describe('subscribe-newsletter Netlify Function', () => {
 
     expect(response.statusCode).toBe(502);
     expect(response.body).not.toContain('Sensitive provider diagnostic');
+  });
+
+  it('returns a generic error when EmailOctopus rejects preference fields', async () => {
+    const fetchMock = mockProvider({
+      contactResponse: {
+        title: 'Invalid field value',
+        detail: 'A private provider validation detail',
+        status: 422,
+      },
+      contactStatus: 422,
+    });
+    const response = await handleNewsletterEvent(makeEvent({
+      email: 'reader@example.com',
+      consent: true,
+      updateCategories: ['Webinars and events'],
+      healthInterests: ['Menstrual health'],
+    }));
+
+    expect(response.statusCode).toBe(502);
+    expect(JSON.parse(response.body)).toEqual({ error: 'newsletter_unavailable' });
+    expect(response.body).not.toContain('private provider validation detail');
   });
 
 });

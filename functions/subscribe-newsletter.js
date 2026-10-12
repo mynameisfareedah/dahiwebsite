@@ -1,6 +1,35 @@
 const EMAILOCTOPUS_API = 'https://api.emailoctopus.com';
 const MAX_BODY_BYTES = 4096;
 
+const UPDATE_CATEGORIES = [
+  'Health tips and educational resources',
+  'Webinars and events',
+  'Community outreach updates',
+  'Volunteering and participation opportunities',
+];
+
+const HEALTH_INTERESTS = [
+  'Menstrual health',
+  'Fertility and conception',
+  'Pregnancy and childbirth',
+  'Breast health',
+  'Family planning',
+  'Menopause',
+  'Mental health and wellbeing',
+  'Nutrition and healthy living',
+  'Sexual and reproductive health',
+  'Preventive healthcare',
+];
+
+const ALLOWED_REQUEST_FIELDS = new Set([
+  'email',
+  'firstName',
+  'consent',
+  'website',
+  'updateCategories',
+  'healthInterests',
+]);
+
 export const config = {
   path: '/.netlify/functions/subscribe-newsletter',
   rateLimit: {
@@ -47,6 +76,23 @@ async function readProviderResponse(response) {
   }
 }
 
+function isValidPreferenceSelection(value, allowedValues) {
+  if (value === undefined) return true;
+  if (!Array.isArray(value) || value.length > allowedValues.length) return false;
+
+  const selectedValues = new Set();
+  for (const selection of value) {
+    if (typeof selection !== 'string'
+      || !allowedValues.includes(selection)
+      || selectedValues.has(selection)) {
+      return false;
+    }
+    selectedValues.add(selection);
+  }
+
+  return true;
+}
+
 export const handleNewsletterEvent = async (event) => {
   if (event.httpMethod !== 'POST') {
     return jsonResponse(405, { error: 'method_not_allowed' }, { Allow: 'POST' });
@@ -72,6 +118,9 @@ export const handleNewsletterEvent = async (event) => {
   if (!body || typeof body !== 'object' || Array.isArray(body)) {
     return jsonResponse(400, { error: 'invalid_request' });
   }
+  if (Object.keys(body).some((key) => !ALLOWED_REQUEST_FIELDS.has(key))) {
+    return jsonResponse(400, { error: 'invalid_request' });
+  }
 
   const email = typeof body.email === 'string' ? body.email.trim().toLowerCase() : '';
   const firstName = typeof body.firstName === 'string' ? body.firstName.trim() : '';
@@ -83,6 +132,13 @@ export const handleNewsletterEvent = async (event) => {
   }
   if (body.consent !== true) {
     return jsonResponse(400, { error: 'consent_required' });
+  }
+  if (body.website !== undefined && typeof body.website !== 'string') {
+    return jsonResponse(400, { error: 'invalid_request' });
+  }
+  if (!isValidPreferenceSelection(body.updateCategories, UPDATE_CATEGORIES)
+    || !isValidPreferenceSelection(body.healthInterests, HEALTH_INTERESTS)) {
+    return jsonResponse(400, { error: 'invalid_preferences' });
   }
 
   if (typeof body.website === 'string' && body.website.trim()) {
@@ -114,8 +170,13 @@ export const handleNewsletterEvent = async (event) => {
       return jsonResponse(503, { error: 'newsletter_unavailable' });
     }
 
+    const fields = {};
+    if (firstName) fields.FirstName = firstName;
+    if (body.updateCategories?.length) fields.UpdateCategories = body.updateCategories;
+    if (body.healthInterests?.length) fields.HealthInterests = body.healthInterests;
+
     const contact = { email_address: email };
-    if (firstName) contact.fields = { FirstName: firstName };
+    if (Object.keys(fields).length) contact.fields = fields;
 
     const contactResponse = await fetch(contactsUrl, {
       method: 'POST',
