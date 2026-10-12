@@ -28,7 +28,7 @@ function PrivacyPage() {
           </p>
           <h2 className="mt-6 text-lg font-semibold text-slate-900">Newsletter subscriptions</h2>
           <p className="mt-3 text-slate-700 leading-7">
-            If you subscribe to DAHI email updates, we collect your email address and any optional first name you provide, with your consent, and use EmailOctopus to manage the list and send updates. Your subscription remains pending until you confirm it using the link in EmailOctopus&apos;s confirmation email. You can unsubscribe using the link included in newsletter emails. We do not add contact, volunteer, event, or community records to the newsletter list without a separate subscription.
+            If you subscribe to DAHI email updates, we collect your email address and any optional first name, communication preferences, and health-topic interests you provide, with your consent. We use these optional preferences to tailor educational emails and invitations. Choosing a health topic does not indicate a diagnosis, health condition, or treatment need, and is not a health record. EmailOctopus manages the list and sends updates. Your subscription remains pending until you confirm it using the link in EmailOctopus&apos;s confirmation email. You can unsubscribe using the link included in DAHI emails. This subscription does not register you to volunteer or attend an event; those activities have separate registration processes.
           </p>
           <h2 className="mt-6 text-lg font-semibold text-slate-900">Questions or updates</h2>
           <p className="mt-3 text-slate-700 leading-7">
