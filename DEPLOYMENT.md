@@ -14,6 +14,12 @@ Set these in your hosting environment:
 - `VITE_SUPABASE_ANON_KEY`
 - `VITE_GA_ID` (optional)
 - `VITE_CLARITY_ID` (optional)
+- `EMAILOCTOPUS_API_KEY` (Netlify Function secret; required for newsletter subscriptions)
+- `EMAILOCTOPUS_LIST_ID` (Netlify Function setting; required for newsletter subscriptions)
+
+Configure the EmailOctopus list with double opt-in enabled. Do not use `VITE_` prefixes for EmailOctopus credentials; they must remain server-side and must not be exposed to the browser.
+
+The newsletter Function uses Netlify's code-defined per-domain/per-IP rate limit: 10 requests per 60 seconds at `/.netlify/functions/subscribe-newsletter`. Netlify applies the rule during deploy post-processing for both Deploy Preview and production contexts; verify the rule in the deploy log before release.
 
 ## Notes
 
