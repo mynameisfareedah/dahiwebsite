@@ -14,8 +14,7 @@ function GetInvolved() {
       icon: 'fa-solid fa-users',
       title: 'Stay Connected',
       description: 'Receive DAHI health and community updates by email.',
-      href: '#newsletter',
-      external: true,
+      link: '/#newsletter',
       buttonText: 'Subscribe for Updates',
     },
     {
@@ -70,14 +69,6 @@ function GetInvolved() {
                   Follow WhatsApp Channel
                 </a>
               </div>
-            ) : action.external ? (
-              <a
-                href={action.href}
-                className="mt-4 inline-flex items-center justify-center rounded-full bg-dahiPrimary px-4 py-2 text-sm font-semibold text-white transition hover:bg-dahiSecondary"
-                aria-label={action.buttonText}
-              >
-                {action.buttonText}
-              </a>
             ) : (
               <Link
                 to={action.link}

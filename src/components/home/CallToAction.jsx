@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 function CallToAction() {
   return (
     <section id="community" className="section-shell max-w-7xl">
@@ -26,7 +28,7 @@ function CallToAction() {
             <p className="mt-4 text-lg leading-8 text-slate-600">Join a growing community of women committed to learning, supporting one another, and making informed health decisions through trusted education and meaningful conversations.</p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <a href="https://whatsapp.com/channel/0029VbBdF4hLI8YZRabyWF0j" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-full bg-dahiPrimary px-6 py-3 text-sm font-semibold text-white transition hover:bg-dahiSecondary">Join WhatsApp Channel</a>
-              <a href="https://forms.gle/joTjf3VYW9anCA9MA" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-full border border-slate-300 px-6 py-3 text-sm font-semibold text-slate-700 transition hover:border-dahiPrimary hover:text-dahiPrimary">Subscribe for Updates</a>
+              <Link to="/#newsletter" className="inline-flex items-center justify-center rounded-full border border-slate-300 px-6 py-3 text-sm font-semibold text-slate-700 transition hover:border-dahiPrimary hover:text-dahiPrimary">Subscribe for Updates</Link>
             </div>
           </div>
         </div>

@@ -170,7 +170,7 @@ function BlogPage() {
 
         <CTASection eyebrow="Stay informed" title="Join DAHI for more stories and updates" description="Subscribe for new articles, event announcements, and community moments that support women’s health education." actions={[
           <Link key="contact" to="/contact" className="inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-semibold text-dahiPrimary transition hover:-translate-y-0.5">Contact Us</Link>,
-          <a key="community" href="https://forms.gle/joTjf3VYW9anCA9MA" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-full border border-white/70 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10">Register</a>,
+          <Link key="community" to="/#newsletter" className="inline-flex items-center justify-center rounded-full border border-white/70 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10">Subscribe for Updates</Link>,
         ]} />
       </section>
     </>

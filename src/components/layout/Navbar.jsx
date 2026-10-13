@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 
 const navLinks = [
   { to: '/', label: 'Home' },
@@ -48,7 +48,7 @@ function Navbar() {
             <i className="fa-solid fa-heart mr-1.5"></i>
             Support Outreach
           </NavLink>
-          <a href="https://forms.gle/joTjf3VYW9anCA9MA" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-full bg-dahiPrimary px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-dahiSecondary">Join Our Community</a>
+          <Link to="/#newsletter" className="inline-flex items-center justify-center rounded-full bg-dahiPrimary px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-dahiSecondary">Join Our Community</Link>
         </div>
 
         <button
@@ -83,7 +83,7 @@ function Navbar() {
             <i className="fa-solid fa-heart mr-1.5"></i>
             Support Outreach
           </NavLink>
-          <a href="https://forms.gle/joTjf3VYW9anCA9MA" target="_blank" rel="noopener noreferrer" className="mt-2 inline-flex items-center justify-center rounded-full bg-dahiPrimary px-5 py-2.5 text-sm font-semibold text-white">Join Our Community</a>
+          <Link to="/#newsletter" onClick={() => setMobileOpen(false)} className="mt-2 inline-flex items-center justify-center rounded-full bg-dahiPrimary px-5 py-2.5 text-sm font-semibold text-white">Join Our Community</Link>
         </div>
       </div>
     </header>

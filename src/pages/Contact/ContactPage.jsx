@@ -95,9 +95,8 @@ function ContactPage() {
               <ContactCard icon={Mail} title="Email" value={OFFICIAL_CONTACT_EMAIL} description="General enquiries, support, and partnership requests." href={`mailto:${OFFICIAL_CONTACT_EMAIL}`} linkLabel="Email us" />
               <ContactCard icon={Phone} title="Phone" value={OFFICIAL_CONTACT_PHONE} description="Speak with the DAHI team for direct support or enquiries." href={`tel:${OFFICIAL_CONTACT_PHONE_LINK}`} linkLabel="Call now" />
             </div>
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-4">
               <ContactCard icon={MessageCircle} title="WhatsApp Channel" value="DAHI updates and announcements" description="Follow our channel for updates, events, and community news." href="https://whatsapp.com/channel/0029VbBdF4hLI8YZRabyWF0j" linkLabel="Join channel" />
-              <ContactCard icon={Mail} title="Registration" value="Sign up for programs" description="Register for workshops, events, and community activities." href="https://forms.gle/joTjf3VYW9anCA9MA" linkLabel="Open form" />
             </div>
           </div>
 
