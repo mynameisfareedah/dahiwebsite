@@ -1,12 +1,11 @@
-import { ExternalLink, Link2, Video, Newspaper, MessageSquare } from 'lucide-react';
+import { ExternalLink, Video, Newspaper, MessageSquare } from 'lucide-react';
 
 const socialLinks = [
   { label: 'Instagram', href: 'https://www.instagram.com/docadihealthintiative_?igsh=YmtnbW1hZnp6MWFz', icon: ExternalLink, description: 'Follow DAHI for health stories, wellness tips, and community updates.' },
   { label: 'Facebook', href: 'https://www.facebook.com/share/1A8VVfnJyr', icon: ExternalLink, description: 'Join our Facebook community to stay connected and share event news.' },
-  { label: 'LinkedIn', href: 'https://www.linkedin.com/', icon: Link2, description: 'Follow DAHI for professional updates, partnerships, and women’s health insights.' },
   { label: 'YouTube', href: 'https://youtube.com/@dahi-01?si=b54Rt5TiEc5Yvb7q', icon: Video, description: 'Watch our latest talks, educational videos, and health discussions.' },
   { label: 'Substack', href: 'https://womenshealthwithdocadi.substack.com', icon: Newspaper, description: 'Read the latest DAHI newsletters, articles, and expert guidance.' },
-  { label: 'WhatsApp Channel', href: 'https://whatsapp.com/channel/0029VbBdF4hLI8YZRabyWF0j', icon: MessageSquare, description: 'Join our WhatsApp channel for direct community updates and support.' },
+  { label: 'WhatsApp Channel', href: 'https://whatsapp.com/channel/0029VbBdF4hLI8YZRabyWF0j', icon: MessageSquare, description: 'Follow our channel for DAHI updates and announcements.' },
 ];
 
 function SocialLinks({ title = 'Follow DAHI', description = 'Stay connected for health education articles, webinars, and community updates.' }) {

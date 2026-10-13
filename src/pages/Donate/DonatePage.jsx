@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import SEO from '../../components/common/SEO';
 import PageHero from '../../components/common/PageHero';
@@ -18,24 +17,13 @@ const faqs = [
 ];
 
 function DonatePage() {
-  const { data: donations = [], isLoading: loadingCampaigns, error: campaignsError } = useSupabaseData('donations', '*', {
+  const { isLoading: loadingCampaigns, error: campaignsError } = useSupabaseData('donations', '*', {
     staleTime: 60000,
     retry: false,
   });
 
-  const donationCampaigns = useMemo(() => {
-    // Temporarily hide donation campaigns from the public page until the active campaign is removed from the database.
-    return [];
-    // return (donations || []).map((d) => ({
-    //   ...d,
-    //   title: d.title || d.name || '',
-    //   description: d.description || '',
-    //   image_url: d.image_url || d.image || null,
-    //   goal_amount: d.goal_amount != null ? Number(d.goal_amount) : 0,
-    //   amount_raised: d.amount_raised != null ? Number(d.amount_raised) : 0,
-    //   currency: d.currency || 'NGN',
-    // }));
-  }, [donations]);
+  // Temporarily hide donation campaigns until the active campaign is removed from the database.
+  const donationCampaigns = [];
 
   return (
     <>
@@ -48,7 +36,7 @@ function DonatePage() {
         breadcrumbs={[{ label: 'Donate' }]}
         actions={[
           <Link key="contact" to="/contact" className="inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-semibold text-dahiPrimary transition hover:-translate-y-0.5">Contact Us</Link>,
-          <a key="community" href="https://whatsapp.com/channel/0029VbBdF4hLI8YZRabyWF0j" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-full border border-white/70 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10">Join WhatsApp</a>,
+          <a key="community" href="https://whatsapp.com/channel/0029VbBdF4hLI8YZRabyWF0j" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-full border border-white/70 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10">Follow WhatsApp Channel</a>,
         ]}
       />
 

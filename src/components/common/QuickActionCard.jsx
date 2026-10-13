@@ -13,8 +13,15 @@ function QuickActionCard({ title, description, href, to }) {
     return <Link to={to}>{content}</Link>;
   }
 
+  const opensExternalTab = href.startsWith('https://') || href.startsWith('http://');
+
   return (
-    <a href={href} target="_blank" rel="noopener noreferrer" className="block">
+    <a
+      href={href}
+      target={opensExternalTab ? '_blank' : undefined}
+      rel={opensExternalTab ? 'noopener noreferrer' : undefined}
+      className="block"
+    >
       {content}
     </a>
   );

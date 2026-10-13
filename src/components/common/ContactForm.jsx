@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
-import { AlertCircle, CheckCircle2, ClipboardCopy, LoaderCircle } from 'lucide-react';
+import { AlertCircle, CheckCircle2, LoaderCircle } from 'lucide-react';
 import { contactSchema } from '../../utils/forms';
 import { messageService } from '../../services/messageService';
+import { OFFICIAL_CONTACT_EMAIL } from '../../constants/contactInfo';
 
 const reasons = [
   'General Enquiry',
@@ -31,6 +32,8 @@ function ContactForm({ initialReason = 'General Enquiry' }) {
   const fileInputRef = useRef(null);
 
   useEffect(() => {
+    // Keep the selected reason in sync when the parent navigates with a different reason query.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setFormData((current) => ({ ...current, reason: initialReason }));
   }, [initialReason]);
 
@@ -101,8 +104,8 @@ function ContactForm({ initialReason = 'General Enquiry' }) {
 
       setStatus('Thank you! Your message has been received and our team will be in touch soon.');
       resetForm({ preserveStatus: true });
-    } catch (error) {
-      setStatus('We could not submit your message right now. Please email us directly at docadi.healthinitiative@gmail.com instead.');
+    } catch {
+      setStatus(`We could not submit your message right now. Please email us directly at ${OFFICIAL_CONTACT_EMAIL} instead.`);
     } finally {
       setIsSubmitting(false);
     }

@@ -10,10 +10,10 @@ function ContactCard({ icon: Icon, title, value, description, href, linkLabel = 
     if (!value) return;
 
     try {
-      await navigator.clipboard.writeText(value);
+      await window.navigator.clipboard.writeText(value);
       setCopied(true);
       window.setTimeout(() => setCopied(false), 2000);
-    } catch (error) {
+    } catch {
       // Clipboard not supported or user denied permission.
     }
   };
@@ -44,7 +44,12 @@ function ContactCard({ icon: Icon, title, value, description, href, linkLabel = 
       )}
       {href && (
         <div className="mt-5 text-sm font-semibold text-dahiPrimary">
-          <a href={href} target="_blank" rel="noopener noreferrer" className="transition hover:text-dahiSecondary">
+          <a
+            href={href}
+            target={href.startsWith('https://') || href.startsWith('http://') ? '_blank' : undefined}
+            rel={href.startsWith('https://') || href.startsWith('http://') ? 'noopener noreferrer' : undefined}
+            className="transition hover:text-dahiSecondary"
+          >
             {linkLabel} →
           </a>
         </div>

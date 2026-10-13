@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { OFFICIAL_CONTACT_EMAIL } from '../../constants/contactInfo';
 import NewsletterLink from './NewsletterLink';
 
 function Footer() {
@@ -38,8 +39,8 @@ function Footer() {
             <div className="font-semibold text-white">Connect with us</div>
             <div className="flex flex-wrap gap-3">
               <NewsletterLink className="text-slate-300 transition hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">Newsletter</NewsletterLink>
-              <a href="mailto:docadi.healthinitiative@gmail.com" className="text-slate-300 transition hover:text-white">Email</a>
-              <a href="https://whatsapp.com/channel/0029VbBdF4hLI8YZRabyWF0j" target="_blank" rel="noopener noreferrer" className="text-slate-300 transition hover:text-white">WhatsApp</a>
+              <a href={`mailto:${OFFICIAL_CONTACT_EMAIL}`} className="text-slate-300 transition hover:text-white">Email</a>
+              <a href="https://whatsapp.com/channel/0029VbBdF4hLI8YZRabyWF0j" target="_blank" rel="noopener noreferrer" className="text-slate-300 transition hover:text-white">WhatsApp Channel</a>
               <a href="https://www.facebook.com/share/1A8VVfnJyr" target="_blank" rel="noopener noreferrer" className="text-slate-300 transition hover:text-white">Facebook</a>
               <a href="https://www.instagram.com/docadihealthintiative_?igsh=YmtnbW1hZnp6MWFz" target="_blank" rel="noopener noreferrer" className="text-slate-300 transition hover:text-white">Instagram</a>
               <a href="https://youtube.com/@dahi-01?si=b54Rt5TiEc5Yvb7q" target="_blank" rel="noopener noreferrer" className="text-slate-300 transition hover:text-white">YouTube</a>

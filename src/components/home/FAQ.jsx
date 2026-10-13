@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { OFFICIAL_CONTACT_EMAIL } from '../../constants/contactInfo';
 
 function FAQ() {
   const [openIndex, setOpenIndex] = useState(null);
@@ -22,7 +23,7 @@ function FAQ() {
     },
     {
       question: "How can I contact DAHI?",
-      answer: "You can reach us through our Contact page, via email at docadi.healthinitiative@gmail.com, or through our social media channels. We typically respond within 1-2 business days.",
+      answer: `You can reach us through our Contact page, via email at ${OFFICIAL_CONTACT_EMAIL}, or through our social media channels. We typically respond within 1-2 business days.`,
     },
   ];
 

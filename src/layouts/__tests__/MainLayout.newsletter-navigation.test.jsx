@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { useEffect, useState } from 'react';
-import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import MainLayout from '../MainLayout';
 
@@ -37,6 +37,11 @@ function renderLayout(initialPath = '/blog', delayedNewsletter = false) {
                 </form>
               </section>
             </>
+          )} />
+          <Route path="/contact" element={(
+            <form id="contact-form">
+              <button type="submit">Send Message</button>
+            </form>
           )} />
         </Route>
       </Routes>
@@ -212,5 +217,40 @@ describe('MainLayout newsletter navigation', () => {
     expect(within(header).queryByRole('link', { name: 'Subscribe' })).not.toBeInTheDocument();
     expect(within(header).getByRole('button', { name: 'Toggle navigation' })).toBeInTheDocument();
     expect(screen.getByTestId('floating-subscribe-cta')).toHaveAttribute('href', '/#newsletter');
+  });
+
+  it('hides the floating CTA while the Contact form submit button is visible', async () => {
+    const observers = [];
+    originalIntersectionObserverDescriptor = Object.getOwnPropertyDescriptor(window, 'IntersectionObserver');
+    window.IntersectionObserver = class {
+      constructor(callback) {
+        this.callback = callback;
+        observers.push(this);
+      }
+
+      observe(target) {
+        (this.targets ||= []).push(target);
+      }
+
+      disconnect() {}
+
+      setVisible(isIntersecting, target = this.targets[0], intersectionRatio = isIntersecting ? 1 : 0) {
+        this.callback([{ isIntersecting, intersectionRatio, target }]);
+      }
+    };
+
+    renderLayout('/contact');
+
+    const submitButton = screen.getByRole('button', { name: 'Send Message' });
+    const subscribeLink = screen.getByTestId('floating-subscribe-cta');
+    await waitFor(() => expect(observers).toHaveLength(1));
+    expect(observers[0].targets).toContain(submitButton);
+    expect(subscribeLink).not.toHaveAttribute('hidden');
+
+    act(() => observers[0].setVisible(true));
+    expect(subscribeLink).toHaveAttribute('hidden');
+
+    act(() => observers[0].setVisible(false));
+    expect(subscribeLink).not.toHaveAttribute('hidden');
   });
 });

@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import userEvent from '@testing-library/user-event';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { describe, expect, it, vi } from 'vitest';
 import { focusAreas, testimonials } from '../../../data/siteContent';
 import AboutPreview from '../AboutPreview';
@@ -86,5 +87,22 @@ describe('homepage visual polish', () => {
     const purchaseLink = screen.getByRole('link', { name: 'View Resource' });
     expect(purchaseLink).toHaveAttribute('href', 'https://selar.com/example');
     expect(purchaseLink.closest('.home-resource-actions')).toHaveClass('relative', 'z-30');
+  });
+
+  it('opens the existing Resources catalogue from Browse All Resources', async () => {
+    const user = userEvent.setup();
+
+    render(
+      <MemoryRouter initialEntries={['/']}>
+        <Routes>
+          <Route path="/" element={<ResourcesPreview />} />
+          <Route path="/resources" element={<h1>Resources Catalogue</h1>} />
+        </Routes>
+      </MemoryRouter>,
+    );
+
+    await user.click(screen.getByRole('link', { name: 'Browse All Resources' }));
+
+    expect(await screen.findByRole('heading', { name: 'Resources Catalogue' })).toBeInTheDocument();
   });
 });

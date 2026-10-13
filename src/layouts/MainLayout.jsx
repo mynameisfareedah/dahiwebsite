@@ -8,18 +8,22 @@ import { trackPageView } from '../lib/analytics';
 function MainLayout() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [newsletterVisibility, setNewsletterVisibility] = useState(null);
+  const [contactFormVisibility, setContactFormVisibility] = useState(null);
   const location = useLocation();
 
   useEffect(() => {
-    if (location.pathname !== '/' || !('IntersectionObserver' in window)) {
+    const isHomepage = location.pathname === '/';
+    const isContactPage = location.pathname === '/contact';
+    if ((!isHomepage && !isContactPage) || !('IntersectionObserver' in window)) {
       return undefined;
     }
 
     let intersectionObserver;
-    const observeNewsletter = () => {
-      const visibilityTargets = [
-        document.querySelector('#newsletter button[type="submit"]'),
-      ].filter(Boolean);
+    const observeSubmitControl = () => {
+      const selector = isHomepage
+        ? '#newsletter button[type="submit"]'
+        : '#contact-form button[type="submit"]';
+      const visibilityTargets = [document.querySelector(selector)].filter(Boolean);
       if (visibilityTargets.length === 0) return false;
 
       const visibleTargets = new Set();
@@ -28,17 +32,19 @@ function MainLayout() {
           if (entry.isIntersecting && entry.intersectionRatio >= 0.5) visibleTargets.add(entry.target);
           else visibleTargets.delete(entry.target);
         });
-        setNewsletterVisibility({ pathname: location.pathname, visible: visibleTargets.size > 0 });
+        const visibility = { pathname: location.pathname, visible: visibleTargets.size > 0 };
+        if (isHomepage) setNewsletterVisibility(visibility);
+        else setContactFormVisibility(visibility);
       });
       visibilityTargets.forEach((target) => intersectionObserver.observe(target));
       return true;
     };
 
     const mutationObserver = new window.MutationObserver(() => {
-      if (observeNewsletter()) mutationObserver.disconnect();
+      if (observeSubmitControl()) mutationObserver.disconnect();
     });
     mutationObserver.observe(document.body, { childList: true, subtree: true });
-    if (observeNewsletter()) mutationObserver.disconnect();
+    if (observeSubmitControl()) mutationObserver.disconnect();
 
     return () => {
       mutationObserver.disconnect();
@@ -118,6 +124,7 @@ function MainLayout() {
           || (location.pathname === '/' && (
             newsletterVisibility?.pathname !== location.pathname || newsletterVisibility.visible
           ))
+          || (location.pathname === '/contact' && contactFormVisibility?.visible)
         }
       />
     </div>

@@ -12,6 +12,7 @@ import OfficeHours from '../../components/common/OfficeHours';
 import SocialLinks from '../../components/common/SocialLinks';
 import QuickActionCard from '../../components/common/QuickActionCard';
 import LocationSection from '../../components/common/LocationSection';
+import { OFFICIAL_CONTACT_EMAIL, OFFICIAL_CONTACT_PHONE, OFFICIAL_CONTACT_PHONE_LINK } from '../../constants/contactInfo';
 
 const reasons = [
   { title: 'General Enquiries', description: 'Questions about DAHI, our work, or how to connect with the team.', icon: CircleAlert },
@@ -35,8 +36,8 @@ const quickActions = [
   { title: 'Questions About the August Outreach?', description: 'Contact our team for more information about attending, volunteering, donating, or partnering with DAHI for this community outreach.', to: '/outreach' },
   { title: 'Request Educational Resources', description: 'Ask for materials that support health education and community learning.', to: '/resources' },
   { title: 'Volunteer With DAHI', description: 'Explore ways to contribute your time and skills to our work.', to: '/volunteer' },
-  { title: 'Partner With DAHI', description: 'Start a conversation about collaborations and shared impact.', href: 'mailto:docadi.healthinitiative@gmail.com' },
-  { title: 'Invite DAHI to Speak', description: 'Bring DAHI to your event, conference, or educational setting.', href: 'mailto:docadi.healthinitiative@gmail.com' },
+  { title: 'Partner With DAHI', description: 'Start a conversation about collaborations and shared impact.', href: `mailto:${OFFICIAL_CONTACT_EMAIL}` },
+  { title: 'Invite DAHI to Speak', description: 'Bring DAHI to your event, conference, or educational setting.', href: `mailto:${OFFICIAL_CONTACT_EMAIL}` },
 ];
 
 function ContactPage() {
@@ -60,6 +61,8 @@ function ContactPage() {
       'Other',
     ];
     if (reasonParam && validReasons.includes(reasonParam)) {
+      // Sync the form selection when the location query changes.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSelectedReason(reasonParam);
       formSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
@@ -89,11 +92,11 @@ function ContactPage() {
           <div className="space-y-6">
             <SectionHeading eyebrow="Let's Connect" title="We welcome meaningful conversations" description="Doc Adi Health Initiative believes that thoughtful conversations create stronger communities and better access to trusted health information." />
             <div className="grid gap-4 md:grid-cols-2">
-              <ContactCard icon={Mail} title="Email" value="docadi.healthinitiative@gmail.com" description="General enquiries, support, and partnership requests." href="mailto:docadi.healthinitiative@gmail.com" linkLabel="Email us" />
-              <ContactCard icon={Phone} title="Phone" value="+44 7438 490958" description="Speak with the DAHI team for direct support or enquiries." href="tel:+447438490958" linkLabel="Call now" />
+              <ContactCard icon={Mail} title="Email" value={OFFICIAL_CONTACT_EMAIL} description="General enquiries, support, and partnership requests." href={`mailto:${OFFICIAL_CONTACT_EMAIL}`} linkLabel="Email us" />
+              <ContactCard icon={Phone} title="Phone" value={OFFICIAL_CONTACT_PHONE} description="Speak with the DAHI team for direct support or enquiries." href={`tel:${OFFICIAL_CONTACT_PHONE_LINK}`} linkLabel="Call now" />
             </div>
             <div className="grid gap-4 md:grid-cols-2">
-              <ContactCard icon={MessageCircle} title="WhatsApp" value="Join our community" description="Stay connected with updates, events, and community conversations." href="https://whatsapp.com/channel/0029VbBdF4hLI8YZRabyWF0j" linkLabel="Join channel" />
+              <ContactCard icon={MessageCircle} title="WhatsApp Channel" value="DAHI updates and announcements" description="Follow our channel for updates, events, and community news." href="https://whatsapp.com/channel/0029VbBdF4hLI8YZRabyWF0j" linkLabel="Join channel" />
               <ContactCard icon={Mail} title="Registration" value="Sign up for programs" description="Register for workshops, events, and community activities." href="https://forms.gle/joTjf3VYW9anCA9MA" linkLabel="Open form" />
             </div>
           </div>
@@ -144,7 +147,7 @@ function ContactPage() {
             <button type="button" onClick={handlePartnerClick} className="inline-flex items-center justify-center rounded-full bg-dahiPrimary px-6 py-3 text-sm font-semibold text-white transition hover:bg-dahiSecondary">
               Become a Partner
             </button>
-            <a href="mailto:docadi.healthinitiative@gmail.com" className="inline-flex items-center justify-center rounded-full border border-slate-300 px-6 py-3 text-sm font-semibold text-slate-700 transition hover:border-dahiPrimary hover:text-dahiPrimary">
+            <a href={`mailto:${OFFICIAL_CONTACT_EMAIL}`} className="inline-flex items-center justify-center rounded-full border border-slate-300 px-6 py-3 text-sm font-semibold text-slate-700 transition hover:border-dahiPrimary hover:text-dahiPrimary">
               Email our partnerships team
             </a>
           </div>
@@ -165,7 +168,7 @@ function ContactPage() {
         </div>
 
         <CTASection eyebrow="Let's build healthier communities together" title="Whether you're looking to learn, collaborate, volunteer, or support our mission, we'd love to hear from you." description="Together, we can improve access to trusted women's health education and empower more women to make informed health decisions." actions={[
-          <a key="contact" href="mailto:docadi.healthinitiative@gmail.com" className="inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-semibold text-dahiPrimary transition hover:-translate-y-0.5">Contact Us</a>,
+          <a key="contact" href={`mailto:${OFFICIAL_CONTACT_EMAIL}`} className="inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-semibold text-dahiPrimary transition hover:-translate-y-0.5">Contact Us</a>,
           <Link key="resources" to="/resources" className="inline-flex items-center justify-center rounded-full border border-white/70 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10">Explore Resources</Link>,
           <Link key="community" to="/blog" className="inline-flex items-center justify-center rounded-full border border-white/70 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10">Join Our Community</Link>,
         ]} />
