@@ -29,14 +29,14 @@ function ResourceCard({
   const displayCurrency = String(currency || 'NGN').toUpperCase();
 
   return (
-    <article className="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-0.5 hover:shadow-md">
+    <article className={`group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm ${compact ? 'home-resource-card hover:z-30' : 'transition duration-300 hover:-translate-y-0.5 hover:shadow-md'}`}>
       <div className={`flex flex-col ${compact ? '' : 'min-h-[320px] lg:flex-row lg:items-stretch'}`}>
-        <div className={`relative w-full overflow-hidden bg-slate-100 ${compact ? 'h-48' : 'h-80 lg:h-auto lg:w-[38%] lg:shrink-0'}`}>
+        <div className={`relative w-full overflow-hidden bg-slate-100 ${compact ? 'home-scroll-reveal h-48' : 'h-80 lg:h-auto lg:w-[38%] lg:shrink-0'}`}>
           <img
             src={imageSrc}
             alt={title || 'Resource'}
             loading="lazy"
-            className="h-full w-full object-cover"
+            className={`h-full w-full object-cover ${compact ? 'home-resource-image' : ''}`}
             onError={() => setImageSrc('/ebook.svg')}
           />
         </div>
@@ -58,7 +58,7 @@ function ResourceCard({
             <p className={`${compact ? 'mt-3 line-clamp-2 text-sm' : 'mt-5 line-clamp-3'} text-slate-600`}>{description || 'No description available'}</p>
           </div>
 
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className={`flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between ${compact ? 'home-resource-actions relative z-30' : ''}`}>
             <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center">
               {action.enabled ? (
                 <a

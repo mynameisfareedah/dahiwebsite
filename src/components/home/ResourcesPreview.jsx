@@ -2,9 +2,22 @@ import { Link } from 'react-router-dom';
 import SupabaseContent from '../common/SupabaseContent';
 import ResourceCard from '../common/ResourceCard';
 
+function getHomepageExcerpt(description) {
+  const text = String(description || '').replace(/\s+/g, ' ').trim();
+  const excerptLength = 170;
+
+  if (text.length <= excerptLength) return text;
+
+  const sentenceEnd = text.slice(0, excerptLength).lastIndexOf('. ');
+  if (sentenceEnd >= 95) return text.slice(0, sentenceEnd + 1);
+
+  const wordEnd = text.lastIndexOf(' ', excerptLength);
+  return `${text.slice(0, wordEnd > 0 ? wordEnd : excerptLength).trimEnd()}...`;
+}
+
 function ResourcesPreview() {
   return (
-    <section id="resources" className="section-shell max-w-7xl">
+    <section id="resources" className="section-shell home-section-band home-section-band--plum max-w-7xl">
       <div className="mb-8 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
         <div className="max-w-3xl">
           <span className="eyebrow">Learn with DAHI</span>
@@ -18,13 +31,13 @@ function ResourcesPreview() {
         table="resources"
         emptyMessage="Resources will appear here once content is published."
         render={(items) => (
-          <div className="grid gap-6">
+          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
             {(items || []).slice(0, 3).map((resource) => (
               <ResourceCard
                 key={resource?.id || resource?.title || 'resource'}
                 title={resource?.title || 'Untitled Resource'}
                 category={resource?.category || resource?.type || 'Resource'}
-                description={resource?.description || 'No description available'}
+                description={getHomepageExcerpt(resource?.description || 'No description available')}
                 author={resource?.author}
                 featured={resource?.featured}
                 status={resource?.status}

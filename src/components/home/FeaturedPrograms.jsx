@@ -2,7 +2,7 @@ import { focusAreas } from '../../data/siteContent';
 
 function FeaturedPrograms() {
   return (
-    <section id="our-focus-areas" className="section-shell max-w-7xl">
+    <section id="our-focus-areas" className="section-shell home-section-band home-section-band--teal max-w-7xl">
       <div className="mb-8 w-full max-w-full">
         <span className="eyebrow">What We Cover</span>
         <h2 className="mt-4 section-title">Our Focus Areas</h2>
@@ -11,8 +11,8 @@ function FeaturedPrograms() {
 
       <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
         {focusAreas.map((item) => (
-          <article key={item.title} className="soft-card min-h-[220px] p-7">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-dahiPrimary/10 text-lg text-dahiPrimary"><i className={item.icon || 'fa-solid fa-heart-pulse'}></i></div>
+          <article key={item.title} className="home-focus-card home-scroll-reveal min-h-[220px] rounded-2xl border border-slate-200/80 bg-white p-7 shadow-sm">
+            <div aria-hidden="true" className={`home-focus-icon flex h-12 w-12 items-center justify-center rounded-2xl text-lg ${item.accent || 'bg-dahiPrimary/10 text-dahiPrimary'}`}><i className={item.icon || 'fa-solid fa-heart-pulse'}></i></div>
             <h3 className="mt-5 text-lg font-semibold text-slate-900">{item.title}</h3>
             <p className="mt-3 text-sm leading-7 text-slate-600">{item.description}</p>
           </article>
