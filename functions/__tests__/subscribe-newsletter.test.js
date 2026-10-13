@@ -93,6 +93,7 @@ describe('subscribe-newsletter Netlify Function', () => {
     const response = await handleNewsletterEvent(makeEvent({
       email: '  READER@example.com ',
       firstName: ' Ada ',
+      lastName: ' Lovelace ',
       consent: true,
     }));
 
@@ -106,9 +107,48 @@ describe('subscribe-newsletter Netlify Function', () => {
       email_address: 'reader@example.com',
       fields: {
         FirstName: 'Ada',
+        LastName: 'Lovelace',
       },
     });
     expect(JSON.parse(fetchMock.mock.calls[1][1].body).status).toBeUndefined();
+  });
+
+  it.each([
+    [{ firstName: ' Ada ' }, { FirstName: 'Ada' }],
+    [{ lastName: ' Lovelace ' }, { LastName: 'Lovelace' }],
+    [{}, undefined],
+  ])('creates a contact with optional name values %s', async (names, expectedFields) => {
+    const fetchMock = mockProvider();
+    const response = await handleNewsletterEvent(makeEvent({
+      email: 'reader@example.com',
+      consent: true,
+      ...names,
+    }));
+
+    expect(response.statusCode).toBe(200);
+    const payload = JSON.parse(fetchMock.mock.calls[1][1].body);
+    if (expectedFields) expect(payload.fields).toEqual(expectedFields);
+    else expect(payload).not.toHaveProperty('fields');
+  });
+
+  it('includes last name alongside both selected preference fields', async () => {
+    const fetchMock = mockProvider();
+    const response = await handleNewsletterEvent(makeEvent({
+      email: 'reader@example.com',
+      firstName: 'Ada',
+      lastName: 'Lovelace',
+      consent: true,
+      updateCategories: ['Webinars and events'],
+      healthInterests: ['Menstrual health'],
+    }));
+
+    expect(response.statusCode).toBe(200);
+    expect(JSON.parse(fetchMock.mock.calls[1][1].body).fields).toEqual({
+      FirstName: 'Ada',
+      LastName: 'Lovelace',
+      UpdateCategories: ['Webinars and events'],
+      HealthInterests: ['Menstrual health'],
+    });
   });
 
   it('maps multiple approved preferences to the exact EmailOctopus fields', async () => {
@@ -291,6 +331,8 @@ describe('subscribe-newsletter Netlify Function', () => {
     [{ email: 'not-an-email', consent: true }, 'invalid_email'],
     [{ email: 'reader@example.com', consent: false }, 'consent_required'],
     [{ email: 'reader@example.com', consent: true, firstName: 7 }, 'invalid_first_name'],
+    [{ email: 'reader@example.com', consent: true, lastName: 7 }, 'invalid_last_name'],
+    [{ email: 'reader@example.com', consent: true, lastName: 'L'.repeat(81) }, 'invalid_last_name'],
   ])('rejects invalid request data %#', async (body, error) => {
     const fetchMock = vi.fn();
     vi.stubGlobal('fetch', fetchMock);

@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import { CheckCircle2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 function NewsletterSection() {
   const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [updateCategories, setUpdateCategories] = useState([]);
   const [healthInterests, setHealthInterests] = useState([]);
@@ -24,6 +26,7 @@ function NewsletterSection() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           firstName,
+          lastName,
           email,
           consent,
           website,
@@ -44,15 +47,13 @@ function NewsletterSection() {
       }
 
       setFirstName('');
+      setLastName('');
       setEmail('');
       setUpdateCategories([]);
       setHealthInterests([]);
       setWebsite('');
       setConsent(false);
-      setStatus({
-        type: 'success',
-        message: 'Thank you. If confirmation is needed, EmailOctopus will send a confirmation email. Please check your inbox and spam folder.',
-      });
+      setStatus({ type: 'success' });
     } catch {
       setStatus({
         type: 'error',
@@ -93,7 +94,21 @@ function NewsletterSection() {
                 className="mt-2 w-full rounded-full border border-slate-200 bg-white px-4 py-3 text-slate-700 outline-none focus:border-dahiPrimary disabled:opacity-70"
               />
             </label>
-            <label htmlFor="newsletter-email" className="block text-sm font-medium text-slate-700">
+            <label htmlFor="newsletter-last-name" className="block text-sm font-medium text-slate-700">
+              Last name <span className="font-normal text-slate-500">(optional)</span>
+              <input
+                id="newsletter-last-name"
+                name="lastName"
+                type="text"
+                autoComplete="family-name"
+                maxLength={80}
+                value={lastName}
+                onChange={(event) => setLastName(event.target.value)}
+                disabled={isSubmitting}
+                className="mt-2 w-full rounded-full border border-slate-200 bg-white px-4 py-3 text-slate-700 outline-none focus:border-dahiPrimary disabled:opacity-70"
+              />
+            </label>
+            <label htmlFor="newsletter-email" className="block text-sm font-medium text-slate-700 sm:col-span-2">
               Email address
               <input
                 id="newsletter-email"
@@ -185,8 +200,28 @@ function NewsletterSection() {
           >
             {isSubmitting ? 'Submitting…' : 'Subscribe'}
           </button>
-          {status && (
-            <p role={status.type === 'error' ? 'alert' : 'status'} aria-live={status.type === 'error' ? 'assertive' : 'polite'} className={`text-sm ${status.type === 'success' ? 'text-emerald-700' : 'text-rose-700'}`}>
+          {status?.type === 'success' && (
+            <div role="status" aria-live="polite" className="rounded-xl border border-emerald-200 bg-emerald-50 p-5 text-slate-700 sm:p-6">
+              <div className="flex items-start gap-3">
+                <CheckCircle2 className="mt-1 h-6 w-6 shrink-0 text-emerald-700" aria-hidden="true" />
+                <div className="space-y-3">
+                  <h3 className="text-lg font-bold text-dahiPrimary">
+                    Thank You for Joining the DAHI Community!
+                  </h3>
+                  <p>We&apos;re delighted to have you connect with us.</p>
+                  <p>
+                    Please check your email inbox (including your spam or junk folder) for a confirmation email, if you haven&apos;t already confirmed your subscription.
+                  </p>
+                  <p>
+                    Once confirmed, you&apos;ll be able to receive DAHI health education resources, webinar invitations, community updates, and opportunities to get involved.
+                  </p>
+                  <p className="font-semibold text-dahiPrimary">Already subscribed? You&apos;re all set!</p>
+                </div>
+              </div>
+            </div>
+          )}
+          {status?.type === 'error' && (
+            <p role="alert" aria-live="assertive" className="text-sm text-rose-700">
               {status.message}
             </p>
           )}

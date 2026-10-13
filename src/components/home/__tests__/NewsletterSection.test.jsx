@@ -37,6 +37,8 @@ describe('NewsletterSection community preferences', () => {
     await user.click(screen.getByLabelText('Community outreach updates'));
     await user.click(screen.getByLabelText('Menstrual health'));
     await user.click(screen.getByLabelText('Nutrition and healthy living'));
+    await user.type(screen.getByLabelText('First name (optional)'), 'Ada');
+    await user.type(screen.getByLabelText('Last name (optional)'), 'Lovelace');
     await user.type(screen.getByLabelText(/Email address/), 'reader@example.com');
     await user.click(screen.getByLabelText(/I agree to receive DAHI/));
     fireEvent.submit(screen.getByRole('button', { name: 'Subscribe' }).closest('form'));
@@ -44,10 +46,18 @@ describe('NewsletterSection community preferences', () => {
     await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
     expect(JSON.parse(fetchMock.mock.calls[0][1].body)).toMatchObject({
       email: 'reader@example.com',
+      firstName: 'Ada',
+      lastName: 'Lovelace',
       consent: true,
       updateCategories: ['Webinars and events', 'Community outreach updates'],
       healthInterests: ['Menstrual health', 'Nutrition and healthy living'],
     });
-    expect(screen.getByRole('status')).toHaveTextContent('Thank you.');
+    const successMessage = screen.getByRole('status');
+    expect(successMessage).toHaveTextContent('Thank You for Joining the DAHI Community!');
+    expect(successMessage).toHaveTextContent("We're delighted to have you connect with us.");
+    expect(successMessage).toHaveTextContent('Please check your email inbox (including your spam or junk folder)');
+    expect(successMessage).toHaveTextContent("Once confirmed, you'll be able to receive DAHI health education resources");
+    expect(successMessage).toHaveTextContent("Already subscribed? You're all set!");
+    expect(successMessage).not.toHaveTextContent('EmailOctopus');
   });
 });

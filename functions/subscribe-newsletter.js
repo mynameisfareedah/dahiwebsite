@@ -24,6 +24,7 @@ const HEALTH_INTERESTS = [
 const ALLOWED_REQUEST_FIELDS = new Set([
   'email',
   'firstName',
+  'lastName',
   'consent',
   'website',
   'updateCategories',
@@ -124,11 +125,15 @@ export const handleNewsletterEvent = async (event) => {
 
   const email = typeof body.email === 'string' ? body.email.trim().toLowerCase() : '';
   const firstName = typeof body.firstName === 'string' ? body.firstName.trim() : '';
+  const lastName = typeof body.lastName === 'string' ? body.lastName.trim() : '';
   if (!email || email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return jsonResponse(400, { error: 'invalid_email' });
   }
   if (firstName.length > 80 || (body.firstName !== undefined && typeof body.firstName !== 'string')) {
     return jsonResponse(400, { error: 'invalid_first_name' });
+  }
+  if (lastName.length > 80 || (body.lastName !== undefined && typeof body.lastName !== 'string')) {
+    return jsonResponse(400, { error: 'invalid_last_name' });
   }
   if (body.consent !== true) {
     return jsonResponse(400, { error: 'consent_required' });
@@ -172,6 +177,7 @@ export const handleNewsletterEvent = async (event) => {
 
     const fields = {};
     if (firstName) fields.FirstName = firstName;
+    if (lastName) fields.LastName = lastName;
     if (body.updateCategories?.length) fields.UpdateCategories = body.updateCategories;
     if (body.healthInterests?.length) fields.HealthInterests = body.healthInterests;
 
