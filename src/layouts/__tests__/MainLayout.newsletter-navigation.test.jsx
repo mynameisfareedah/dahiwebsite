@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { useEffect, useState } from 'react';
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { Link, MemoryRouter, Route, Routes } from 'react-router-dom';
 import MainLayout from '../MainLayout';
 
 vi.mock('../../lib/analytics', () => ({ trackPageView: vi.fn() }));
@@ -27,8 +27,12 @@ function renderLayout(initialPath = '/blog', delayedNewsletter = false) {
       <Routes>
         <Route element={<MainLayout />}>
           <Route path="/blog" element={<h1>Blog</h1>} />
+          <Route path="/team" element={<section id="founder" tabIndex={-1} className="scroll-mt-24"><h1>Meet the Founder</h1></section>} />
+          <Route path="/about" element={<section id="mission-vision-values" tabIndex={-1} className="scroll-mt-24"><h1>Our Mission, Vision and Core Values</h1></section>} />
           <Route path="/" element={delayedNewsletter ? <DelayedNewsletter /> : (
             <>
+              <Link to="/team#founder">Read Her Story</Link>
+              <Link to="/about#mission-vision-values">Explore Our Mission &amp; Values</Link>
               <a href="#newsletter">Subscribe for Updates</a>
               <section id="newsletter" tabIndex={-1} className="scroll-mt-24">
                 <h1>Newsletter subscription</h1>
@@ -140,6 +144,60 @@ describe('MainLayout newsletter navigation', () => {
     fireEvent.click(screen.getByRole('link', { name: 'Subscribe' }));
 
     await waitFor(() => expect(scrollIntoView).toHaveBeenCalledWith({ behavior: 'smooth', block: 'start' }));
+  });
+
+  it('scrolls to the founder section after direct navigation to /team#founder', async () => {
+    const scrollIntoView = vi.fn();
+    originalScrollIntoViewDescriptor = Object.getOwnPropertyDescriptor(window.HTMLElement.prototype, 'scrollIntoView');
+    Object.defineProperty(window.HTMLElement.prototype, 'scrollIntoView', {
+      configurable: true,
+      value: scrollIntoView,
+    });
+    renderLayout('/team#founder');
+
+    const founderSection = await screen.findByRole('heading', { name: 'Meet the Founder' });
+    await waitFor(() => {
+      expect(document.activeElement).toBe(founderSection.parentElement);
+      expect(scrollIntoView).toHaveBeenCalledWith({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  it('scrolls to the founder section when navigating there from the homepage', async () => {
+    const scrollIntoView = vi.fn();
+    originalScrollIntoViewDescriptor = Object.getOwnPropertyDescriptor(window.HTMLElement.prototype, 'scrollIntoView');
+    Object.defineProperty(window.HTMLElement.prototype, 'scrollIntoView', {
+      configurable: true,
+      value: scrollIntoView,
+    });
+    renderLayout('/');
+
+    fireEvent.click(screen.getByRole('link', { name: 'Read Her Story' }));
+
+    const founderHeading = await screen.findByRole('heading', { name: 'Meet the Founder' });
+    await waitFor(() => {
+      expect(document.activeElement).toBe(founderHeading.parentElement);
+      expect(founderHeading.parentElement).toHaveClass('scroll-mt-24');
+      expect(scrollIntoView).toHaveBeenCalledWith({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  it('scrolls to the mission and values section from the homepage with the header offset', async () => {
+    const scrollIntoView = vi.fn();
+    originalScrollIntoViewDescriptor = Object.getOwnPropertyDescriptor(window.HTMLElement.prototype, 'scrollIntoView');
+    Object.defineProperty(window.HTMLElement.prototype, 'scrollIntoView', {
+      configurable: true,
+      value: scrollIntoView,
+    });
+    renderLayout('/');
+
+    fireEvent.click(screen.getByRole('link', { name: 'Explore Our Mission & Values' }));
+
+    const sectionHeading = await screen.findByRole('heading', { name: 'Our Mission, Vision and Core Values' });
+    await waitFor(() => {
+      expect(document.activeElement).toBe(sectionHeading.parentElement);
+      expect(sectionHeading.parentElement).toHaveClass('scroll-mt-24');
+      expect(scrollIntoView).toHaveBeenCalledWith({ behavior: 'smooth', block: 'start' });
+    });
   });
 
   it.each(['/', '/blog'])('routes Join Us from %s to the community section and closes the drawer', async (initialPath) => {

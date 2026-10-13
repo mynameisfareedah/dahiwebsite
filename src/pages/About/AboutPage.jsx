@@ -5,21 +5,11 @@ import CTASection from '../../components/common/CTASection';
 import AboutHero from '../../components/about/AboutHero';
 import StorySection from '../../components/about/StorySection';
 import TimelineSection from '../../components/about/TimelineSection';
-import MissionVisionCard from '../../components/about/MissionVisionCard';
-import ValueCard from '../../components/about/ValueCard';
+import MissionVisionValues from '../../components/common/MissionVisionValues';
 import ServiceCard from '../../components/about/ServiceCard';
 import ApproachCard from '../../components/about/ApproachCard';
 
 function AboutPage() {
-  const values = [
-    { icon: 'fa-solid fa-hand-holding-heart', title: 'Compassion', description: 'We believe health education should be delivered with empathy, understanding, and respect. Every woman’s health journey is unique, and we strive to create a supportive environment where women feel heard and valued.' },
-    { icon: 'fa-solid fa-shield-halved', title: 'Integrity', description: 'We are committed to providing trustworthy and responsible health information. Accuracy, honesty, and transparency guide the resources we create and the conversations we facilitate.' },
-    { icon: 'fa-solid fa-star', title: 'Excellence', description: 'We aim for quality in everything we do—from our educational materials and webinars to our community engagement initiatives. We continuously seek ways to improve and provide meaningful experiences.' },
-    { icon: 'fa-solid fa-graduation-cap', title: 'Education', description: 'We believe knowledge is a powerful tool for improving health outcomes. Through education, women can better understand their bodies, recognise health concerns, and make informed choices.' },
-    { icon: 'fa-solid fa-users', title: 'Community', description: 'We believe meaningful change happens through connection and collaboration. We create spaces where women can learn, share experiences, and support one another.' },
-    { icon: 'fa-solid fa-rocket', title: 'Empowerment', description: 'Our goal is to help women build confidence in understanding and managing their health by providing the knowledge and resources they need.' },
-  ];
-
   const services = [
     { icon: 'fa-solid fa-female', title: 'Women’s Health Education', description: 'We provide accessible health education that addresses important topics affecting women throughout different stages of life.' },
     { icon: 'fa-solid fa-video', title: 'Health Education Webinars', description: 'Through expert-led webinars and discussions, DAHI creates opportunities for women to learn directly from healthcare professionals.' },
@@ -69,19 +59,7 @@ function AboutPage() {
           </div>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-2">
-          <MissionVisionCard icon="fa-solid fa-bullseye" title="Mission" description="Our mission is to empower women with accessible, evidence-based health education, practical resources, and supportive communities that promote informed decisions and healthier lives." accent="bg-dahiPrimary/10 text-dahiPrimary" />
-          <MissionVisionCard icon="fa-solid fa-eye" title="Vision" description="Our vision is a future where every woman has the knowledge, confidence, and support needed to take control of her health." accent="bg-dahiSecondary/10 text-dahiSecondary" />
-        </div>
-
-        <div className="soft-card p-8 sm:p-10">
-          <SectionHeading eyebrow="Core values" title="The principles that guide everything we do" description="Our values shape the way we create resources, host conversations, and build relationships with the women and communities we serve." />
-          <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {values.map((value) => (
-              <ValueCard key={value.title} icon={value.icon} title={value.title} description={value.description} />
-            ))}
-          </div>
-        </div>
+        <MissionVisionValues />
 
         <div className="soft-card p-8 sm:p-10">
           <SectionHeading eyebrow="What we do" title="Supporting women through education, resources, and community connection" description="DAHI focuses on improving women’s health awareness through education, resources, and community-based initiatives." />
@@ -126,10 +104,10 @@ function AboutPage() {
             </div>
             <div className="rounded-[1.25rem] border border-slate-200 p-6">
               <p className="text-lg leading-8 text-slate-600">
-                Want to learn more about the people behind DAHI? Visit our full team page to meet the members shaping our work and the community we serve.
+                Want to learn more about DAHI’s founder and the team shaping our work? Visit Our Story &amp; Team.
               </p>
-              <Link to="/team" className="mt-6 inline-flex items-center justify-center rounded-full bg-dahiPrimary px-6 py-3 text-sm font-semibold text-white transition hover:bg-dahiSecondary">
-                View All Team Members
+              <Link to="/team#founder" className="mt-6 inline-flex items-center justify-center rounded-full bg-dahiPrimary px-6 py-3 text-sm font-semibold text-white transition hover:bg-dahiSecondary">
+                Meet the Founder
               </Link>
             </div>
           </div>

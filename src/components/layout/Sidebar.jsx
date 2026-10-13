@@ -6,7 +6,7 @@ import NewsletterLink from './NewsletterLink';
 const sidebarLinks = [
   { to: '/', label: 'Home' },
   { to: '/about', label: 'About' },
-  { to: '/team', label: 'Meet the Team' },
+  { to: '/team', label: 'Our Story & Team' },
   { to: '/blog', label: 'Blog' },
   { to: '/events', label: 'Events' },
   { to: '/outreach', label: 'Outreach' },

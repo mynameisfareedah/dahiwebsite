@@ -102,6 +102,35 @@ function MainLayout() {
     };
   }, [location.pathname, location.hash]);
 
+  useEffect(() => {
+    const anchorRoutes = {
+      '/team': '#founder',
+      '/about': '#mission-vision-values',
+    };
+    if (location.hash !== anchorRoutes[location.pathname]) return undefined;
+
+    let mutationObserver;
+    const scrollToAnchor = () => {
+      const anchorSection = document.querySelector(location.hash);
+      if (!anchorSection) return;
+
+      mutationObserver.disconnect();
+      anchorSection.focus({ preventScroll: true });
+      anchorSection.scrollIntoView({
+        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+        block: 'start',
+      });
+    };
+    mutationObserver = new window.MutationObserver(scrollToAnchor);
+    mutationObserver.observe(document.body, { childList: true, subtree: true });
+    const animationFrame = window.requestAnimationFrame(scrollToAnchor);
+
+    return () => {
+      window.cancelAnimationFrame(animationFrame);
+      mutationObserver.disconnect();
+    };
+  }, [location.pathname, location.hash]);
+
   return (
     <div className="min-h-screen overflow-x-hidden bg-slate-50 text-slate-700 flex flex-col">
       <div className="flex flex-1">

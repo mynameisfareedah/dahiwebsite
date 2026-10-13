@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import MissionVisionValues from '../common/MissionVisionValues';
 
 function AboutPreview() {
   return (
@@ -11,8 +12,10 @@ function AboutPreview() {
           <p>We combine evidence-based education with practical resources and community engagement to help women understand their health and make informed decisions.</p>
           <p>In August 2026, this mission expanded into community-based health outreach with DAHI&apos;s first programme in Gwagwalada, Abuja.</p>
         </div>
-        <p className="mt-6 border-l-2 border-dahiAccent pl-4 text-base font-medium italic text-slate-700">To educate, empower, and support women and young girls by providing accessible and trustworthy health knowledge across all stages of life.</p>
         <Link to="/about" className="mt-7 inline-flex items-center justify-center rounded-full bg-dahiPrimary px-6 py-3 text-sm font-semibold text-white transition hover:bg-dahiSecondary">Learn More About DAHI</Link>
+      </div>
+      <div className="mt-10">
+        <MissionVisionValues compact />
       </div>
     </section>
   );
