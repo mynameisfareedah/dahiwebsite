@@ -34,6 +34,8 @@ function renderLayout(initialPath = '/blog', delayedNewsletter = false) {
               <Link to="/team#founder">Read Her Story</Link>
               <Link to="/about#mission-vision-values">Explore Our Mission &amp; Values</Link>
               <a href="#newsletter">Subscribe for Updates</a>
+              <a href="https://chat.whatsapp.com/EF4piOoqYOSIEXlJ6eKX4T" data-whatsapp-action>Join WhatsApp Group</a>
+              <a href="https://whatsapp.com/channel/0029VbBdF4hLI8YZRabyWF0j" data-whatsapp-action>Follow WhatsApp Channel</a>
               <section id="newsletter" tabIndex={-1} className="scroll-mt-24">
                 <h1>Newsletter subscription</h1>
                 <form>
@@ -265,6 +267,46 @@ describe('MainLayout newsletter navigation', () => {
     observers[0].setVisible(false);
     await waitFor(() => expect(subscribeLink).not.toHaveAttribute('hidden'));
     expect(subscribeLink).not.toHaveStyle({ display: 'none' });
+  });
+
+  it('hides the floating CTA while either WhatsApp action is visible', async () => {
+    const observers = [];
+    originalIntersectionObserverDescriptor = Object.getOwnPropertyDescriptor(window, 'IntersectionObserver');
+    window.IntersectionObserver = class {
+      constructor(callback) {
+        this.callback = callback;
+        observers.push(this);
+      }
+
+      observe(target) {
+        (this.targets ||= []).push(target);
+      }
+
+      disconnect() {}
+
+      setVisible(isIntersecting, target, intersectionRatio = isIntersecting ? 1 : 0) {
+        this.callback([{ isIntersecting, intersectionRatio, target }]);
+      }
+    };
+    renderLayout('/');
+
+    await waitFor(() => expect(observers).toHaveLength(1));
+    const subscribeLink = screen.getByTestId('floating-subscribe-cta');
+    const groupLink = screen.getByRole('link', { name: 'Join WhatsApp Group' });
+    const channelLink = screen.getByRole('link', { name: 'Follow WhatsApp Channel' });
+    expect(observers[0].targets).toContain(groupLink);
+    expect(observers[0].targets).toContain(channelLink);
+    act(() => observers[0].setVisible(false, observers[0].targets[0], 0));
+    await waitFor(() => expect(subscribeLink).not.toHaveAttribute('hidden'));
+
+    act(() => observers[0].setVisible(true, groupLink, 0.1));
+    await waitFor(() => expect(subscribeLink).toHaveAttribute('hidden'));
+
+    act(() => observers[0].setVisible(false, groupLink, 0));
+    await waitFor(() => expect(subscribeLink).not.toHaveAttribute('hidden'));
+
+    act(() => observers[0].setVisible(true, channelLink, 0.1));
+    await waitFor(() => expect(subscribeLink).toHaveAttribute('hidden'));
   });
 
   it('restores the original header layout and keeps the floating CTA accessible', () => {

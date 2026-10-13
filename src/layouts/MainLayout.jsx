@@ -8,6 +8,7 @@ import { trackPageView } from '../lib/analytics';
 function MainLayout() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [newsletterVisibility, setNewsletterVisibility] = useState(null);
+  const [communityActionsVisibility, setCommunityActionsVisibility] = useState(null);
   const [contactFormVisibility, setContactFormVisibility] = useState(null);
   const location = useLocation();
 
@@ -23,18 +24,37 @@ function MainLayout() {
       const selector = isHomepage
         ? '#newsletter button[type="submit"]'
         : '#contact-form button[type="submit"]';
-      const visibilityTargets = [document.querySelector(selector)].filter(Boolean);
+      const newsletterTarget = document.querySelector(selector);
+      const communityTargets = isHomepage
+        ? Array.from(document.querySelectorAll('[data-whatsapp-action]'))
+        : [];
+      const visibilityTargets = [newsletterTarget, ...communityTargets].filter(Boolean);
       if (visibilityTargets.length === 0) return false;
 
       const visibleTargets = new Set();
       intersectionObserver = new window.IntersectionObserver((entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting && entry.intersectionRatio >= 0.5) visibleTargets.add(entry.target);
+          const isCommunityAction = communityTargets.includes(entry.target);
+          const isVisible = entry.isIntersecting
+            && (isCommunityAction ? entry.intersectionRatio > 0 : entry.intersectionRatio >= 0.5);
+          if (isVisible) visibleTargets.add(entry.target);
           else visibleTargets.delete(entry.target);
         });
-        const visibility = { pathname: location.pathname, visible: visibleTargets.size > 0 };
-        if (isHomepage) setNewsletterVisibility(visibility);
-        else setContactFormVisibility(visibility);
+        if (isHomepage) {
+          setNewsletterVisibility({
+            pathname: location.pathname,
+            visible: visibleTargets.has(newsletterTarget),
+          });
+          setCommunityActionsVisibility({
+            pathname: location.pathname,
+            visible: communityTargets.some((target) => visibleTargets.has(target)),
+          });
+        } else {
+          setContactFormVisibility({
+            pathname: location.pathname,
+            visible: visibleTargets.has(newsletterTarget),
+          });
+        }
       });
       visibilityTargets.forEach((target) => intersectionObserver.observe(target));
       return true;
@@ -153,6 +173,7 @@ function MainLayout() {
           || (location.pathname === '/' && (
             newsletterVisibility?.pathname !== location.pathname || newsletterVisibility.visible
           ))
+          || (location.pathname === '/' && communityActionsVisibility?.visible)
           || (location.pathname === '/contact' && contactFormVisibility?.visible)
         }
       />
