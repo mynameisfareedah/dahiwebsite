@@ -32,6 +32,9 @@ function renderLayout(initialPath = '/blog', delayedNewsletter = false) {
               <a href="#newsletter">Subscribe for Updates</a>
               <section id="newsletter" tabIndex={-1} className="scroll-mt-24">
                 <h1>Newsletter subscription</h1>
+                <form>
+                  <button type="submit">Subscribe</button>
+                </form>
               </section>
             </>
           )} />
@@ -176,25 +179,29 @@ describe('MainLayout newsletter navigation', () => {
 
       disconnect() {}
 
-      setVisible(isIntersecting, target = this.targets[0]) {
-        this.callback([{ isIntersecting, target }]);
+      setVisible(isIntersecting, target = this.targets[0], intersectionRatio = isIntersecting ? 1 : 0) {
+        this.callback([{ isIntersecting, intersectionRatio, target }]);
       }
     };
     renderLayout('/');
 
     await waitFor(() => expect(observers).toHaveLength(1));
     const subscribeLink = screen.getByTestId('floating-subscribe-cta');
+    expect(observers[0].targets[0]).toBe(screen.getByRole('button', { name: 'Subscribe' }));
     observers[0].setVisible(false);
     await waitFor(() => expect(subscribeLink).not.toHaveAttribute('hidden'));
+    expect(subscribeLink).not.toHaveStyle({ display: 'none' });
 
-    observers[0].setVisible(true);
+    observers[0].setVisible(true, observers[0].targets[0], 0.25);
+    await waitFor(() => expect(subscribeLink).not.toHaveAttribute('hidden'));
+
+    observers[0].setVisible(true, observers[0].targets[0], 1);
     await waitFor(() => expect(subscribeLink).toHaveAttribute('hidden'));
+    expect(subscribeLink).toHaveStyle({ display: 'none' });
 
     observers[0].setVisible(false);
-    await waitFor(() => expect(subscribeLink).toHaveAttribute('hidden'));
-
-    observers[0].setVisible(false, observers[0].targets[1]);
     await waitFor(() => expect(subscribeLink).not.toHaveAttribute('hidden'));
+    expect(subscribeLink).not.toHaveStyle({ display: 'none' });
   });
 
   it('restores the original header layout and keeps the floating CTA accessible', () => {

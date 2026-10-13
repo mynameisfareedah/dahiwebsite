@@ -18,15 +18,14 @@ function MainLayout() {
     let intersectionObserver;
     const observeNewsletter = () => {
       const visibilityTargets = [
-        document.getElementById('newsletter'),
-        ...document.querySelectorAll('a[href="#newsletter"]'),
+        document.querySelector('#newsletter button[type="submit"]'),
       ].filter(Boolean);
       if (visibilityTargets.length === 0) return false;
 
       const visibleTargets = new Set();
       intersectionObserver = new window.IntersectionObserver((entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) visibleTargets.add(entry.target);
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.5) visibleTargets.add(entry.target);
           else visibleTargets.delete(entry.target);
         });
         setNewsletterVisibility({ pathname: location.pathname, visible: visibleTargets.size > 0 });
