@@ -95,6 +95,7 @@ describe('admin Event Type forms', () => {
     const eventType = container.querySelector('[name="eventType"]');
 
     expect(eventType).toBeRequired();
+    expect(container.querySelector('[name="capacity"]')).toBeNull();
     expect(screen.getByRole('option', { name: 'Webinars' })).toHaveValue('webinar');
     expect(screen.getByRole('option', { name: 'Masterclasses' })).toHaveValue('masterclass');
     expect(screen.getByRole('option', { name: 'Outreach & Community' })).toHaveValue('outreach_community');
@@ -104,9 +105,7 @@ describe('admin Event Type forms', () => {
     changeField(container, 'title', 'New webinar');
     changeField(container, 'eventType', 'webinar');
     changeField(container, 'date', '2026-11-10');
-    changeField(container, 'time', '10:00');
     changeField(container, 'location', 'DAHI');
-    changeField(container, 'capacity', '25');
     fireEvent.click(container.querySelector('[name="featured"]'));
     fireEvent.submit(container.querySelector('form'));
 
@@ -114,19 +113,25 @@ describe('admin Event Type forms', () => {
     expect(mocks.createEvent.mock.calls[0][0]).toMatchObject({
       eventType: 'webinar',
       featured: true,
+      event_end_date: null,
+      start_time: null,
+      event_schedule: [{ date: '2026-11-10', time: null }],
     });
     expect(mocks.createEvent.mock.calls[0][0]).not.toHaveProperty('category');
+    expect(mocks.createEvent.mock.calls[0][0]).not.toHaveProperty('capacity');
   });
 
-  it('creates a quiz announcement with its participation URL and featured status', async () => {
+  it('creates a two-day quiz with separate TBA sessions and its participation URL', async () => {
     const { container } = renderCreateEvent();
 
     changeField(container, 'title', 'DAHI Educational Quiz');
     changeField(container, 'eventType', 'quiz_challenge');
-    changeField(container, 'date', '2026-11-10');
-    changeField(container, 'time', '10:00');
+    changeField(container, 'date', '2026-10-17');
+    changeField(container, 'endDate', '2026-10-18');
+    changeField(container, 'scheduleMode', 'sessions');
+    fireEvent.click(screen.getByRole('button', { name: 'Add session' }));
+    changeField(container, 'session-1-date', '2026-10-18');
     changeField(container, 'location', 'Online');
-    changeField(container, 'capacity', '25');
     changeField(container, 'registrationUrl', 'https://example.com/quiz');
     fireEvent.click(container.querySelector('[name="featured"]'));
     fireEvent.submit(container.querySelector('form'));
@@ -134,12 +139,19 @@ describe('admin Event Type forms', () => {
     await waitFor(() => expect(mocks.createEvent).toHaveBeenCalledOnce());
     expect(mocks.createEvent.mock.calls[0][0]).toMatchObject({
       eventType: 'quiz_challenge',
-      date: '2026-11-10',
-      time: '10:00',
+      date: '2026-10-17',
+      endDate: '2026-10-18',
+      event_end_date: '2026-10-18',
+      start_time: null,
+      event_schedule: [
+        { date: '2026-10-17', time: null },
+        { date: '2026-10-18', time: null },
+      ],
       registrationUrl: 'https://example.com/quiz',
       featured: true,
       status: 'draft',
     });
+    expect(mocks.createEvent.mock.calls[0][0]).not.toHaveProperty('capacity');
   });
 
   it('rejects a create form without an Event Type', async () => {
@@ -147,9 +159,7 @@ describe('admin Event Type forms', () => {
 
     changeField(container, 'title', 'Event without a type');
     changeField(container, 'date', '2026-11-10');
-    changeField(container, 'time', '10:00');
     changeField(container, 'location', 'DAHI');
-    changeField(container, 'capacity', '25');
     fireEvent.submit(container.querySelector('form'));
 
     await waitFor(() => expect(screen.getByText('Event Type is required')).toBeInTheDocument());
@@ -164,6 +174,7 @@ describe('admin Event Type forms', () => {
     expect(mocks.getEventById).toHaveBeenCalledWith('event-1');
     await waitFor(() => expect(eventType).toHaveValue('masterclass'));
     expect(container.querySelector('[name="category"]')).toBeNull();
+    expect(container.querySelector('[name="capacity"]')).toBeNull();
 
     changeField(container, 'eventType', 'outreach_community');
     fireEvent.click(container.querySelector('[name="featured"]'));
@@ -173,8 +184,51 @@ describe('admin Event Type forms', () => {
     expect(mocks.updateEvent.mock.calls[0][1]).toMatchObject({
       eventType: 'outreach_community',
       featured: true,
+      start_time: '10:00',
     });
     expect(mocks.updateEvent.mock.calls[0][1]).not.toHaveProperty('category');
+    expect(mocks.updateEvent.mock.calls[0][1]).not.toHaveProperty('capacity');
+  });
+
+  it('lets an administrator confirm one TBA session while leaving another TBA', async () => {
+    mocks.getEventById.mockResolvedValueOnce({
+      success: true,
+      data: {
+        id: 'event-1',
+        title: 'DAHI Online Quiz',
+        description: 'Two-day quiz',
+        event_type: 'quiz_challenge',
+        event_date: '2026-10-17',
+        event_end_date: '2026-10-18',
+        event_schedule: [
+          { date: '2026-10-17', time: null },
+          { date: '2026-10-18', time: null },
+        ],
+        start_time: null,
+        location: 'Online',
+        capacity: 40,
+        status: 'draft',
+      },
+    });
+
+    const { container } = renderEditEvent();
+    await waitFor(() => expect(container.querySelector('[name="session-0-timeStatus"]')).toHaveValue('tba'));
+    expect(container.querySelector('[name="capacity"]')).toBeNull();
+
+    changeField(container, 'session-0-timeStatus', 'confirmed');
+    changeField(container, 'session-0-time', '15:30');
+    fireEvent.submit(container.querySelector('form'));
+
+    await waitFor(() => expect(mocks.updateEvent).toHaveBeenCalledOnce());
+    expect(mocks.updateEvent.mock.calls[0][1]).toMatchObject({
+      start_time: '15:30',
+      event_end_date: '2026-10-18',
+      event_schedule: [
+        { date: '2026-10-17', time: '15:30' },
+        { date: '2026-10-18', time: null },
+      ],
+    });
+    expect(mocks.updateEvent.mock.calls[0][1]).not.toHaveProperty('capacity');
   });
 
   it('edits an existing event to the quiz type', async () => {
@@ -190,6 +244,7 @@ describe('admin Event Type forms', () => {
       featured: false,
     });
     expect(mocks.updateEvent.mock.calls[0][1]).not.toHaveProperty('category');
+    expect(mocks.updateEvent.mock.calls[0][1]).not.toHaveProperty('capacity');
   });
 
   it('rejects clearing Event Type while editing when the schema is ready', async () => {

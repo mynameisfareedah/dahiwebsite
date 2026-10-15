@@ -4,6 +4,7 @@ import EventCard from '../common/EventCard';
 import SectionHeading from '../common/SectionHeading';
 import { getFeaturedEvents } from '../../services/supabase/eventsService';
 import { getPublicEventType } from '../../utils/publicEventType';
+import { formatEventDateRange, formatEventTimeSummary } from '../../utils/eventSchedule';
 
 function FeaturedEventsSection() {
   const [events, setEvents] = useState([]);
@@ -68,8 +69,11 @@ function FeaturedEventsSection() {
               eventId={event.id}
               title={event.title}
               eventType={getPublicEventType(event)}
-              date={event.date || event.event_date}
-              time={event.time || event.start_time}
+              date={formatEventDateRange(
+                event.event_date || event.date,
+                event.event_end_date || event.endDate
+              )}
+              time={formatEventTimeSummary(event)}
               speaker={event.speaker || 'DAHI Team'}
               description={event.description}
               image={event.poster_url || event.image || '/WEBINARS.jpg'}

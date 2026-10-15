@@ -53,7 +53,9 @@ function normalizeEvent(event) {
   return {
     ...event,
     date: event.event_date ?? event.date ?? null,
+    endDate: event.event_end_date ?? event.endDate ?? null,
     time: event.start_time ?? event.time ?? null,
+    schedule: event.event_schedule ?? event.schedule ?? null,
     attendees: event.attendees_count ?? event.attendees ?? 0,
     featured: event.featured ?? false,
     published: event.status === EVENT_STATUS.PUBLISHED,
@@ -311,7 +313,9 @@ export const eventService = {
         description: data.description || null,
         event_type: data.eventType,
         event_date: data.date || data.event_date || null,
+        event_end_date: data.event_end_date ?? data.endDate ?? null,
         start_time: data.time || data.start_time || null,
+        event_schedule: data.event_schedule ?? data.schedule ?? null,
         location: data.location || null,
         poster_url: data.poster_url || null,
         registration_url: data.registrationUrl || data.registration_url || null,
@@ -321,7 +325,6 @@ export const eventService = {
           data.registrationEnabled == null ? true : Boolean(data.registrationEnabled),
         registration_status: data.registrationStatus || 'open',
         registration_deadline: data.registrationDeadline || data.registration_deadline || null,
-        capacity: data.capacity != null ? Number(data.capacity) : 0,
         featured: Boolean(data.featured),
         status: sanitizedStatus,
         created_by: currentUser.id,
@@ -391,7 +394,6 @@ export const eventService = {
           data.registrationEnabled == null ? true : Boolean(data.registrationEnabled),
         registration_status: data.registrationStatus || 'open',
         registration_deadline: data.registrationDeadline || data.registration_deadline || null,
-        capacity: data.capacity != null ? Number(data.capacity) : 0,
         featured:
           data.featured == null
             ? undefined
@@ -399,6 +401,12 @@ export const eventService = {
         status: sanitizedStatus,
         updated_at: new Date().toISOString(),
       };
+      if ('event_end_date' in data || 'endDate' in data) {
+        payload.event_end_date = data.event_end_date ?? data.endDate ?? null;
+      }
+      if ('event_schedule' in data || 'schedule' in data) {
+        payload.event_schedule = data.event_schedule ?? data.schedule ?? null;
+      }
       if (isEventTypeSchemaReady() && data.eventType !== undefined) {
         payload.event_type = data.eventType;
       }

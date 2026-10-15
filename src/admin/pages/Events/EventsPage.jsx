@@ -9,6 +9,7 @@ import { getEventImageUrl } from '../../services/eventService';
 import { EVENT_STATUS } from '../../../constants/status';
 import { EVENT_TYPE_OPTIONS, getEventTypeLabel } from '../../../constants/eventTypes';
 import { isEventTypeSchemaReady } from '../../../constants/eventTypeSchema';
+import { formatEventDateRange, formatEventTimeSummary } from '../../../utils/eventSchedule';
 
 const STATUS_OPTIONS = [
   { value: 'all', label: 'All Statuses' },
@@ -387,7 +388,10 @@ export default memo(function EventsPage() {
                     </td>
                     <td className="px-5 py-4 text-slate-300">{event.category || '—'}</td>
                     <td className="px-5 py-4 text-slate-300">{getEventTypeLabel(event.event_type)}</td>
-                    <td className="px-5 py-4 text-slate-300">{event.date || 'TBD'}</td>
+                    <td className="px-5 py-4 text-slate-300">
+                      <div>{formatEventDateRange(event.date, event.endDate)}</div>
+                      <div className="mt-1 text-xs text-slate-400">{formatEventTimeSummary(event)}</div>
+                    </td>
                     <td className="px-5 py-4">
                       <StatusBadge status={event.status || EVENT_STATUS.DRAFT} />
                     </td>

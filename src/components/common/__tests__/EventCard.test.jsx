@@ -35,6 +35,16 @@ describe('EventCard', () => {
     expect(screen.getByText('Quizzes & Challenges')).toBeInTheDocument();
   });
 
+  it('displays a formatted multi-day date range and session times', () => {
+    renderEventCard({
+      date: '17–18 October 2026',
+      time: '17 Oct: TBA · 18 Oct: 15:30',
+    });
+
+    expect(screen.getByText('17–18 October 2026')).toBeInTheDocument();
+    expect(screen.getByText('17 Oct: TBA · 18 Oct: 15:30')).toBeInTheDocument();
+  });
+
   it('keeps closed registration disabled while retaining event details navigation', () => {
     renderEventCard({
       eventId: 'event-123',

@@ -11,6 +11,7 @@ import { EVENT_STATUS } from '../../constants/status';
 import { PUBLIC_EVENT_FILTER_OPTIONS } from '../../constants/eventTypes';
 import { testimonials } from '../../data/siteContent';
 import { getPublicEventType, matchesPublicEventFilter } from '../../utils/publicEventType';
+import { formatEventDateRange, formatEventTimeSummary } from '../../utils/eventSchedule';
 
 const quizSeriesHighlights = [
   'DAHI Ramadan Quiz (DRQ) — 28 February to 18 March 2026',
@@ -154,8 +155,11 @@ function EventsPage() {
                   eventId={event.id}
                   title={event.title}
                   eventType={getPublicEventType(event)}
-                  date={event.event_date || event.date}
-                  time={event.start_time || event.time}
+                  date={formatEventDateRange(
+                    event.event_date || event.date,
+                    event.event_end_date || event.endDate
+                  )}
+                  time={formatEventTimeSummary(event)}
                   speaker={event.speaker || 'DAHI Team'}
                   description={event.description}
                   image={event.category?.toLowerCase().includes('outreach') || event.title?.toLowerCase().includes('outreach')

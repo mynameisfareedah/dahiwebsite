@@ -11,8 +11,11 @@ describe('EventForm Event Type field', () => {
           eventType: '',
           description: '',
           date: '',
+          endDate: '',
+          scheduleMode: 'shared',
+          timeStatus: 'tba',
           time: '',
-          capacity: '0',
+          sessions: [],
           location: '',
           registrationUrl: '',
           registrationButtonText: '',
@@ -40,6 +43,7 @@ describe('EventForm Event Type field', () => {
 
     const selects = screen.getAllByRole('combobox');
     expect(selects[0]).toHaveValue('');
+    expect(document.querySelector('[name="capacity"]')).not.toBeInTheDocument();
     expect(screen.queryByText('Category')).not.toBeInTheDocument();
     expect(screen.getByRole('option', { name: 'Webinars' })).toHaveValue('webinar');
     expect(screen.getByRole('option', { name: 'Masterclasses' })).toHaveValue('masterclass');

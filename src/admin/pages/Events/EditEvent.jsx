@@ -8,6 +8,11 @@ import { eventService, getEventImageUrl } from '../../services/eventService';
 import { EVENT_STATUS } from '../../../constants/status';
 import { EVENT_TYPE_OPTIONS } from '../../../constants/eventTypes';
 import { EVENT_TYPE_SCHEMA_ACTIVATION_MESSAGE, isEventTypeSchemaReady } from '../../../constants/eventTypeSchema';
+import {
+  getEventScheduleFormValues,
+  toEventServicePayload,
+  validateEventSchedule,
+} from '../../../utils/eventSchedule';
 
 const STATUS_OPTIONS = [
   { value: EVENT_STATUS.DRAFT, label: 'Draft' },
@@ -19,13 +24,16 @@ const initialFormValues = {
   description: '',
   eventType: '',
   date: '',
+  endDate: '',
+  scheduleMode: 'shared',
+  timeStatus: 'tba',
   time: '',
+  sessions: [],
   location: '',
   registrationUrl: '',
   registrationButtonText: '',
   registrationEnabled: true,
   registrationStatus: 'open',
-  capacity: '0',
   status: EVENT_STATUS.DRAFT,
   featured: false,
 };
@@ -49,14 +57,8 @@ const formRules = {
     (val) => validators.minLength(val, 3, 'Event title'),
   ],
   date: [(val) => validators.required(val, 'Date')],
-  time: [(val) => validators.required(val, 'Time')],
   location: [(val) => validators.required(val, 'Location')],
   registrationUrl: [(val) => validateOptionalRegistrationUrl(val)],
-  capacity: [
-    (val) => validators.required(val, 'Capacity'),
-    (val) => validators.number(val),
-    (val) => validators.minValue(val, 1),
-  ],
 };
 
 export default function EditEvent() {
@@ -84,7 +86,7 @@ export default function EditEvent() {
     setIsUploading(true);
 
     try {
-      const payload = { ...formValues };
+      const payload = toEventServicePayload(formValues);
       const existingEventType = eventRecord?.event_type || '';
       if (!eventTypeSchemaReady && formValues.eventType !== existingEventType) {
         addToast(EVENT_TYPE_SCHEMA_ACTIVATION_MESSAGE, 'error');
@@ -120,7 +122,10 @@ export default function EditEvent() {
     const rules = eventTypeSchemaReady || eventRecord?.event_type
       ? { ...formRules, eventType: [(val) => validators.required(val, 'Event Type')] }
       : formRules;
-    return validateForm(values, rules);
+    return {
+      ...validateForm(values, rules),
+      ...validateEventSchedule(values),
+    };
   });
 
   useEffect(() => {
@@ -145,8 +150,9 @@ export default function EditEvent() {
         setFieldValue('title', eventData.title || '');
         setFieldValue('description', eventData.description || '');
         setFieldValue('eventType', eventData.event_type || '');
-        setFieldValue('date', eventData.date || '');
-        setFieldValue('time', eventData.time || '');
+        Object.entries(getEventScheduleFormValues(eventData)).forEach(([field, value]) => {
+          setFieldValue(field, value);
+        });
         setFieldValue('location', eventData.location || '');
         setFieldValue('registrationUrl', eventData.registrationUrl || eventData.registration_url || '');
         setFieldValue('registrationButtonText', eventData.registrationButtonText || eventData.registration_button_text || '');
@@ -158,7 +164,6 @@ export default function EditEvent() {
           'registrationStatus',
           eventData.registrationStatus || eventData.registration_status || 'open'
         );
-        setFieldValue('capacity', String(eventData.capacity || 0));
         setFieldValue('status', eventData.status || EVENT_STATUS.DRAFT);
         setFieldValue('featured', eventData.featured === true);
       } catch (error) {
@@ -182,6 +187,39 @@ export default function EditEvent() {
   const handlePosterFileChange = (file) => {
     setPosterFile(file);
     setPreviewUrl(file ? URL.createObjectURL(file) : null);
+  };
+
+  const handleScheduleModeChange = (scheduleMode) => {
+    if (scheduleMode === 'sessions' && values.sessions.length === 0) {
+      setFieldValue('sessions', [{ date: values.date, time: '', timeStatus: 'tba' }]);
+    }
+    setFieldValue('scheduleMode', scheduleMode);
+  };
+
+  const handleScheduleChange = (index, field, value) => {
+    setFieldValue('sessions', values.sessions.map((session, sessionIndex) => (
+      sessionIndex === index
+        ? { ...session, [field]: value, ...(field === 'timeStatus' && value === 'tba' ? { time: '' } : {}) }
+        : session
+    )));
+  };
+
+  const handleAddSession = () => {
+    setFieldValue('sessions', [
+      ...values.sessions,
+      { date: values.endDate || values.date, time: '', timeStatus: 'tba' },
+    ]);
+  };
+
+  const handleRemoveSession = (index) => {
+    if (values.sessions.length > 1) {
+      setFieldValue('sessions', values.sessions.filter((_, sessionIndex) => sessionIndex !== index));
+    }
+  };
+
+  const handleSharedTimeStatusChange = (timeStatus) => {
+    setFieldValue('timeStatus', timeStatus);
+    if (timeStatus === 'tba') setFieldValue('time', '');
   };
 
   if (loading) {
@@ -225,6 +263,11 @@ export default function EditEvent() {
             touched={touched}
             onChange={handleChange}
             onBlur={handleBlur}
+            onScheduleModeChange={handleScheduleModeChange}
+            onSharedTimeStatusChange={handleSharedTimeStatusChange}
+            onScheduleChange={handleScheduleChange}
+            onAddSession={handleAddSession}
+            onRemoveSession={handleRemoveSession}
             onSubmit={handleSubmit}
             eventTypes={[
               ...(!values.eventType ? [{ value: '', label: 'Not assigned — select a type' }] : []),

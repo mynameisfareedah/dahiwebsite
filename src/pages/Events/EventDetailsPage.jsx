@@ -7,6 +7,11 @@ import { getEventById } from '../../services/supabase/eventsService';
 import { resolveRegistrationState } from '../../utils/registration';
 import { getEventTypeLabel } from '../../constants/eventTypes';
 import { getPublicEventType } from '../../utils/publicEventType';
+import {
+  formatEventDate,
+  formatEventDateRange,
+  getEventSessions,
+} from '../../utils/eventSchedule';
 
 function EventDetailsPage() {
   const { id } = useParams();
@@ -18,6 +23,7 @@ function EventDetailsPage() {
   const seoDescription = event?.description || 'DAHI event details';
   const registrationState = resolveRegistrationState(event, 'Register Now');
   const eventTypeLabel = event ? getEventTypeLabel(getPublicEventType(event)) : null;
+  const eventSessions = event ? getEventSessions(event) : [];
 
   useEffect(() => {
     let mounted = true;
@@ -90,11 +96,27 @@ function EventDetailsPage() {
               ) : null}
               <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
                 <div className="text-xs font-semibold uppercase tracking-[0.2em] text-dahiSecondary">Date</div>
-                <div className="mt-1 font-semibold text-slate-900">{event.event_date || event.date || 'TBC'}</div>
+                <div className="mt-1 font-semibold text-slate-900">
+                  {formatEventDateRange(
+                    event.event_date || event.date,
+                    event.event_end_date || event.endDate
+                  )}
+                </div>
               </div>
               <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
                 <div className="text-xs font-semibold uppercase tracking-[0.2em] text-dahiSecondary">Time</div>
-                <div className="mt-1 font-semibold text-slate-900">{event.start_time || event.time || 'TBC'}</div>
+                <div className="mt-1 space-y-2 font-semibold text-slate-900">
+                  {eventSessions.map((session, index) => (
+                    <div key={`${session.date}-${index}`}>
+                      {eventSessions.length > 1 ? (
+                        <span className="mr-2 font-medium text-slate-600">
+                          {formatEventDate(session.date)}:
+                        </span>
+                      ) : null}
+                      {session.time || 'TBA'}
+                    </div>
+                  ))}
+                </div>
               </div>
               <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 sm:col-span-2">
                 <div className="text-xs font-semibold uppercase tracking-[0.2em] text-dahiSecondary">Location</div>

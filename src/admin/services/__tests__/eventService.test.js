@@ -81,6 +81,7 @@ describe('eventService - Real Implementation', () => {
       featured: true,
     }));
     expect(insert.mock.calls[0][0]).not.toHaveProperty('category');
+    expect(insert.mock.calls[0][0]).not.toHaveProperty('capacity');
   });
 
   it('returns error when create fails with Supabase error', async () => {
@@ -112,14 +113,25 @@ describe('eventService - Real Implementation', () => {
     expect(supabase.from).not.toHaveBeenCalled();
   });
 
-  it('creates an event with the quiz Event Type', async () => {
+  it('creates a multi-day quiz with TBA sessions without sending Capacity', async () => {
     vi.mocked(supabase.auth.getUser).mockResolvedValueOnce({
       data: { user: { id: 'admin-1' } },
       error: null,
     });
 
     const single = vi.fn().mockResolvedValueOnce({
-      data: { id: 'quiz-1', title: 'DAHI Quiz', event_type: 'quiz_challenge', status: 'draft' },
+      data: {
+        id: 'quiz-1',
+        title: 'DAHI Quiz',
+        event_type: 'quiz_challenge',
+        event_date: '2026-10-17',
+        event_end_date: '2026-10-18',
+        event_schedule: [
+          { date: '2026-10-17', time: null },
+          { date: '2026-10-18', time: null },
+        ],
+        status: 'draft',
+      },
       error: null,
     });
     const select = vi.fn().mockReturnValue({ single });
@@ -129,17 +141,28 @@ describe('eventService - Real Implementation', () => {
     const result = await eventService.createEvent({
       title: 'DAHI Quiz',
       eventType: 'quiz_challenge',
-      date: '2026-11-10',
-      time: '10:00',
+      date: '2026-10-17',
+      event_end_date: '2026-10-18',
+      start_time: null,
+      event_schedule: [
+        { date: '2026-10-17', time: null },
+        { date: '2026-10-18', time: null },
+      ],
       status: 'draft',
     });
 
     expect(result.success).toBe(true);
     expect(insert).toHaveBeenCalledWith(expect.objectContaining({
       event_type: 'quiz_challenge',
-      event_date: '2026-11-10',
-      start_time: '10:00',
+      event_date: '2026-10-17',
+      event_end_date: '2026-10-18',
+      start_time: null,
+      event_schedule: [
+        { date: '2026-10-17', time: null },
+        { date: '2026-10-18', time: null },
+      ],
     }));
+    expect(insert.mock.calls[0][0]).not.toHaveProperty('capacity');
   });
 
   it('updates an event successfully', async () => {
@@ -165,6 +188,11 @@ describe('eventService - Real Implementation', () => {
       title: 'Updated Event',
       date: '2026-08-02',
       time: '12:00',
+      endDate: '2026-08-03',
+      event_schedule: [
+        { date: '2026-08-02', time: '12:00' },
+        { date: '2026-08-03', time: null },
+      ],
       status: 'published',
       eventType: 'masterclass',
       featured: true,
@@ -175,8 +203,14 @@ describe('eventService - Real Implementation', () => {
     expect(update).toHaveBeenCalledWith(expect.objectContaining({
       event_type: 'masterclass',
       featured: true,
+      event_end_date: '2026-08-03',
+      event_schedule: [
+        { date: '2026-08-02', time: '12:00' },
+        { date: '2026-08-03', time: null },
+      ],
     }));
     expect(update.mock.calls[0][0]).not.toHaveProperty('category');
+    expect(update.mock.calls[0][0]).not.toHaveProperty('capacity');
   });
 
   it('deletes an event successfully', async () => {

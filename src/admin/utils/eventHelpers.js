@@ -1,5 +1,7 @@
+import { formatEventDate as formatCalendarDate } from '../../utils/eventSchedule';
+
 export function formatEventDate(dateString) {
-  return dateString ? new Date(dateString).toLocaleDateString() : '-';
+  return formatCalendarDate(dateString);
 }
 
 export function formatEventTime(timeString) {

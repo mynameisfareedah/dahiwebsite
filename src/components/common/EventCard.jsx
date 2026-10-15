@@ -47,7 +47,7 @@ function EventCard({
           <div className="flex flex-wrap gap-2 text-sm font-semibold text-dahiSecondary">
             <span>{date}</span>
             <span>•</span>
-            <span>{time}</span>
+            <span className="min-w-0 break-words">{time}</span>
           </div>
           <h3 className="mt-4 text-xl font-semibold text-slate-900">{title}</h3>
           <p className="mt-2 text-sm font-semibold uppercase tracking-[0.2em] text-dahiPrimary">{speaker}</p>

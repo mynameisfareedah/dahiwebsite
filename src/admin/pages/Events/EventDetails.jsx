@@ -4,6 +4,11 @@ import { ChevronDown } from 'lucide-react';
 import { useToast } from '../../hooks/useDataManagement';
 import { eventService, getEventImageUrl } from '../../services/eventService';
 import { EVENT_STATUS } from '../../../constants/status';
+import {
+  formatEventDate,
+  formatEventDateRange,
+  getEventSessions,
+} from '../../../utils/eventSchedule';
 export default function EventDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -109,6 +114,7 @@ export default function EventDetails() {
   }
 
   const posterUrl = getEventImageUrl(event.poster_url);
+  const eventSessions = getEventSessions(event);
 
   return (
     <div className="space-y-8">
@@ -217,8 +223,19 @@ export default function EventDetails() {
             <p className="mt-2 text-lg font-semibold text-white">{event.featured ? 'Yes' : 'No'}</p>
           </div>
           <div className="space-y-3 rounded-3xl border border-gray-800 bg-slate-900 p-5">
-            <p className="text-sm uppercase tracking-[0.2em] text-gray-400">Date & Time</p>
-            <p className="mt-2 text-lg font-semibold text-white">{event.date || 'TBD'} {event.time || ''}</p>
+            <p className="text-sm uppercase tracking-[0.2em] text-gray-400">Date</p>
+            <p className="mt-2 text-lg font-semibold text-white">
+              {formatEventDateRange(event.date, event.endDate)}
+            </p>
+            <p className="pt-2 text-sm uppercase tracking-[0.2em] text-gray-400">Time</p>
+            <div className="space-y-1 text-white">
+              {eventSessions.map((session, index) => (
+                <p key={`${session.date}-${index}`}>
+                  {eventSessions.length > 1 ? `${formatEventDate(session.date)}: ` : ''}
+                  {session.time || 'TBA'}
+                </p>
+              ))}
+            </div>
           </div>
           {(event.registrationUrl || event.registration_url) && (
             <div className="space-y-3 rounded-3xl border border-gray-800 bg-slate-900 p-5">
