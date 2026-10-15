@@ -40,6 +40,7 @@ export function FormSelect({ label, error, required, help, children, options = [
     <FormField label={label} error={error} required={required} help={help}>
       <select
         {...props}
+        required={required}
         className={`w-full px-4 py-2 bg-gray-800 border rounded text-white focus:outline-none transition ${
           error ? 'border-red-500 focus:border-red-500' : 'border-gray-700 focus:border-blue-500'
         }`}

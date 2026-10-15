@@ -315,3 +315,27 @@ export async function getUpcomingEvents(limit = 5) {
     return { data: [], error: handleSupabaseError(err) };
   }
 }
+
+export async function getFeaturedEvents() {
+  try {
+    if (!isSupabaseConfigured) {
+      return { data: [], error: null };
+    }
+
+    const { data, error } = await supabase
+      .from('events')
+      .select('*')
+      .eq('status', EVENT_STATUS.PUBLISHED)
+      .eq('featured', true)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      return { data: [], error: handleSupabaseError(error) };
+    }
+
+    return { data: mapEvents(data || []), error: null };
+  } catch (err) {
+    console.error('Error in getFeaturedEvents:', err);
+    return { data: [], error: handleSupabaseError(err) };
+  }
+}

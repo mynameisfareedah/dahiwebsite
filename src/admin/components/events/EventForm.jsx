@@ -14,7 +14,6 @@ export function EventForm({
   onChange,
   onBlur,
   onSubmit,
-  categories,
   eventTypes = [],
   eventTypeError,
   eventTypeHelp,
@@ -29,7 +28,7 @@ export function EventForm({
 }) {
   return (
     <form onSubmit={onSubmit} className="space-y-8">
-      <div className="grid gap-4 lg:grid-cols-3">
+      <div className="grid gap-4 lg:grid-cols-2">
         <FormInput
           label="Event Title"
           name="title"
@@ -39,14 +38,6 @@ export function EventForm({
           error={touched.title && errors.title}
           required
           placeholder="Community Health Seminar"
-        />
-        <FormSelect
-          label="Category"
-          name="category"
-          value={values.category}
-          onChange={onChange}
-          onBlur={onBlur}
-          options={categories}
         />
         <FormSelect
           label="Event Type"

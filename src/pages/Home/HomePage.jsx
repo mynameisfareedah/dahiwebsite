@@ -4,6 +4,7 @@ import AboutPreview from '../../components/home/AboutPreview';
 import FeaturedPrograms from '../../components/home/FeaturedPrograms';
 import MeetDocAdi from '../../components/home/MeetDocAdi';
 import Impact from '../../components/home/Impact';
+import FeaturedEventsSection from '../../components/home/FeaturedEventsSection';
 import ResourcesPreview from '../../components/home/ResourcesPreview';
 import Testimonials from '../../components/home/Testimonials';
 import GetInvolved from '../../components/home/GetInvolved';
@@ -34,6 +35,9 @@ function HomePage() {
 
       {/* 6.5. Featured Substack Article */}
       <FeaturedSubstackArticle />
+
+      {/* Featured published events */}
+      <FeaturedEventsSection />
 
       {/* 6.5. Completed First Community Outreach */}
       <UpcomingOutreachSection />

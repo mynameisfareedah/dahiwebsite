@@ -9,15 +9,6 @@ import { EVENT_STATUS } from '../../../constants/status';
 import { EVENT_TYPE_OPTIONS } from '../../../constants/eventTypes';
 import { EVENT_TYPE_SCHEMA_ACTIVATION_MESSAGE, isEventTypeSchemaReady } from '../../../constants/eventTypeSchema';
 
-const CATEGORY_OPTIONS = [
-  { value: 'health', label: 'Health' },
-  { value: 'wellness', label: 'Wellness' },
-  { value: 'education', label: 'Education' },
-  { value: 'outreach', label: 'Outreach' },
-  { value: 'workshop', label: 'Workshop' },
-  { value: 'webinar', label: 'Webinar' },
-];
-
 const STATUS_OPTIONS = [
   { value: EVENT_STATUS.DRAFT, label: 'Draft' },
   { value: EVENT_STATUS.PUBLISHED, label: 'Published' },
@@ -26,7 +17,6 @@ const STATUS_OPTIONS = [
 const initialFormValues = {
   title: '',
   description: '',
-  category: 'health',
   eventType: '',
   date: '',
   time: '',
@@ -146,10 +136,9 @@ export default function CreateEvent() {
             onChange={handleChange}
             onBlur={handleBlur}
             onSubmit={handleSubmit}
-            categories={CATEGORY_OPTIONS}
             eventTypes={[{ value: '', label: 'Select Event Type' }, ...EVENT_TYPE_OPTIONS]}
             eventTypeError={errors.eventType}
-            eventTypeHelp="Choose one approved public classification. Category remains a separate field."
+            eventTypeHelp="Choose one approved public classification."
             statuses={STATUS_OPTIONS}
             isSubmitting={isSubmitting || isUploading}
             submitDisabled={!eventTypeSchemaReady}

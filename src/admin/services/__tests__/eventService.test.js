@@ -69,13 +69,18 @@ describe('eventService - Real Implementation', () => {
       capacity: 100,
       status: 'draft',
       eventType: 'webinar',
+      featured: true,
     });
 
     expect(result.success).toBe(true);
     expect(result.error).toBeNull();
     expect(result.data.title).toBe('Health Talk');
     expect(supabase.from).toHaveBeenCalledWith('events');
-    expect(insert).toHaveBeenCalledWith(expect.objectContaining({ event_type: 'webinar' }));
+    expect(insert).toHaveBeenCalledWith(expect.objectContaining({
+      event_type: 'webinar',
+      featured: true,
+    }));
+    expect(insert.mock.calls[0][0]).not.toHaveProperty('category');
   });
 
   it('returns error when create fails with Supabase error', async () => {
@@ -132,11 +137,16 @@ describe('eventService - Real Implementation', () => {
       time: '12:00',
       status: 'published',
       eventType: 'masterclass',
+      featured: true,
     });
 
     expect(result.success).toBe(true);
     expect(result.data.title).toBe('Updated Event');
-    expect(update).toHaveBeenCalledWith(expect.objectContaining({ event_type: 'masterclass' }));
+    expect(update).toHaveBeenCalledWith(expect.objectContaining({
+      event_type: 'masterclass',
+      featured: true,
+    }));
+    expect(update.mock.calls[0][0]).not.toHaveProperty('category');
   });
 
   it('deletes an event successfully', async () => {

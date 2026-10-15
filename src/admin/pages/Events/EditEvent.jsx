@@ -9,15 +9,6 @@ import { EVENT_STATUS } from '../../../constants/status';
 import { EVENT_TYPE_OPTIONS } from '../../../constants/eventTypes';
 import { EVENT_TYPE_SCHEMA_ACTIVATION_MESSAGE, isEventTypeSchemaReady } from '../../../constants/eventTypeSchema';
 
-const CATEGORY_OPTIONS = [
-  { value: 'health', label: 'Health' },
-  { value: 'wellness', label: 'Wellness' },
-  { value: 'education', label: 'Education' },
-  { value: 'outreach', label: 'Outreach' },
-  { value: 'workshop', label: 'Workshop' },
-  { value: 'webinar', label: 'Webinar' },
-];
-
 const STATUS_OPTIONS = [
   { value: EVENT_STATUS.DRAFT, label: 'Draft' },
   { value: EVENT_STATUS.PUBLISHED, label: 'Published' },
@@ -26,7 +17,6 @@ const STATUS_OPTIONS = [
 const initialFormValues = {
   title: '',
   description: '',
-  category: 'health',
   eventType: '',
   date: '',
   time: '',
@@ -154,7 +144,6 @@ export default function EditEvent() {
         setEventRecord(eventData);
         setFieldValue('title', eventData.title || '');
         setFieldValue('description', eventData.description || '');
-        setFieldValue('category', eventData.category || 'health');
         setFieldValue('eventType', eventData.event_type || '');
         setFieldValue('date', eventData.date || '');
         setFieldValue('time', eventData.time || '');
@@ -237,7 +226,6 @@ export default function EditEvent() {
             onChange={handleChange}
             onBlur={handleBlur}
             onSubmit={handleSubmit}
-            categories={CATEGORY_OPTIONS}
             eventTypes={[
               ...(!values.eventType ? [{ value: '', label: 'Not assigned — select a type' }] : []),
               ...EVENT_TYPE_OPTIONS,
@@ -245,7 +233,7 @@ export default function EditEvent() {
             eventTypeError={errors.eventType}
             eventTypeRequired={eventTypeSchemaReady || Boolean(eventRecord?.event_type)}
             eventTypeHelp={eventTypeSchemaReady
-              ? 'Choose the event’s public classification. Category remains a separate field.'
+              ? 'Choose the event’s public classification.'
               : 'Existing records without a type remain unassigned. Changing this selection is disabled until the database schema is ready.'}
             statuses={STATUS_OPTIONS}
             isSubmitting={isSubmitting || isUploading}

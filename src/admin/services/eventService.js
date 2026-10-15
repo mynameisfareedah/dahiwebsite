@@ -309,7 +309,6 @@ export const eventService = {
         title: data.title,
         slug: (data.title || '').toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') || 'event',
         description: data.description || null,
-        category: data.category || 'general',
         event_type: data.eventType,
         event_date: data.date || data.event_date || null,
         start_time: data.time || data.start_time || null,
@@ -381,7 +380,6 @@ export const eventService = {
       const payload = {
         title: data.title,
         description: data.description || null,
-        category: data.category || 'general',
         event_date: data.date || data.event_date || null,
         start_time: data.time || data.start_time || null,
         location: data.location || null,
