@@ -112,6 +112,36 @@ describe('eventService - Real Implementation', () => {
     expect(supabase.from).not.toHaveBeenCalled();
   });
 
+  it('creates an event with the quiz Event Type', async () => {
+    vi.mocked(supabase.auth.getUser).mockResolvedValueOnce({
+      data: { user: { id: 'admin-1' } },
+      error: null,
+    });
+
+    const single = vi.fn().mockResolvedValueOnce({
+      data: { id: 'quiz-1', title: 'DAHI Quiz', event_type: 'quiz_challenge', status: 'draft' },
+      error: null,
+    });
+    const select = vi.fn().mockReturnValue({ single });
+    const insert = vi.fn().mockReturnValue({ select });
+    vi.mocked(supabase.from).mockReturnValueOnce({ insert });
+
+    const result = await eventService.createEvent({
+      title: 'DAHI Quiz',
+      eventType: 'quiz_challenge',
+      date: '2026-11-10',
+      time: '10:00',
+      status: 'draft',
+    });
+
+    expect(result.success).toBe(true);
+    expect(insert).toHaveBeenCalledWith(expect.objectContaining({
+      event_type: 'quiz_challenge',
+      event_date: '2026-11-10',
+      start_time: '10:00',
+    }));
+  });
+
   it('updates an event successfully', async () => {
     const single = vi.fn().mockResolvedValueOnce({
       data: {

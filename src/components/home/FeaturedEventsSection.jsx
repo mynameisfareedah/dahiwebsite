@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import EventCard from '../common/EventCard';
 import SectionHeading from '../common/SectionHeading';
 import { getFeaturedEvents } from '../../services/supabase/eventsService';
+import { getPublicEventType } from '../../utils/publicEventType';
 
 function FeaturedEventsSection() {
   const [events, setEvents] = useState([]);
@@ -66,6 +67,7 @@ function FeaturedEventsSection() {
               key={event.id}
               eventId={event.id}
               title={event.title}
+              eventType={getPublicEventType(event)}
               date={event.date || event.event_date}
               time={event.time || event.start_time}
               speaker={event.speaker || 'DAHI Team'}

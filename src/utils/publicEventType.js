@@ -28,3 +28,8 @@ export function getPublicEventType(event) {
   if (category === 'outreach') return 'outreach_community';
   return null;
 }
+
+export function matchesPublicEventFilter(event, filter) {
+  if (filter === 'all') return true;
+  return getPublicEventType(event) === filter;
+}

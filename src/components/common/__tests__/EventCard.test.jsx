@@ -29,6 +29,12 @@ describe('EventCard', () => {
     );
   });
 
+  it('shows the assigned Event Type label', () => {
+    renderEventCard({ eventType: 'quiz_challenge' });
+
+    expect(screen.getByText('Quizzes & Challenges')).toBeInTheDocument();
+  });
+
   it('keeps closed registration disabled while retaining event details navigation', () => {
     renderEventCard({
       eventId: 'event-123',

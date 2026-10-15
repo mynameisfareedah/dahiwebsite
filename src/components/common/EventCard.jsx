@@ -1,9 +1,11 @@
 import { Link } from 'react-router-dom';
 import { resolveRegistrationState } from '../../utils/registration';
+import { getEventTypeLabel } from '../../constants/eventTypes';
 
 function EventCard({
   eventId,
   title,
+  eventType,
   date,
   time,
   speaker,
@@ -28,6 +30,7 @@ function EventCard({
   const normalizedHref = typeof registrationState.href === 'string' ? registrationState.href.trim() : '';
   const isInternalLink = normalizedHref.startsWith('/');
   const detailsHref = eventId == null || eventId === '' ? null : `/events/${encodeURIComponent(eventId)}`;
+  const eventTypeLabel = eventType ? getEventTypeLabel(eventType) : null;
 
   return (
     <article className="soft-card overflow-hidden">
@@ -36,6 +39,11 @@ function EventCard({
           <img src={image} alt={title} loading="lazy" className="h-56 w-full rounded-[1rem] object-contain bg-white sm:h-72" />
         </div>
         <div className="min-w-0 flex-1 p-2 sm:p-0">
+          {eventTypeLabel && eventTypeLabel !== 'Not assigned' ? (
+            <span className="inline-flex rounded-full bg-dahiPrimary/10 px-3 py-1 text-xs font-semibold text-dahiPrimary">
+              {eventTypeLabel}
+            </span>
+          ) : null}
           <div className="flex flex-wrap gap-2 text-sm font-semibold text-dahiSecondary">
             <span>{date}</span>
             <span>•</span>

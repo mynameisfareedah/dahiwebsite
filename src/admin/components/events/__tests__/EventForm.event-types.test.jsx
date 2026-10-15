@@ -31,6 +31,7 @@ describe('EventForm Event Type field', () => {
           { value: 'webinar', label: 'Webinars' },
           { value: 'masterclass', label: 'Masterclasses' },
           { value: 'outreach_community', label: 'Outreach & Community' },
+          { value: 'quiz_challenge', label: 'Quizzes & Challenges' },
         ]}
         statuses={[{ value: 'draft', label: 'Draft' }]}
         isSubmitting={false}
@@ -43,5 +44,6 @@ describe('EventForm Event Type field', () => {
     expect(screen.getByRole('option', { name: 'Webinars' })).toHaveValue('webinar');
     expect(screen.getByRole('option', { name: 'Masterclasses' })).toHaveValue('masterclass');
     expect(screen.getByRole('option', { name: 'Outreach & Community' })).toHaveValue('outreach_community');
+    expect(screen.getByRole('option', { name: 'Quizzes & Challenges' })).toHaveValue('quiz_challenge');
   });
 });

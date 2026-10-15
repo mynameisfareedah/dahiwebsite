@@ -10,7 +10,7 @@ import { getEvents } from '../../services/supabase/eventsService';
 import { EVENT_STATUS } from '../../constants/status';
 import { PUBLIC_EVENT_FILTER_OPTIONS } from '../../constants/eventTypes';
 import { testimonials } from '../../data/siteContent';
-import { getPublicEventType } from '../../utils/publicEventType';
+import { getPublicEventType, matchesPublicEventFilter } from '../../utils/publicEventType';
 
 const quizSeriesHighlights = [
   'DAHI Ramadan Quiz (DRQ) — 28 February to 18 March 2026',
@@ -61,11 +61,6 @@ const timelineEntries = [
 
 const filterOptions = PUBLIC_EVENT_FILTER_OPTIONS;
 
-function matchesEventFilter(event, filter) {
-  if (filter === 'all') return true;
-  return getPublicEventType(event) === filter;
-}
-
 function EventsPage() {
   const [activeFilter, setActiveFilter] = useState('all');
 
@@ -103,7 +98,7 @@ function EventsPage() {
   }, []);
 
   const filteredEvents = useMemo(() => {
-    return events.filter((event) => matchesEventFilter(event, activeFilter));
+    return events.filter((event) => matchesPublicEventFilter(event, activeFilter));
   }, [activeFilter, events]);
   const activeFilterLabel = filterOptions.find((option) => option.value === activeFilter)?.label || 'selected category';
 
@@ -158,6 +153,7 @@ function EventsPage() {
                   key={event.id || event.title}
                   eventId={event.id}
                   title={event.title}
+                  eventType={getPublicEventType(event)}
                   date={event.event_date || event.date}
                   time={event.start_time || event.time}
                   speaker={event.speaker || 'DAHI Team'}

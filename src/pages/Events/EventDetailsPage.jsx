@@ -5,6 +5,8 @@ import SectionHeading from '../../components/common/SectionHeading';
 import { useEffect, useState } from 'react';
 import { getEventById } from '../../services/supabase/eventsService';
 import { resolveRegistrationState } from '../../utils/registration';
+import { getEventTypeLabel } from '../../constants/eventTypes';
+import { getPublicEventType } from '../../utils/publicEventType';
 
 function EventDetailsPage() {
   const { id } = useParams();
@@ -15,6 +17,7 @@ function EventDetailsPage() {
   const seoTitle = event?.title || 'Event Details';
   const seoDescription = event?.description || 'DAHI event details';
   const registrationState = resolveRegistrationState(event, 'Register Now');
+  const eventTypeLabel = event ? getEventTypeLabel(getPublicEventType(event)) : null;
 
   useEffect(() => {
     let mounted = true;
@@ -79,6 +82,12 @@ function EventDetailsPage() {
           />
           <div className="space-y-4 p-6 sm:p-8">
             <div className="grid gap-3 sm:grid-cols-2">
+              {eventTypeLabel && eventTypeLabel !== 'Not assigned' ? (
+                <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                  <div className="text-xs font-semibold uppercase tracking-[0.2em] text-dahiSecondary">Event Type</div>
+                  <div className="mt-1 font-semibold text-slate-900">{eventTypeLabel}</div>
+                </div>
+              ) : null}
               <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
                 <div className="text-xs font-semibold uppercase tracking-[0.2em] text-dahiSecondary">Date</div>
                 <div className="mt-1 font-semibold text-slate-900">{event.event_date || event.date || 'TBC'}</div>

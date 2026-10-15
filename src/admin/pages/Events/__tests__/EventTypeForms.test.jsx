@@ -98,6 +98,7 @@ describe('admin Event Type forms', () => {
     expect(screen.getByRole('option', { name: 'Webinars' })).toHaveValue('webinar');
     expect(screen.getByRole('option', { name: 'Masterclasses' })).toHaveValue('masterclass');
     expect(screen.getByRole('option', { name: 'Outreach & Community' })).toHaveValue('outreach_community');
+    expect(screen.getByRole('option', { name: 'Quizzes & Challenges' })).toHaveValue('quiz_challenge');
     expect(container.querySelector('[name="category"]')).toBeNull();
 
     changeField(container, 'title', 'New webinar');
@@ -115,6 +116,44 @@ describe('admin Event Type forms', () => {
       featured: true,
     });
     expect(mocks.createEvent.mock.calls[0][0]).not.toHaveProperty('category');
+  });
+
+  it('creates a quiz announcement with its participation URL and featured status', async () => {
+    const { container } = renderCreateEvent();
+
+    changeField(container, 'title', 'DAHI Educational Quiz');
+    changeField(container, 'eventType', 'quiz_challenge');
+    changeField(container, 'date', '2026-11-10');
+    changeField(container, 'time', '10:00');
+    changeField(container, 'location', 'Online');
+    changeField(container, 'capacity', '25');
+    changeField(container, 'registrationUrl', 'https://example.com/quiz');
+    fireEvent.click(container.querySelector('[name="featured"]'));
+    fireEvent.submit(container.querySelector('form'));
+
+    await waitFor(() => expect(mocks.createEvent).toHaveBeenCalledOnce());
+    expect(mocks.createEvent.mock.calls[0][0]).toMatchObject({
+      eventType: 'quiz_challenge',
+      date: '2026-11-10',
+      time: '10:00',
+      registrationUrl: 'https://example.com/quiz',
+      featured: true,
+      status: 'draft',
+    });
+  });
+
+  it('rejects a create form without an Event Type', async () => {
+    const { container } = renderCreateEvent();
+
+    changeField(container, 'title', 'Event without a type');
+    changeField(container, 'date', '2026-11-10');
+    changeField(container, 'time', '10:00');
+    changeField(container, 'location', 'DAHI');
+    changeField(container, 'capacity', '25');
+    fireEvent.submit(container.querySelector('form'));
+
+    await waitFor(() => expect(screen.getByText('Event Type is required')).toBeInTheDocument());
+    expect(mocks.createEvent).not.toHaveBeenCalled();
   });
 
   it('loads and safely updates the existing Event Type without a Category form value', async () => {
@@ -136,5 +175,31 @@ describe('admin Event Type forms', () => {
       featured: true,
     });
     expect(mocks.updateEvent.mock.calls[0][1]).not.toHaveProperty('category');
+  });
+
+  it('edits an existing event to the quiz type', async () => {
+    const { container } = renderEditEvent();
+    await waitFor(() => expect(container.querySelector('[name="eventType"]')).not.toBeNull());
+
+    changeField(container, 'eventType', 'quiz_challenge');
+    fireEvent.submit(container.querySelector('form'));
+
+    await waitFor(() => expect(mocks.updateEvent).toHaveBeenCalledOnce());
+    expect(mocks.updateEvent.mock.calls[0][1]).toMatchObject({
+      eventType: 'quiz_challenge',
+      featured: false,
+    });
+    expect(mocks.updateEvent.mock.calls[0][1]).not.toHaveProperty('category');
+  });
+
+  it('rejects clearing Event Type while editing when the schema is ready', async () => {
+    const { container } = renderEditEvent();
+    await waitFor(() => expect(container.querySelector('[name="eventType"]')).toHaveValue('masterclass'));
+
+    changeField(container, 'eventType', '');
+    fireEvent.submit(container.querySelector('form'));
+
+    await waitFor(() => expect(screen.getByText('Event Type is required')).toBeInTheDocument());
+    expect(mocks.updateEvent).not.toHaveBeenCalled();
   });
 });

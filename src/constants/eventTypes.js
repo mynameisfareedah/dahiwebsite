@@ -2,6 +2,7 @@ export const EVENT_TYPE_OPTIONS = Object.freeze([
   { value: 'webinar', label: 'Webinars' },
   { value: 'masterclass', label: 'Masterclasses' },
   { value: 'outreach_community', label: 'Outreach & Community' },
+  { value: 'quiz_challenge', label: 'Quizzes & Challenges' },
 ]);
 
 export const PUBLIC_EVENT_FILTER_OPTIONS = Object.freeze([
