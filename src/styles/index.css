@@ -29,6 +29,28 @@ body {
   padding: 5rem 1.5rem;
 }
 
+.home-page {
+  min-width: 0;
+}
+
+.home-page > .section-shell {
+  width: 100%;
+  max-width: 96rem;
+  margin-inline: auto;
+  padding: clamp(3rem, 4vw, 4rem) clamp(1rem, 3vw, 3rem);
+}
+
+.home-page > #about {
+  padding-top: clamp(2rem, 3vw, 3rem);
+}
+
+.home-page > #hero {
+  width: 100%;
+  max-width: 96rem;
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 3vw, 3rem);
+}
+
 @media (min-width: 1024px) {
   .section-shell {
     padding: 5rem 1.5rem 5rem 0;

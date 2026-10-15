@@ -8,7 +8,7 @@ function Footer() {
     <footer className="mt-12 text-slate-300">
       {/* Promotional Banner */}
       <div className="bg-gradient-to-r from-dahiAccent/90 to-dahiPrimary/90 py-6">
-        <div className="flex max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-0">
+        <div className="mx-auto flex w-full max-w-[96rem] items-center justify-between gap-4 px-4 sm:px-6 lg:px-12">
           <div className="flex items-center gap-2 sm:gap-4">
             <span className="text-3xl">📅</span>
             <div>
@@ -27,7 +27,7 @@ function Footer() {
 
       {/* Footer Content */}
       <div className="border-t border-slate-200 bg-slate-900 py-10">
-        <div className="flex max-w-7xl flex-col gap-8 px-4 sm:px-6 lg:flex-row lg:justify-between lg:px-0">
+        <div className="mx-auto flex w-full max-w-[96rem] flex-col gap-8 px-4 sm:px-6 lg:flex-row lg:justify-between lg:px-12">
           <div className="max-w-xl">
             <Link to="/" className="flex items-center gap-3">
               <img src="/logo.jpeg" alt="DAHI logo" loading="lazy" className="h-16 w-auto rounded-lg" />

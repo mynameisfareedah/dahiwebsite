@@ -70,7 +70,7 @@ function NewsletterSection() {
       tabIndex={-1}
       className="section-shell max-w-7xl scroll-mt-24 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-dahiPrimary"
     >
-      <div className="soft-card overflow-hidden p-8 sm:p-10">
+      <div className="soft-card grid overflow-hidden p-8 sm:p-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start lg:gap-x-8">
         <div className="max-w-3xl">
           <span className="eyebrow">Stay Connected</span>
           <h2 className="mt-4 text-3xl font-black text-slate-900">Join the DAHI Community</h2>
@@ -78,7 +78,7 @@ function NewsletterSection() {
             Stay informed with practical health education, webinar invitations, community outreach updates, and opportunities to participate in DAHI initiatives.
           </p>
         </div>
-        <form onSubmit={handleSubmit} className="mt-8 max-w-2xl space-y-4 rounded-[1.25rem] border border-slate-200 bg-slate-50 p-4 sm:p-6">
+        <form onSubmit={handleSubmit} className="mt-8 max-w-none space-y-4 rounded-[1.25rem] border border-slate-200 bg-slate-50 p-4 sm:p-6 lg:mt-0">
           <div className="grid gap-4 sm:grid-cols-2">
             <label htmlFor="newsletter-first-name" className="block text-sm font-medium text-slate-700">
               First name <span className="font-normal text-slate-500">(optional)</span>
@@ -226,7 +226,7 @@ function NewsletterSection() {
             </p>
           )}
         </form>
-        <p className="mt-3 text-sm text-slate-500">New subscriptions remain pending until you confirm by email. You can unsubscribe at any time.</p>
+        <p className="mt-3 text-sm text-slate-500 lg:col-start-2 lg:row-start-2">New subscriptions remain pending until you confirm by email. You can unsubscribe at any time.</p>
       </div>
     </section>
   );

@@ -81,6 +81,18 @@ describe('MainLayout newsletter navigation', () => {
     }
   });
 
+  it('shows primary links and the newsletter action at desktop widths while retaining the mobile drawer', () => {
+    renderLayout();
+
+    expect(screen.getByRole('navigation', { name: 'Primary navigation' })).toHaveClass('min-[1280px]:flex');
+    expect(screen.getByRole('navigation', { name: 'Mobile navigation' })).toHaveClass('flex-1');
+    expect(screen.getByRole('button', { name: 'Toggle navigation' })).toHaveClass('min-[1280px]:hidden');
+    expect(screen.getByRole('button', { name: 'Toggle navigation' })).toHaveAttribute('aria-controls', 'mobile-sidebar');
+    expect(screen.getAllByRole('link', { name: 'Join Us' }).some((link) => (
+      link.classList.contains('min-[1280px]:inline-flex')
+    ))).toBe(true);
+  });
+
   it('navigates from another route, scrolls to the section, and moves focus', async () => {
     const scrollIntoView = vi.fn();
     originalScrollIntoViewDescriptor = Object.getOwnPropertyDescriptor(window.HTMLElement.prototype, 'scrollIntoView');
@@ -111,7 +123,10 @@ describe('MainLayout newsletter navigation', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Toggle navigation' }));
     expect(screen.getByRole('button', { name: 'Toggle navigation' })).toHaveAttribute('aria-expanded', 'true');
     expect(screen.getByTestId('floating-subscribe-cta')).toHaveAttribute('hidden');
-    fireEvent.click(within(screen.getByRole('navigation')).getByRole('link', { name: 'Newsletter' }));
+    fireEvent.click(
+      within(screen.getByRole('navigation', { name: 'Mobile navigation' }))
+        .getByRole('link', { name: 'Newsletter' })
+    );
 
     await screen.findByRole('heading', { name: 'Newsletter subscription' });
     await waitFor(() => expect(scrollIntoView).toHaveBeenCalledWith({ behavior: 'auto', block: 'start' }));
@@ -214,7 +229,8 @@ describe('MainLayout newsletter navigation', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Toggle navigation' }));
     expect(screen.getByRole('button', { name: 'Toggle navigation' })).toHaveAttribute('aria-expanded', 'true');
 
-    const joinUsLink = screen.getByRole('link', { name: 'Join Us' });
+    const joinUsLink = within(document.getElementById('mobile-sidebar'))
+      .getByRole('link', { name: 'Join Us' });
     expect(joinUsLink).toHaveAttribute('href', '/#newsletter');
     expect(joinUsLink).not.toHaveAttribute('target');
     expect(joinUsLink.getAttribute('href')).not.toMatch(/^https:/);

@@ -1,11 +1,12 @@
 import { Link } from 'react-router-dom';
-import { resolveRegistrationState } from '../../utils/registration';
 import { getEventTypeLabel } from '../../constants/eventTypes';
+import { resolveRegistrationState } from '../../utils/registration';
 
 function EventCard({
   eventId,
-  title,
   eventType,
+  layout = 'horizontal',
+  title,
   date,
   time,
   speaker,
@@ -31,12 +32,13 @@ function EventCard({
   const isInternalLink = normalizedHref.startsWith('/');
   const detailsHref = eventId == null || eventId === '' ? null : `/events/${encodeURIComponent(eventId)}`;
   const eventTypeLabel = eventType ? getEventTypeLabel(eventType) : null;
+  const isGridLayout = layout === 'grid';
 
   return (
     <article className="soft-card overflow-hidden">
-      <div className="flex flex-col gap-6 p-4 sm:flex-row sm:items-center sm:p-6">
-        <div className="w-full shrink-0 overflow-hidden rounded-[1.25rem] border border-dahiPrimary/20 bg-slate-50 p-2 shadow-sm sm:w-[280px] lg:w-[320px]">
-          <img src={image} alt={title} loading="lazy" className="h-56 w-full rounded-[1rem] object-contain bg-white sm:h-72" />
+      <div className={`flex flex-col gap-6 p-4 sm:p-6 ${isGridLayout ? 'items-stretch' : 'sm:flex-row sm:items-center'}`}>
+        <div className={`w-full shrink-0 overflow-hidden rounded-[1.25rem] border border-dahiPrimary/20 bg-slate-50 p-2 shadow-sm ${isGridLayout ? '' : 'sm:w-[280px] lg:w-[320px]'}`}>
+          <img src={image} alt={title} loading="lazy" className={`w-full rounded-[1rem] object-contain bg-white ${isGridLayout ? 'h-56' : 'h-56 sm:h-72'}`} />
         </div>
         <div className="min-w-0 flex-1 p-2 sm:p-0">
           {eventTypeLabel && eventTypeLabel !== 'Not assigned' ? (

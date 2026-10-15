@@ -11,14 +11,14 @@ function MeetDocAdi() {
 
   return (
     <section id="doctor" className="section-shell max-w-7xl">
-      <div className="grid items-center gap-8 overflow-hidden rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm sm:p-8 lg:grid-cols-[0.7fr_1.3fr]">
+      <div className="grid items-center gap-8 overflow-hidden rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm sm:p-8 lg:grid-cols-[minmax(18rem,0.8fr)_minmax(0,1.2fr)]">
         <img
           src={founder?.profile_image || founder?.photo_url || '/docadi-320.webp'}
           alt="Dr Adiyat Olamide Dele-Salawu (Doc Adi)"
           width="320"
           height="320"
           loading="lazy"
-          className="mx-auto aspect-square w-full max-w-xs rounded-[1.25rem] object-cover"
+          className="mx-auto aspect-square w-full max-w-sm rounded-[1.25rem] object-cover"
         />
         <div className="space-y-5">
           <div>

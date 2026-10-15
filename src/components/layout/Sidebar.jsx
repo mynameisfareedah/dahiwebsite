@@ -26,18 +26,42 @@ function Sidebar({ mobileOpen, setMobileOpen }) {
   return (
     <>
       {/* Hamburger Button */}
-      <div className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between border-b border-slate-200 bg-white/90 backdrop-blur px-4 py-4">
-        <NavLink to="/" className="flex items-center gap-3">
+      <div className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between gap-4 border-b border-slate-200 bg-white/90 px-4 py-4 backdrop-blur sm:px-6">
+        <NavLink to="/" className="flex shrink-0 items-center gap-3">
           <img src="/logo.jpeg" alt="DAHI logo" loading="lazy" className="h-14 w-auto rounded-lg" />
           <div className="leading-tight">
             <div className="text-2xl font-extrabold text-dahiPrimary">DAHI</div>
             <div className="text-sm font-semibold text-slate-500">Doc Adi Health Initiative</div>
           </div>
         </NavLink>
+        <nav className="hidden min-w-0 flex-1 items-center justify-center gap-1 min-[1280px]:flex" aria-label="Primary navigation">
+          {sidebarLinks.map((link) => (
+            <NavLink
+              key={link.to}
+              to={link.to}
+              className={({ isActive }) =>
+                `whitespace-nowrap rounded-lg px-2 py-2 text-sm font-semibold transition ${
+                  isActive
+                    ? 'text-dahiPrimary'
+                    : 'text-slate-700 hover:bg-slate-100 hover:text-dahiPrimary'
+                }`
+              }
+            >
+              {link.label}
+            </NavLink>
+          ))}
+          <NewsletterLink className="whitespace-nowrap rounded-lg px-2 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-dahiPrimary">
+            Newsletter
+          </NewsletterLink>
+        </nav>
+        <NewsletterLink className="hidden shrink-0 items-center justify-center whitespace-nowrap rounded-full bg-dahiPrimary px-4 py-2 text-sm font-semibold text-white transition hover:bg-dahiSecondary min-[1280px]:inline-flex">
+          Join Us
+        </NewsletterLink>
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
-          className="rounded-lg border border-slate-200 p-2 text-slate-700 hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dahiPrimary"
+          className="shrink-0 rounded-lg border border-slate-200 p-2 text-slate-700 hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dahiPrimary min-[1280px]:hidden"
           aria-expanded={mobileOpen}
+          aria-controls="mobile-sidebar"
           aria-label="Toggle navigation"
         >
           {mobileOpen ? <X size={24} /> : <Menu size={24} />}
@@ -47,14 +71,15 @@ function Sidebar({ mobileOpen, setMobileOpen }) {
       {/* Overlay */}
       {mobileOpen && (
         <div
-          className="fixed inset-0 z-30 bg-black/50"
+          className="fixed inset-0 z-30 bg-black/50 min-[1280px]:hidden"
           onClick={() => setMobileOpen(false)}
         />
       )}
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 bottom-0 z-40 w-64 bg-white border-r border-slate-200 transform transition-transform duration-300 ease-in-out ${
+        id="mobile-sidebar"
+        className={`fixed top-0 left-0 bottom-0 z-40 w-64 transform border-r border-slate-200 bg-white transition-transform duration-300 ease-in-out min-[1280px]:hidden ${
           mobileOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
@@ -70,7 +95,7 @@ function Sidebar({ mobileOpen, setMobileOpen }) {
           </div>
 
           {/* Navigation Links */}
-          <nav className="flex-1 overflow-y-auto px-4 py-6 md:px-4">
+          <nav aria-label="Mobile navigation" className="flex-1 overflow-y-auto px-4 py-6 md:px-4">
             <ul className="space-y-2">
               {sidebarLinks.map((link) => (
                 <li key={link.to}>

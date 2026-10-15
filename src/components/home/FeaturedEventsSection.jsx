@@ -62,26 +62,28 @@ function FeaturedEventsSection() {
           Featured events could not be loaded right now.
         </p>
       ) : (
-        <div className="grid gap-6 lg:grid-cols-2">
+        <div className={`grid gap-6 lg:grid-cols-2 ${events.length >= 3 ? 'xl:grid-cols-3' : ''}`}>
           {events.map((event) => (
-            <EventCard
-              key={event.id}
-              eventId={event.id}
-              title={event.title}
-              eventType={getPublicEventType(event)}
-              date={formatEventDateRange(
-                event.event_date || event.date,
-                event.event_end_date || event.endDate
-              )}
-              time={formatEventTimeSummary(event)}
-              speaker={event.speaker || 'DAHI Team'}
-              description={event.description}
-              image={event.poster_url || event.image || '/WEBINARS.jpg'}
-              registrationEnabled={event.registrationEnabled}
-              registrationStatus={event.registrationStatus}
-              registrationUrl={event.registrationUrl}
-              registrationButtonText={event.registrationButtonText}
-            />
+            <div key={event.id} className={events.length === 1 ? 'lg:col-span-2' : undefined}>
+              <EventCard
+                eventId={event.id}
+                eventType={getPublicEventType(event)}
+                layout={events.length > 1 ? 'grid' : 'horizontal'}
+                title={event.title}
+                date={formatEventDateRange(
+                  event.event_date || event.date,
+                  event.event_end_date || event.endDate
+                )}
+                time={formatEventTimeSummary(event)}
+                speaker={event.speaker || 'DAHI Team'}
+                description={event.description}
+                image={event.poster_url || event.image || '/WEBINARS.jpg'}
+                registrationEnabled={event.registrationEnabled}
+                registrationStatus={event.registrationStatus}
+                registrationUrl={event.registrationUrl}
+                registrationButtonText={event.registrationButtonText}
+              />
+            </div>
           ))}
         </div>
       )}

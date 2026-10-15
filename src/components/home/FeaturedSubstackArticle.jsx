@@ -87,7 +87,7 @@ function FeaturedSubstackArticle() {
   return (
     <section className="section-shell max-w-7xl">
       <div className="soft-card overflow-hidden">
-        <div className="grid gap-8 lg:grid-cols-[0.95fr_0.75fr] items-stretch">
+        <div className="grid items-stretch gap-8 lg:grid-cols-[1.1fr_0.9fr]">
           <div className="p-8">
             <SectionHeading eyebrow="Featured from DAHI" title={featured.title} description="" />
             <p className="mt-4 line-clamp-3 text-base leading-7 text-slate-600">{stripHtml(featured.excerpt).slice(0, 300)}</p>
@@ -109,11 +109,11 @@ function FeaturedSubstackArticle() {
               <span>{featured.date}</span>
             </div>
           </div>
-          <div className="h-full overflow-hidden">
+          <div className="min-h-64 overflow-hidden lg:min-h-[28rem]">
             <img
               src={featured.image}
               alt={featured.title}
-              className="h-full w-full object-cover scale-95"
+              className="h-64 w-full object-cover sm:h-80 lg:h-full lg:min-h-[28rem]"
             />
           </div>
         </div>
