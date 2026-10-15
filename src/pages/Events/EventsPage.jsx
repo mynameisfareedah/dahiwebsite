@@ -8,7 +8,9 @@ import EventCard from '../../components/common/EventCard';
 import LoadingState from '../../components/common/LoadingState';
 import { getEvents } from '../../services/supabase/eventsService';
 import { EVENT_STATUS } from '../../constants/status';
+import { PUBLIC_EVENT_FILTER_OPTIONS } from '../../constants/eventTypes';
 import { testimonials } from '../../data/siteContent';
+import { getPublicEventType } from '../../utils/publicEventType';
 
 const quizSeriesHighlights = [
   'DAHI Ramadan Quiz (DRQ) — 28 February to 18 March 2026',
@@ -57,17 +59,12 @@ const timelineEntries = [
   { period: 'June 2026', title: 'Women\'s Health Q&A Webinar' },
 ];
 
-const filterOptions = [
-  { label: 'All Activities', value: 'all' },
-  { label: 'Community Outreach', value: 'community outreach' },
-  { label: 'Webinars', value: 'webinar' },
-  { label: 'Masterclasses', value: 'masterclass' },
-  { label: 'Educational Quiz', value: 'educational quiz' },
-  { label: 'Health Quizzes', value: 'health quiz' },
-  { label: 'Awareness Campaigns', value: 'awareness campaigns' },
-  { label: 'Educational Resources', value: 'educational resources' },
-  { label: 'Community Activities', value: 'community activities' },
-];
+const filterOptions = PUBLIC_EVENT_FILTER_OPTIONS;
+
+function matchesEventFilter(event, filter) {
+  if (filter === 'all') return true;
+  return getPublicEventType(event) === filter;
+}
 
 function EventsPage() {
   const [activeFilter, setActiveFilter] = useState('all');
@@ -105,27 +102,10 @@ function EventsPage() {
     };
   }, []);
 
-  // Filter events based on the active filter
   const filteredEvents = useMemo(() => {
-    const eventSource = events || [];
-
-    if (activeFilter === 'all') {
-      return eventSource;
-    }
-
-    return eventSource.filter((event) => {
-      const category = event.category.toLowerCase();
-      if (activeFilter === 'community outreach') return category.includes('community outreach');
-      if (activeFilter === 'webinar') return category.includes('webinar');
-      if (activeFilter === 'masterclass') return category.includes('masterclass');
-      if (activeFilter === 'educational quiz') return category.includes('educational quiz');
-      if (activeFilter === 'health quiz') return event.title.toLowerCase().includes('quiz');
-      if (activeFilter === 'awareness campaigns') return event.title.toLowerCase().includes('awareness') || event.title.toLowerCase().includes('campaign');
-      if (activeFilter === 'educational resources') return event.title.toLowerCase().includes('resource');
-      if (activeFilter === 'community activities') return event.title.toLowerCase().includes('community');
-      return false;
-    });
+    return events.filter((event) => matchesEventFilter(event, activeFilter));
   }, [activeFilter, events]);
+  const activeFilterLabel = filterOptions.find((option) => option.value === activeFilter)?.label || 'selected category';
 
   return (
     <>
@@ -169,11 +149,14 @@ function EventsPage() {
             {loadingEvents ? (
               <LoadingState />
             ) : filteredEvents.length === 0 ? (
-              <div className="rounded-[1.25rem] border border-slate-200 bg-slate-50 p-6 text-sm text-slate-600">No published events are available right now.</div>
+              <div className="rounded-[1.25rem] border border-slate-200 bg-slate-50 p-6 text-sm text-slate-600">
+                No published events are available in {activeFilterLabel} right now.
+              </div>
             ) : (
               filteredEvents.map((event) => (
                 <EventCard
                   key={event.id || event.title}
+                  eventId={event.id}
                   title={event.title}
                   date={event.event_date || event.date}
                   time={event.start_time || event.time}

@@ -233,8 +233,8 @@ export default function AdminVolunteerApplications() {
       }
 
       const [html2canvasMod, jspdfMod] = await Promise.all([
-        import(/* @vite-ignore */ 'html2canvas').catch((e) => ({ error: e })),
-        import(/* @vite-ignore */ 'jspdf').catch((e) => ({ error: e })),
+        import('html2canvas').catch((e) => ({ error: e })),
+        import('jspdf').catch((e) => ({ error: e })),
       ]);
       if (html2canvasMod.error || jspdfMod.error) {
         console.error('pdf import failed', html2canvasMod.error || jspdfMod.error);
@@ -329,8 +329,8 @@ export default function AdminVolunteerApplications() {
       }
 
       const [html2canvasMod, jspdfMod] = await Promise.all([
-        import(/* @vite-ignore */ 'html2canvas').catch((e) => ({ error: e })),
-        import(/* @vite-ignore */ 'jspdf').catch((e) => ({ error: e })),
+        import('html2canvas').catch((e) => ({ error: e })),
+        import('jspdf').catch((e) => ({ error: e })),
       ]);
       if (html2canvasMod.error || jspdfMod.error) {
         console.error('pdf import failed', html2canvasMod.error || jspdfMod.error);

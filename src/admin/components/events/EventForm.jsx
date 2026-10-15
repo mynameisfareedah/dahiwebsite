@@ -15,15 +15,21 @@ export function EventForm({
   onBlur,
   onSubmit,
   categories,
+  eventTypes = [],
+  eventTypeError,
+  eventTypeHelp,
+  eventTypeRequired = true,
   statuses,
   isSubmitting,
+  submitDisabled = false,
+  schemaNotice,
   submitLabel = 'Save Event',
   children,
   onCancel,
 }) {
   return (
     <form onSubmit={onSubmit} className="space-y-8">
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className="grid gap-4 lg:grid-cols-3">
         <FormInput
           label="Event Title"
           name="title"
@@ -41,6 +47,17 @@ export function EventForm({
           onChange={onChange}
           onBlur={onBlur}
           options={categories}
+        />
+        <FormSelect
+          label="Event Type"
+          name="eventType"
+          value={values.eventType || ''}
+          onChange={onChange}
+          onBlur={onBlur}
+          options={eventTypes}
+          error={eventTypeError || (touched.eventType && errors.eventType)}
+          required={eventTypeRequired}
+          help={eventTypeHelp}
         />
       </div>
 
@@ -176,6 +193,12 @@ export function EventForm({
 
       {children}
 
+      {schemaNotice ? (
+        <p role="status" className="rounded-xl border border-amber-800 bg-amber-950/60 p-4 text-sm text-amber-100">
+          {schemaNotice}
+        </p>
+      ) : null}
+
       <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
         {onCancel && (
           <button
@@ -188,7 +211,7 @@ export function EventForm({
         )}
         <button
           type="submit"
-          disabled={isSubmitting}
+          disabled={isSubmitting || submitDisabled}
           className="rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:opacity-60"
         >
           {submitLabel}

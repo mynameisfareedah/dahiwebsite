@@ -34,6 +34,7 @@ function buildListQueryResult({ data = [], count = 0, error = null } = {}) {
 describe('eventService - Real Implementation', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.stubEnv('VITE_SUPABASE_EVENT_TYPE_SCHEMA_READY', 'true');
   });
 
   it('creates an event successfully', async () => {
@@ -67,12 +68,14 @@ describe('eventService - Real Implementation', () => {
       location: 'Hall A',
       capacity: 100,
       status: 'draft',
+      eventType: 'webinar',
     });
 
     expect(result.success).toBe(true);
     expect(result.error).toBeNull();
     expect(result.data.title).toBe('Health Talk');
     expect(supabase.from).toHaveBeenCalledWith('events');
+    expect(insert).toHaveBeenCalledWith(expect.objectContaining({ event_type: 'webinar' }));
   });
 
   it('returns error when create fails with Supabase error', async () => {
@@ -90,10 +93,18 @@ describe('eventService - Real Implementation', () => {
 
     vi.mocked(supabase.from).mockReturnValueOnce({ insert });
 
-    const result = await eventService.createEvent({ title: 'Bad Event' });
+    const result = await eventService.createEvent({ title: 'Bad Event', eventType: 'webinar' });
 
     expect(result.success).toBe(false);
     expect(result.error.message).toBe('Insert failed');
+  });
+
+  it('rejects unapproved Event Types before writing', async () => {
+    const result = await eventService.createEvent({ title: 'Health Talk', eventType: 'quiz' });
+
+    expect(result.success).toBe(false);
+    expect(result.error.message).toMatch(/valid Event Type/i);
+    expect(supabase.from).not.toHaveBeenCalled();
   });
 
   it('updates an event successfully', async () => {
@@ -120,10 +131,12 @@ describe('eventService - Real Implementation', () => {
       date: '2026-08-02',
       time: '12:00',
       status: 'published',
+      eventType: 'masterclass',
     });
 
     expect(result.success).toBe(true);
     expect(result.data.title).toBe('Updated Event');
+    expect(update).toHaveBeenCalledWith(expect.objectContaining({ event_type: 'masterclass' }));
   });
 
   it('deletes an event successfully', async () => {

@@ -7,13 +7,13 @@ const AUTH_REQUEST_TIMEOUT_MS = 12000;
 async function withTimeout(promise, timeoutMs, timeoutMessage) {
   let timerId;
   const timeoutPromise = new Promise((_, reject) => {
-    timerId = setTimeout(() => reject(new Error(timeoutMessage)), timeoutMs);
+    timerId = globalThis.setTimeout(() => reject(new Error(timeoutMessage)), timeoutMs);
   });
 
   try {
     return await Promise.race([promise, timeoutPromise]);
   } finally {
-    clearTimeout(timerId);
+    globalThis.clearTimeout(timerId);
   }
 }
 
@@ -63,8 +63,6 @@ class AuthService {
    * @returns {Promise<{error: null} | {error: string}>}
    */
   async signOut() {
-    console.trace("signOut() CALLED");
-
     if (isSupabaseConfigured && supabase) {
       try {
         const { error } = await supabase.auth.signOut();
@@ -122,8 +120,17 @@ class AuthService {
    * @returns {Promise<Object|null>}
    */
   async getUser() {
-    const result = await supabase.auth.getUser();
-    return result.data?.user ?? null;
+    try {
+      const result = await supabase.auth.getUser();
+      if (result.error) {
+        console.error('Error getting current user:', result.error);
+        return null;
+      }
+      return result.data?.user ?? null;
+    } catch (err) {
+      console.error('Error getting current user:', err);
+      return null;
+    }
   }
 
   /**
@@ -138,23 +145,17 @@ class AuthService {
 
     try {
       const { data, error } = await withTimeout(
-        supabase
-          .from('admin_users')
-          .select('active, role')
-          .eq('id', userId)
-          .maybeSingle(),
+        supabase.rpc('is_admin'),
         AUTH_REQUEST_TIMEOUT_MS,
         'Timed out while validating admin access.'
       );
 
-      if (error || !data) {
+      if (error) {
         if (error) console.error('Verify admin error:', error);
         return false;
       }
 
-      const role = String(data.role || '').trim();
-      const isActive = data.active === true;
-      return isActive && (role === 'Admin' || role === 'Super Admin');
+      return data === true;
     } catch (err) {
       console.error('Verify admin error:', err);
       return false;
@@ -194,15 +195,10 @@ class AuthService {
    */
   persistSession(session) {
     try {
-      console.log("Persisting session...", session);
-
-      localStorage.setItem(
+      globalThis.localStorage.setItem(
         STORAGE_KEYS.AUTH_SESSION,
         JSON.stringify(session)
       );
-
-      console.log("Stored:", localStorage.getItem(STORAGE_KEYS.AUTH_SESSION));
-      console.log("Keys:", Object.keys(localStorage));
     } catch (err) {
       console.error("Persist session failed:", err);
     }

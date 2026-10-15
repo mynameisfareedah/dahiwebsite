@@ -1,5 +1,7 @@
 import { supabase, isSupabaseConfigured, handleSupabaseError } from '../../lib/supabase';
 import { EVENT_STATUS } from '../../constants/status';
+import { isEventType } from '../../constants/eventTypes';
+import { EVENT_TYPE_SCHEMA_ACTIVATION_MESSAGE, isEventTypeSchemaReady } from '../../constants/eventTypeSchema';
 import { logAudit } from './auditService';
 
 const EVENT_TABLE = 'events';
@@ -75,13 +77,15 @@ export function getEventImageUrl(path) {
 }
 
 function applyFilters(queryBuilder, options) {
-  const { search, status, category, featured } = options;
+  const { search, status, category, eventType, featured } = options;
 
   if (search) {
     const searchTerm = `%${search.trim()}%`;
-    queryBuilder.or(
-      `title.ilike.${searchTerm},slug.ilike.${searchTerm},description.ilike.${searchTerm},location.ilike.${searchTerm},category.ilike.${searchTerm}`
-    );
+    const searchableFields =
+      `title.ilike.${searchTerm},slug.ilike.${searchTerm},description.ilike.${searchTerm},location.ilike.${searchTerm},category.ilike.${searchTerm}`;
+    queryBuilder.or(isEventTypeSchemaReady()
+      ? `${searchableFields},event_type.ilike.${searchTerm}`
+      : searchableFields);
   }
 
   if (status && status !== 'all') {
@@ -90,6 +94,10 @@ function applyFilters(queryBuilder, options) {
 
   if (category && category !== 'all') {
     queryBuilder.eq('category', category);
+  }
+
+  if (eventType && eventType !== 'all') {
+    queryBuilder.eq('event_type', eventType);
   }
 
   if (featured === true || featured === false) {
@@ -115,7 +123,7 @@ function applyPagination(queryBuilder, options) {
 
 async function getEventRecord(id) {
   // Validate ID format to prevent injection - should be UUID
-  if (!id || typeof id !== 'string' || !/^[a-f0-9\-]{36}$/i.test(id)) {
+  if (!id || typeof id !== 'string' || !/^[a-f0-9-]{36}$/i.test(id)) {
     throw new Error('Invalid event ID format');
   }
 
@@ -196,7 +204,7 @@ async function uploadImage(file, folder = 'posters') {
   const timestamp = Date.now();
   const safeName = file.name
     .toLowerCase()
-    .replace(/[^a-z0-9\.]+/g, '-')
+    .replace(/[^a-z0-9.]+/g, '-')
     .replace(/^-+|-+$/g, '');
   const filePath = `${folder}/${timestamp}-${safeName}`;
 
@@ -223,6 +231,10 @@ export const eventService = {
     try {
       if (!isSupabaseConfigured) {
         return buildSuccessResponse([]);
+      }
+
+      if (options.eventType && options.eventType !== 'all' && !isEventTypeSchemaReady()) {
+        return buildErrorResponse({ message: EVENT_TYPE_SCHEMA_ACTIVATION_MESSAGE });
       }
 
       let query = supabase.from(EVENT_TABLE).select('*', { count: 'exact' });
@@ -273,6 +285,13 @@ export const eventService = {
         return buildSuccessResponse(null);
       }
 
+      if (!isEventTypeSchemaReady()) {
+        return buildErrorResponse({ message: EVENT_TYPE_SCHEMA_ACTIVATION_MESSAGE });
+      }
+      if (!isEventType(data.eventType)) {
+        return buildErrorResponse({ message: 'Select a valid Event Type before creating the event.' });
+      }
+
       // Get current user
       const {
         data: { user: currentUser },
@@ -291,6 +310,7 @@ export const eventService = {
         slug: (data.title || '').toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') || 'event',
         description: data.description || null,
         category: data.category || 'general',
+        event_type: data.eventType,
         event_date: data.date || data.event_date || null,
         start_time: data.time || data.start_time || null,
         location: data.location || null,
@@ -348,6 +368,13 @@ export const eventService = {
         return buildSuccessResponse(null);
       }
 
+      if (data.eventType !== undefined && !isEventTypeSchemaReady()) {
+        return buildErrorResponse({ message: EVENT_TYPE_SCHEMA_ACTIVATION_MESSAGE });
+      }
+      if (isEventTypeSchemaReady() && data.eventType !== undefined && !isEventType(data.eventType)) {
+        return buildErrorResponse({ message: 'Select a valid Event Type before updating the event.' });
+      }
+
       const allowedStatuses = [EVENT_STATUS.DRAFT, EVENT_STATUS.PUBLISHED];
       const sanitizedStatus = allowedStatuses.includes(data.status) ? data.status : EVENT_STATUS.DRAFT;
 
@@ -374,6 +401,9 @@ export const eventService = {
         status: sanitizedStatus,
         updated_at: new Date().toISOString(),
       };
+      if (isEventTypeSchemaReady() && data.eventType !== undefined) {
+        payload.event_type = data.eventType;
+      }
 
       const { data: updated, error } = await supabase
         .from(EVENT_TABLE)
@@ -503,7 +533,7 @@ export const eventService = {
       }
 
       const original = await getEventRecord(id);
-      const nextFeatured = !Boolean(original.featured);
+      const nextFeatured = !original.featured;
 
       const { data: updated, error } = await supabase
         .from(EVENT_TABLE)
@@ -531,8 +561,16 @@ export const eventService = {
       if (!isSupabaseConfigured) {
         return buildSuccessResponse(null);
       }
+      if (!isEventTypeSchemaReady()) {
+        return buildErrorResponse({ message: EVENT_TYPE_SCHEMA_ACTIVATION_MESSAGE });
+      }
 
       const original = await getEventRecord(id);
+      if (!isEventType(original.event_type)) {
+        return buildErrorResponse({
+          message: 'Assign a valid Event Type before duplicating this event.',
+        });
+      }
       const duplicate = {
         ...original,
         title: `${original.title} (Copy)`,

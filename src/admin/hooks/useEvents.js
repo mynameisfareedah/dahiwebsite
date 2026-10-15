@@ -4,6 +4,7 @@ import { eventService } from '../services/eventService';
 const DEFAULT_FILTERS = {
   status: 'all',
   category: 'all',
+  eventType: 'all',
   featured: 'all',
 };
 
@@ -47,6 +48,7 @@ export function useEvents({
         search,
         status: filters.status,
         category: filters.category,
+        eventType: filters.eventType,
         featured: featuredFilter,
         sortBy,
         sortOrder,
@@ -71,7 +73,11 @@ export function useEvents({
   }, [search, filters, sortBy, sortOrder, page, pageSize]);
 
   useEffect(() => {
-    loadEvents();
+    const timeoutId = window.setTimeout(() => {
+      loadEvents();
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
   }, [loadEvents]);
 
   const refresh = useCallback(() => loadEvents(), [loadEvents]);
@@ -183,5 +189,3 @@ export function useEvents({
     duplicateEvent,
   };
 }
-
-

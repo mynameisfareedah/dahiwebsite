@@ -10,6 +10,7 @@ vi.mock('../../../lib/supabase', () => ({
       getUser: vi.fn(),
     },
     from: vi.fn(),
+    rpc: vi.fn(),
   },
   isSupabaseConfigured: true,
 }));
@@ -21,7 +22,7 @@ import { supabase } from '../../../lib/supabase';
 describe('AuthService - Real Implementation', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    localStorage.clear();
+    window.localStorage.clear();
   });
 
   afterEach(() => {
@@ -78,7 +79,7 @@ describe('AuthService - Real Implementation', () => {
       });
 
       // Set a session to verify it gets cleared
-      localStorage.setItem('adminSession', JSON.stringify({ token: 'test' }));
+      window.localStorage.setItem('adminSession', JSON.stringify({ token: 'test' }));
 
       const result = await authService.signOut();
 
@@ -91,7 +92,7 @@ describe('AuthService - Real Implementation', () => {
         error: { message: 'Already signed out' },
       });
 
-      localStorage.setItem('adminSession', JSON.stringify({ token: 'test' }));
+      window.localStorage.setItem('adminSession', JSON.stringify({ token: 'test' }));
 
       const result = await authService.signOut();
 
@@ -207,48 +208,29 @@ describe('AuthService - Real Implementation', () => {
   });
 
   describe('verifyAdmin', () => {
-    it('should verify admin by checking profiles table', async () => {
-      const mockProfile = { id: 'user-123', role: 'Admin' };
-
-      // Mock the Supabase from().select() chain
-      const mockSelect = vi.fn().mockReturnThis();
-      const mockEq = vi.fn().mockReturnThis();
-      const mockMaybeSingle = vi.fn().mockResolvedValueOnce({
-        data: mockProfile,
+    it('uses the database authorization function for an authenticated administrator', async () => {
+      vi.mocked(supabase.rpc).mockResolvedValueOnce({
+        data: true,
         error: null,
       });
-
-      vi.mocked(supabase.from).mockReturnValueOnce({
-        select: mockSelect,
-      });
-
-      mockSelect.mockReturnValueOnce({ eq: mockEq });
-      mockEq.mockReturnValueOnce({ maybeSingle: mockMaybeSingle });
 
       const isAdmin = await authService.verifyAdmin('user-123');
 
       expect(isAdmin).toBe(true);
-      expect(supabase.from).toHaveBeenCalledWith('profiles');
+      expect(supabase.rpc).toHaveBeenCalledWith('is_admin');
+      expect(supabase.from).not.toHaveBeenCalled();
     });
 
-    it('should return false for non-admin users', async () => {
-      const mockSelect = vi.fn().mockReturnThis();
-      const mockEq = vi.fn().mockReturnThis();
-      const mockMaybeSingle = vi.fn().mockResolvedValueOnce({
-        data: null,
+    it('denies users not authorized by the database function', async () => {
+      vi.mocked(supabase.rpc).mockResolvedValueOnce({
+        data: false,
         error: null,
       });
-
-      vi.mocked(supabase.from).mockReturnValueOnce({
-        select: mockSelect,
-      });
-
-      mockSelect.mockReturnValueOnce({ eq: mockEq });
-      mockEq.mockReturnValueOnce({ maybeSingle: mockMaybeSingle });
 
       const isAdmin = await authService.verifyAdmin('user-456');
 
       expect(isAdmin).toBe(false);
+      expect(supabase.rpc).toHaveBeenCalledWith('is_admin');
     });
 
     it('should return false when userId is missing', async () => {
@@ -257,24 +239,25 @@ describe('AuthService - Real Implementation', () => {
       expect(isAdmin).toBe(false);
     });
 
-    it('should handle database query errors', async () => {
-      const mockSelect = vi.fn().mockReturnThis();
-      const mockEq = vi.fn().mockReturnThis();
-      const mockMaybeSingle = vi.fn().mockResolvedValueOnce({
+    it('fails closed when the database authorization function errors', async () => {
+      vi.mocked(supabase.rpc).mockResolvedValueOnce({
         data: null,
         error: { message: 'Database error' },
       });
 
-      vi.mocked(supabase.from).mockReturnValueOnce({
-        select: mockSelect,
-      });
-
-      mockSelect.mockReturnValueOnce({ eq: mockEq });
-      mockEq.mockReturnValueOnce({ maybeSingle: mockMaybeSingle });
-
       const isAdmin = await authService.verifyAdmin('user-123');
 
       expect(isAdmin).toBe(false);
+      expect(supabase.rpc).toHaveBeenCalledWith('is_admin');
+    });
+
+    it('fails closed unless the authorization function returns literal true', async () => {
+      vi.mocked(supabase.rpc).mockResolvedValueOnce({
+        data: 'true',
+        error: null,
+      });
+
+      await expect(authService.verifyAdmin('user-123')).resolves.toBe(false);
     });
   });
 });

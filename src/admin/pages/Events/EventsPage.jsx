@@ -7,6 +7,8 @@ import { LoadingState } from '../../components/events/LoadingState';
 import { EmptyState } from '../../components/events/EmptyState';
 import { getEventImageUrl } from '../../services/eventService';
 import { EVENT_STATUS } from '../../../constants/status';
+import { EVENT_TYPE_OPTIONS, getEventTypeLabel } from '../../../constants/eventTypes';
+import { isEventTypeSchemaReady } from '../../../constants/eventTypeSchema';
 
 const STATUS_OPTIONS = [
   { value: 'all', label: 'All Statuses' },
@@ -128,6 +130,7 @@ const EventActionDropdown = memo(function EventActionDropdown({ event, onDelete,
 
 export default memo(function EventsPage() {
   const [searchTerm, setSearchTerm] = useState('');
+  const eventTypeSchemaReady = isEventTypeSchemaReady();
 
   const {
     events,
@@ -181,6 +184,11 @@ export default memo(function EventsPage() {
 
   const handleCategoryChange = (value) => {
     setFilters((current) => ({ ...current, category: value }));
+    setPage(1);
+  };
+
+  const handleEventTypeChange = (value) => {
+    setFilters((current) => ({ ...current, eventType: value }));
     setPage(1);
   };
 
@@ -271,8 +279,9 @@ export default memo(function EventsPage() {
           </div>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           <select
+            aria-label="Filter by status"
             value={filters.status}
             onChange={(event) => handleStatusChange(event.target.value)}
             disabled={loading}
@@ -284,6 +293,7 @@ export default memo(function EventsPage() {
           </select>
 
           <select
+            aria-label="Filter by category"
             value={filters.category}
             onChange={(event) => handleCategoryChange(event.target.value)}
             disabled={loading}
@@ -293,8 +303,25 @@ export default memo(function EventsPage() {
               <option key={option.value} value={option.value}>{option.label}</option>
             ))}
           </select>
+          <select
+            aria-label="Filter by Event Type"
+            value={filters.eventType || 'all'}
+            onChange={(event) => handleEventTypeChange(event.target.value)}
+            disabled={loading || !eventTypeSchemaReady}
+            className="w-full rounded-3xl border border-slate-800 bg-slate-900/80 px-4 py-3 text-sm text-white outline-none transition focus:border-blue-500 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            <option value="all">All Event Types</option>
+            {EVENT_TYPE_OPTIONS.map((option) => (
+              <option key={option.value} value={option.value}>{option.label}</option>
+            ))}
+          </select>
         </div>
       </div>
+      {!eventTypeSchemaReady ? (
+        <p className="text-sm text-amber-300" role="status">
+          Event Type filtering will be available after the database schema is activated.
+        </p>
+      ) : null}
 
       {showInlineError ? (
         <div className="rounded-3xl border border-amber-700 bg-amber-950/60 p-4 text-sm text-amber-100">
@@ -316,7 +343,7 @@ export default memo(function EventsPage() {
           onAction={() => {
             setSearchTerm('');
             setSearch('');
-            setFilters({ status: 'all', category: 'all', featured: 'all' });
+            setFilters({ status: 'all', category: 'all', eventType: 'all', featured: 'all' });
             setPage(1);
           }}
         />
@@ -328,6 +355,7 @@ export default memo(function EventsPage() {
                 <tr>
                   <th className="px-5 py-4">Event</th>
                   <th className="px-5 py-4">Category</th>
+                  <th className="px-5 py-4">Event Type</th>
                   <th className="px-5 py-4 cursor-pointer" onClick={() => handleSort('event_date')}>
                     Date {sortIcon('event_date')}
                   </th>
@@ -358,6 +386,7 @@ export default memo(function EventsPage() {
                       </div>
                     </td>
                     <td className="px-5 py-4 text-slate-300">{event.category || '—'}</td>
+                    <td className="px-5 py-4 text-slate-300">{getEventTypeLabel(event.event_type)}</td>
                     <td className="px-5 py-4 text-slate-300">{event.date || 'TBD'}</td>
                     <td className="px-5 py-4">
                       <StatusBadge status={event.status || EVENT_STATUS.DRAFT} />

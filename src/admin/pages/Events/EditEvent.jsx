@@ -6,6 +6,8 @@ import { EventImageUploader } from '../../components/events/EventImageUploader';
 import { validators, validateForm } from '../../utils/validation';
 import { eventService, getEventImageUrl } from '../../services/eventService';
 import { EVENT_STATUS } from '../../../constants/status';
+import { EVENT_TYPE_OPTIONS } from '../../../constants/eventTypes';
+import { EVENT_TYPE_SCHEMA_ACTIVATION_MESSAGE, isEventTypeSchemaReady } from '../../../constants/eventTypeSchema';
 
 const CATEGORY_OPTIONS = [
   { value: 'health', label: 'Health' },
@@ -25,6 +27,7 @@ const initialFormValues = {
   title: '',
   description: '',
   category: 'health',
+  eventType: '',
   date: '',
   time: '',
   location: '',
@@ -76,6 +79,7 @@ export default function EditEvent() {
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
+  const eventTypeSchemaReady = isEventTypeSchemaReady();
 
   const {
     values,
@@ -91,6 +95,14 @@ export default function EditEvent() {
 
     try {
       const payload = { ...formValues };
+      const existingEventType = eventRecord?.event_type || '';
+      if (!eventTypeSchemaReady && formValues.eventType !== existingEventType) {
+        addToast(EVENT_TYPE_SCHEMA_ACTIVATION_MESSAGE, 'error');
+        return;
+      }
+      if (!eventTypeSchemaReady) {
+        delete payload.eventType;
+      }
 
       if (posterFile) {
         const uploadResponse = await eventService.uploadPoster(posterFile);
@@ -114,13 +126,15 @@ export default function EditEvent() {
     } finally {
       setIsUploading(false);
     }
-  }, (values) => validateForm(values, formRules));
+  }, (values) => {
+    const rules = eventTypeSchemaReady || eventRecord?.event_type
+      ? { ...formRules, eventType: [(val) => validators.required(val, 'Event Type')] }
+      : formRules;
+    return validateForm(values, rules);
+  });
 
   useEffect(() => {
     if (!id) {
-      console.error('Invalid event id');
-      setLoadError('Missing event id');
-      setLoading(false);
       return;
     }
 
@@ -141,6 +155,7 @@ export default function EditEvent() {
         setFieldValue('title', eventData.title || '');
         setFieldValue('description', eventData.description || '');
         setFieldValue('category', eventData.category || 'health');
+        setFieldValue('eventType', eventData.event_type || '');
         setFieldValue('date', eventData.date || '');
         setFieldValue('time', eventData.time || '');
         setFieldValue('location', eventData.location || '');
@@ -157,7 +172,6 @@ export default function EditEvent() {
         setFieldValue('capacity', String(eventData.capacity || 0));
         setFieldValue('status', eventData.status || EVENT_STATUS.DRAFT);
         setFieldValue('featured', eventData.featured === true);
-        setPreviewUrl(getEventImageUrl(eventData.poster_url));
       } catch (error) {
         setLoadError(error?.message || 'Unable to load event');
       } finally {
@@ -170,23 +184,16 @@ export default function EditEvent() {
     return () => {
       isMounted = false;
     };
-  }, [id]);
+  }, [id, setFieldValue]);
 
-  useEffect(() => {
-    if (!posterFile) {
-      if (eventRecord?.poster_url) {
-        setPreviewUrl(getEventImageUrl(eventRecord.poster_url));
-      }
-      return undefined;
-    }
+  useEffect(() => () => {
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+  }, [previewUrl]);
 
-    const url = URL.createObjectURL(posterFile);
-    setPreviewUrl(url);
-
-    return () => {
-      URL.revokeObjectURL(url);
-    };
-  }, [posterFile, eventRecord]);
+  const handlePosterFileChange = (file) => {
+    setPosterFile(file);
+    setPreviewUrl(file ? URL.createObjectURL(file) : null);
+  };
 
   if (loading) {
     return (
@@ -231,15 +238,28 @@ export default function EditEvent() {
             onBlur={handleBlur}
             onSubmit={handleSubmit}
             categories={CATEGORY_OPTIONS}
+            eventTypes={[
+              ...(!values.eventType ? [{ value: '', label: 'Not assigned — select a type' }] : []),
+              ...EVENT_TYPE_OPTIONS,
+            ]}
+            eventTypeError={errors.eventType}
+            eventTypeRequired={eventTypeSchemaReady || Boolean(eventRecord?.event_type)}
+            eventTypeHelp={eventTypeSchemaReady
+              ? 'Choose the event’s public classification. Category remains a separate field.'
+              : 'Existing records without a type remain unassigned. Changing this selection is disabled until the database schema is ready.'}
             statuses={STATUS_OPTIONS}
             isSubmitting={isSubmitting || isUploading}
+            submitDisabled={!eventTypeSchemaReady && values.eventType !== (eventRecord?.event_type || '')}
+            schemaNotice={!eventTypeSchemaReady
+              ? `${EVENT_TYPE_SCHEMA_ACTIVATION_MESSAGE} Existing event types remain visible, and untyped records are not assigned automatically.`
+              : null}
             submitLabel={isSubmitting || isUploading ? 'Saving...' : 'Update Event'}
             onCancel={() => navigate('/admin/events')}
           >
             <EventImageUploader
-              previewUrl={previewUrl}
+              previewUrl={posterFile ? previewUrl : getEventImageUrl(eventRecord?.poster_url)}
               fileName={posterFile?.name || eventRecord?.poster_url?.split('/').pop()}
-              onFileChange={setPosterFile}
+              onFileChange={handlePosterFileChange}
             />
           </EventForm>
         </div>

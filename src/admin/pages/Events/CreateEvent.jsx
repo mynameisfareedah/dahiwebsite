@@ -6,6 +6,8 @@ import { EventImageUploader } from '../../components/events/EventImageUploader';
 import { validators, validateForm } from '../../utils/validation';
 import { eventService } from '../../services/eventService';
 import { EVENT_STATUS } from '../../../constants/status';
+import { EVENT_TYPE_OPTIONS } from '../../../constants/eventTypes';
+import { EVENT_TYPE_SCHEMA_ACTIVATION_MESSAGE, isEventTypeSchemaReady } from '../../../constants/eventTypeSchema';
 
 const CATEGORY_OPTIONS = [
   { value: 'health', label: 'Health' },
@@ -25,6 +27,7 @@ const initialFormValues = {
   title: '',
   description: '',
   category: 'health',
+  eventType: '',
   date: '',
   time: '',
   location: '',
@@ -55,6 +58,7 @@ const formRules = {
     (val) => validators.required(val, 'Event title'),
     (val) => validators.minLength(val, 3, 'Event title'),
   ],
+  eventType: [(val) => validators.required(val, 'Event Type')],
   date: [(val) => validators.required(val, 'Date')],
   time: [(val) => validators.required(val, 'Time')],
   location: [(val) => validators.required(val, 'Location')],
@@ -72,6 +76,7 @@ export default function CreateEvent() {
   const [posterFile, setPosterFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
+  const eventTypeSchemaReady = isEventTypeSchemaReady();
 
   const {
     values,
@@ -82,6 +87,11 @@ export default function CreateEvent() {
     handleBlur,
     handleSubmit,
   } = useForm(initialFormValues, async (formValues) => {
+    if (!eventTypeSchemaReady) {
+      addToast(EVENT_TYPE_SCHEMA_ACTIVATION_MESSAGE, 'error');
+      return;
+    }
+
     setIsUploading(true);
 
     try {
@@ -109,19 +119,14 @@ export default function CreateEvent() {
     }
   }, (values) => validateForm(values, formRules));
 
-  useEffect(() => {
-    if (!posterFile) {
-      setPreviewUrl(null);
-      return undefined;
-    }
+  useEffect(() => () => {
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+  }, [previewUrl]);
 
-    const url = URL.createObjectURL(posterFile);
-    setPreviewUrl(url);
-
-    return () => {
-      URL.revokeObjectURL(url);
-    };
-  }, [posterFile]);
+  const handlePosterFileChange = (file) => {
+    setPosterFile(file);
+    setPreviewUrl(file ? URL.createObjectURL(file) : null);
+  };
 
   return (
     <div className="space-y-8">
@@ -142,15 +147,22 @@ export default function CreateEvent() {
             onBlur={handleBlur}
             onSubmit={handleSubmit}
             categories={CATEGORY_OPTIONS}
+            eventTypes={[{ value: '', label: 'Select Event Type' }, ...EVENT_TYPE_OPTIONS]}
+            eventTypeError={errors.eventType}
+            eventTypeHelp="Choose one approved public classification. Category remains a separate field."
             statuses={STATUS_OPTIONS}
             isSubmitting={isSubmitting || isUploading}
+            submitDisabled={!eventTypeSchemaReady}
+            schemaNotice={!eventTypeSchemaReady
+              ? `${EVENT_TYPE_SCHEMA_ACTIVATION_MESSAGE} The selected type will be preserved in this form; no event will be saved yet.`
+              : null}
             submitLabel={isSubmitting || isUploading ? 'Saving...' : 'Create Event'}
             onCancel={() => navigate('/admin/events')}
           >
             <EventImageUploader
-              previewUrl={previewUrl}
+              previewUrl={posterFile ? previewUrl : null}
               fileName={posterFile?.name}
-              onFileChange={setPosterFile}
+              onFileChange={handlePosterFileChange}
             />
           </EventForm>
         </div>

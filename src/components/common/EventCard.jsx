@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { resolveRegistrationState } from '../../utils/registration';
 
 function EventCard({
+  eventId,
   title,
   date,
   time,
@@ -26,6 +27,7 @@ function EventCard({
   );
   const normalizedHref = typeof registrationState.href === 'string' ? registrationState.href.trim() : '';
   const isInternalLink = normalizedHref.startsWith('/');
+  const detailsHref = eventId == null || eventId === '' ? null : `/events/${encodeURIComponent(eventId)}`;
 
   return (
     <article className="soft-card overflow-hidden">
@@ -42,21 +44,31 @@ function EventCard({
           <h3 className="mt-4 text-xl font-semibold text-slate-900">{title}</h3>
           <p className="mt-2 text-sm font-semibold uppercase tracking-[0.2em] text-dahiPrimary">{speaker}</p>
           <p className="mt-3 text-slate-600">{description}</p>
-          {registrationState.enabled && isInternalLink ? (
-            <Link to={normalizedHref} className="mt-6 inline-flex rounded-full bg-dahiPrimary px-4 py-2 text-sm font-semibold text-white transition hover:bg-dahiSecondary">{registrationState.label}</Link>
-          ) : registrationState.enabled ? (
-            <a href={normalizedHref} target="_blank" rel="noopener noreferrer" className="mt-6 inline-flex rounded-full bg-dahiPrimary px-4 py-2 text-sm font-semibold text-white transition hover:bg-dahiSecondary">{registrationState.label}</a>
-          ) : (
-            <div className="mt-6">
+          <div className="mt-6 flex flex-wrap gap-3">
+            {registrationState.enabled && isInternalLink ? (
+              <Link to={normalizedHref} data-event-card-action className="inline-flex rounded-full bg-dahiPrimary px-4 py-2 text-sm font-semibold text-white transition hover:bg-dahiSecondary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dahiPrimary">{registrationState.label}</Link>
+            ) : registrationState.enabled ? (
+              <a href={normalizedHref} target="_blank" rel="noopener noreferrer" data-event-card-action className="inline-flex rounded-full bg-dahiPrimary px-4 py-2 text-sm font-semibold text-white transition hover:bg-dahiSecondary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dahiPrimary">{registrationState.label}</a>
+            ) : (
               <button
                 type="button"
                 disabled
+                data-event-card-action
                 className="inline-flex cursor-not-allowed rounded-full bg-slate-300 px-4 py-2 text-sm font-semibold text-slate-600"
               >
                 {registrationState.label}
               </button>
-            </div>
-          )}
+            )}
+            {detailsHref && (
+              <Link
+                to={detailsHref}
+                data-event-card-action
+                className="inline-flex rounded-full border border-dahiPrimary px-4 py-2 text-sm font-semibold text-dahiPrimary transition hover:bg-dahiPrimary/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dahiPrimary"
+              >
+                View Details
+              </Link>
+            )}
+          </div>
         </div>
       </div>
     </article>
