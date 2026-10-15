@@ -3,8 +3,8 @@ import MissionVisionValues from '../common/MissionVisionValues';
 
 function AboutPreview() {
   return (
-    <section id="about" className="section-shell mx-auto max-w-7xl">
-      <div className="home-about-copy max-w-4xl">
+    <section id="about" className="section-shell w-full">
+      <div className="home-about-copy w-full min-w-0">
         <span className="eyebrow">About DAHI</span>
         <h2 className="mt-4 section-title">Health education rooted in evidence, compassion, and faith.</h2>
         <div className="mt-5 space-y-4 text-lg leading-8 text-slate-600">

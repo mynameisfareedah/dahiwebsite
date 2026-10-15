@@ -33,13 +33,15 @@ function renderInRouter(ui) {
 
 describe('homepage visual polish', () => {
   it('keeps one community discussion image after removing the repeated About image', () => {
-    renderInRouter(
+    const { container } = renderInRouter(
       <>
         <Hero />
         <AboutPreview />
       </>,
     );
 
+    expect(container.querySelector('#about')).toHaveClass('w-full');
+    expect(container.querySelector('.home-about-copy')).toHaveClass('w-full', 'min-w-0');
     expect(screen.getAllByAltText('DAHI community members in discussion')).toHaveLength(1);
     expect(screen.getByRole('heading', { name: 'Health education rooted in evidence, compassion, and faith.' })).toBeInTheDocument();
     expect(screen.getByText(/In August 2026, this mission expanded/)).toBeInTheDocument();
