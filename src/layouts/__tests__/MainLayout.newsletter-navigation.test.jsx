@@ -163,6 +163,31 @@ describe('MainLayout newsletter navigation', () => {
     await waitFor(() => expect(scrollIntoView).toHaveBeenCalledWith({ behavior: 'smooth', block: 'start' }));
   });
 
+  it('hides the floating Subscribe CTA while it overlaps a form action and restores it afterward', async () => {
+    renderLayout('/contact');
+
+    const subscribeLink = screen.getByTestId('floating-subscribe-cta');
+    const submitButton = screen.getByRole('button', { name: 'Send Message' });
+    const ctaRect = {
+      top: 700, bottom: 748, left: 800, right: 936, width: 136, height: 48,
+    };
+    const overlappingRect = {
+      top: 710, bottom: 740, left: 820, right: 890, width: 70, height: 30,
+    };
+    const clearRect = {
+      top: 100, bottom: 140, left: 20, right: 120, width: 100, height: 40,
+    };
+    vi.spyOn(subscribeLink, 'getBoundingClientRect').mockReturnValue(ctaRect);
+    const submitRect = vi.spyOn(submitButton, 'getBoundingClientRect').mockReturnValue(overlappingRect);
+
+    act(() => fireEvent.scroll(window));
+    await waitFor(() => expect(subscribeLink).toHaveAttribute('hidden'));
+
+    submitRect.mockReturnValue(clearRect);
+    act(() => fireEvent.scroll(window));
+    await waitFor(() => expect(subscribeLink).not.toHaveAttribute('hidden'));
+  });
+
   it('scrolls to the founder section after direct navigation to /team#founder', async () => {
     const scrollIntoView = vi.fn();
     originalScrollIntoViewDescriptor = Object.getOwnPropertyDescriptor(window.HTMLElement.prototype, 'scrollIntoView');

@@ -57,7 +57,7 @@ function GetInvolved() {
                   data-whatsapp-action
                   className="inline-flex min-h-11 items-center justify-center rounded-full bg-dahiPrimary px-4 py-2 text-sm font-semibold text-white hover:bg-dahiSecondary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dahiPrimary"
                 >
-                  Join WhatsApp Group
+                  Join Our WhatsApp Group
                 </a>
                 <a
                   href={WHATSAPP_CHANNEL_URL}
@@ -66,7 +66,7 @@ function GetInvolved() {
                   data-whatsapp-action
                   className="inline-flex min-h-11 items-center justify-center rounded-full border border-dahiPrimary px-4 py-2 text-sm font-semibold text-dahiPrimary hover:bg-dahiPrimary/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dahiPrimary"
                 >
-                  Follow WhatsApp Channel
+                  Follow Our WhatsApp Channel
                 </a>
               </div>
             ) : (

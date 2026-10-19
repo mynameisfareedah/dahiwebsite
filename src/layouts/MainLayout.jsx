@@ -10,6 +10,7 @@ function MainLayout() {
   const [newsletterVisibility, setNewsletterVisibility] = useState(null);
   const [communityActionsVisibility, setCommunityActionsVisibility] = useState(null);
   const [contactFormVisibility, setContactFormVisibility] = useState(null);
+  const [floatingSubscribeCollision, setFloatingSubscribeCollision] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
@@ -69,6 +70,57 @@ function MainLayout() {
     return () => {
       mutationObserver.disconnect();
       intersectionObserver?.disconnect();
+    };
+  }, [location.pathname]);
+
+  useEffect(() => {
+    const intersects = (first, second) => (
+      first.left < second.right
+      && first.right > second.left
+      && first.top < second.bottom
+      && first.bottom > second.top
+    );
+
+    const updateCollision = () => {
+      const subscribe = document.querySelector('[data-floating-subscribe-cta]');
+      const subscribeRect = subscribe?.getBoundingClientRect();
+      if (!subscribeRect || subscribeRect.width === 0 || subscribeRect.height === 0) {
+        setFloatingSubscribeCollision(false);
+        return;
+      }
+
+      const footerRect = document.querySelector('footer')?.getBoundingClientRect();
+      const controls = Array.from(document.querySelectorAll(
+        'main a[href], main button, main input:not([type="hidden"]), main select, main textarea, header a[href], header button, [role="navigation"] a[href], [role="navigation"] button, button[aria-label="Toggle navigation"]',
+      ));
+      const controlRects = controls
+        .map((control) => control.getBoundingClientRect())
+        .filter((rect) => rect.width > 0 && rect.height > 0);
+      const overlapsFooter = footerRect
+        && footerRect.width > 0
+        && footerRect.height > 0
+        && intersects(footerRect, subscribeRect);
+      const overlapsControl = controlRects.some((rect) => intersects(rect, subscribeRect));
+
+      setFloatingSubscribeCollision(Boolean(overlapsFooter || overlapsControl));
+    };
+
+    let animationFrame = 0;
+    const scheduleCollisionUpdate = () => {
+      window.cancelAnimationFrame(animationFrame);
+      animationFrame = window.requestAnimationFrame(updateCollision);
+    };
+    const mutationObserver = new window.MutationObserver(updateCollision);
+    mutationObserver.observe(document.body, { childList: true, subtree: true });
+    updateCollision();
+    window.addEventListener('scroll', scheduleCollisionUpdate, { passive: true });
+    window.addEventListener('resize', scheduleCollisionUpdate);
+
+    return () => {
+      mutationObserver.disconnect();
+      window.cancelAnimationFrame(animationFrame);
+      window.removeEventListener('scroll', scheduleCollisionUpdate);
+      window.removeEventListener('resize', scheduleCollisionUpdate);
     };
   }, [location.pathname]);
 
@@ -175,6 +227,7 @@ function MainLayout() {
           ))
           || (location.pathname === '/' && communityActionsVisibility?.visible)
           || (location.pathname === '/contact' && contactFormVisibility?.visible)
+          || floatingSubscribeCollision
         }
       />
     </div>

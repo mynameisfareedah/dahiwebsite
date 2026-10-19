@@ -16,8 +16,8 @@ describe('WhatsApp community links', () => {
     renderWithRouter(<GetInvolved />);
 
     const section = screen.getByRole('heading', { name: 'Get Involved with DAHI' }).closest('section');
-    const groupLink = within(section).getByRole('link', { name: 'Join WhatsApp Group' });
-    const channelLink = within(section).getByRole('link', { name: 'Follow WhatsApp Channel' });
+    const groupLink = within(section).getByRole('link', { name: 'Join Our WhatsApp Group' });
+    const channelLink = within(section).getByRole('link', { name: 'Follow Our WhatsApp Channel' });
 
     expect(groupLink).toHaveAttribute('href', whatsappGroupUrl);
     expect(groupLink).toHaveAttribute('target', '_blank');
@@ -26,7 +26,7 @@ describe('WhatsApp community links', () => {
     expect(channelLink).toHaveAttribute('target', '_blank');
     expect(channelLink).toHaveAttribute('rel', 'noopener noreferrer');
     expect(groupLink).not.toBe(channelLink);
-    expect(within(section).getAllByRole('link', { name: 'Join WhatsApp Group' })).toHaveLength(1);
+    expect(within(section).getAllByRole('link', { name: 'Join Our WhatsApp Group' })).toHaveLength(1);
   });
 
   it('includes separate Group and Channel destinations in the footer', () => {

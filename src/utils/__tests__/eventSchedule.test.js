@@ -3,6 +3,7 @@ import {
   buildEventSchedulePayload,
   formatEventDate,
   formatEventDateRange,
+  formatEventTimeSummary,
   getEventScheduleFormValues,
   toEventServicePayload,
   validateEventSchedule,
@@ -14,6 +15,26 @@ describe('event scheduling helpers', () => {
     expect(formatEventDateRange('2026-10-17', '2026-10-18')).toBe('17–18 October 2026');
     expect(formatEventDateRange('2026-10-17', '2026-11-02')).toBe('17 October–2 November 2026');
     expect(formatEventDateRange('2026-10-17', null)).toBe('17 October 2026');
+  });
+
+  it('formats multi-day sessions with their dates and start/end times', () => {
+    expect(formatEventTimeSummary({
+      event_schedule: [
+        { date: '2026-10-17', time: '15:00:00', end_time: '18:00:00' },
+        { date: '2026-10-18', time: '15:00', end_time: '18:00' },
+      ],
+    })).toBe('17 Oct: 3:00 PM–6:00 PM · 18 Oct: 3:00 PM–6:00 PM');
+  });
+
+  it('formats single-day ranges and keeps missing times as TBA', () => {
+    expect(formatEventTimeSummary({
+      start_time: '15:00',
+      end_time: '18:00',
+    })).toBe('3:00 PM–6:00 PM');
+    expect(formatEventTimeSummary({
+      event_schedule: [{ date: '2026-10-17', time: null, end_time: '18:00' }],
+    })).toBe('17 Oct: TBA');
+    expect(formatEventTimeSummary({})).toBe('TBA');
   });
 
   it('rejects an End Date before the required Start Date', () => {

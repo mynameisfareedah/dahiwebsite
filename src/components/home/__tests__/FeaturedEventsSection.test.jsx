@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -46,6 +46,35 @@ describe('FeaturedEventsSection', () => {
     );
     expect(screen.getByRole('link', { name: 'View All Events' })).toHaveAttribute('href', '/events');
     expect(screen.getByRole('button', { name: 'Registration Closed' })).toBeDisabled();
+  });
+
+  it('shows the full date range and each scheduled start/end time', async () => {
+    mocks.getFeaturedEvents.mockResolvedValue({
+      data: [{
+        id: 'doq',
+        title: 'DAHI Online Quiz',
+        event_date: '2026-10-17',
+        event_end_date: '2026-10-18',
+        event_schedule: [
+          { date: '2026-10-17', time: '15:00', end_time: '18:00' },
+          { date: '2026-10-18', time: '15:00', end_time: '18:00' },
+        ],
+      }],
+      error: null,
+    });
+
+    render(
+      <MemoryRouter>
+        <FeaturedEventsSection />
+      </MemoryRouter>
+    );
+
+    const eventHeading = await screen.findByRole('heading', { name: 'DAHI Online Quiz' });
+    const eventCard = eventHeading.closest('article');
+    expect(within(eventCard).getByText('17–18 October 2026')).toBeInTheDocument();
+    expect(within(eventCard).getByText(
+      '17 Oct: 3:00 PM–6:00 PM · 18 Oct: 3:00 PM–6:00 PM'
+    )).toBeInTheDocument();
   });
 
   it('uses a balanced two-column desktop grid for multiple featured events', async () => {

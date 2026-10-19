@@ -33,6 +33,24 @@ function normalizeTime(value) {
   return typeof value === 'string' ? value.slice(0, 5) : '';
 }
 
+function formatDisplayTime(value) {
+  const time = normalizeTime(value);
+  const match = /^([01]\d|2[0-3]):([0-5]\d)$/.exec(time);
+  if (!match) return time;
+
+  const hour = Number(match[1]);
+  const displayHour = hour % 12 || 12;
+  return `${displayHour}:${match[2]} ${hour < 12 ? 'AM' : 'PM'}`;
+}
+
+function formatSessionTime(startTime, endTime) {
+  const start = formatDisplayTime(startTime);
+  if (!start) return 'TBA';
+
+  const end = formatDisplayTime(endTime);
+  return end ? `${start}–${end}` : start;
+}
+
 export function formatEventDate(dateString) {
   const parsed = parseCalendarDate(dateString);
   if (!parsed) return dateString || '-';
@@ -83,12 +101,18 @@ export function formatEventTimeSummary(event) {
           timeZone: 'UTC',
         }).format(parsedDate.date)
         : session.date;
-      const timeLabel = normalizeTime(session.time) || 'TBA';
+      const timeLabel = formatSessionTime(
+        session.time ?? session.start_time,
+        session.end_time ?? session.endTime
+      );
       return dateLabel ? `${dateLabel}: ${timeLabel}` : timeLabel;
     }).join(' · ');
   }
 
-  return normalizeTime(event?.start_time ?? event?.time) || 'TBA';
+  return formatSessionTime(
+    event?.start_time ?? event?.time,
+    event?.end_time ?? event?.endTime
+  );
 }
 
 export function getEventSessions(event) {

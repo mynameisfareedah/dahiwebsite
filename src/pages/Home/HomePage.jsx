@@ -1,5 +1,6 @@
 import Hero from '../../components/home/Hero';
 import UpcomingOutreachSection from '../../components/home/UpcomingOutreachSection';
+import OutreachPhotoLoop from '../../components/home/OutreachPhotoLoop';
 import AboutPreview from '../../components/home/AboutPreview';
 import FeaturedPrograms from '../../components/home/FeaturedPrograms';
 import MeetDocAdi from '../../components/home/MeetDocAdi';
@@ -41,6 +42,17 @@ function HomePage() {
 
       {/* 6.5. Completed First Community Outreach */}
       <UpcomingOutreachSection />
+
+      <section className="section-shell max-w-7xl" aria-labelledby="home-outreach-gallery-title">
+        <div className="mb-8 max-w-3xl">
+          <span className="eyebrow">Community Outreach</span>
+          <h2 id="home-outreach-gallery-title" className="mt-4 section-title">Outreach in pictures</h2>
+          <p className="mt-4 text-lg leading-8 text-slate-600">
+            Moments from DAHI&apos;s community health outreach and education activities.
+          </p>
+        </div>
+        <OutreachPhotoLoop />
+      </section>
 
       {/* 7. Featured Health Resources */}
       <ResourcesPreview />
