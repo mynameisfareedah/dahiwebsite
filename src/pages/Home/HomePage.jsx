@@ -1,5 +1,4 @@
 import Hero from '../../components/home/Hero';
-import UpcomingOutreachSection from '../../components/home/UpcomingOutreachSection';
 import OutreachPhotoLoop from '../../components/home/OutreachPhotoLoop';
 import AboutPreview from '../../components/home/AboutPreview';
 import FeaturedPrograms from '../../components/home/FeaturedPrograms';
@@ -39,9 +38,6 @@ function HomePage() {
 
       {/* Featured published events */}
       <FeaturedEventsSection />
-
-      {/* 6.5. Completed First Community Outreach */}
-      <UpcomingOutreachSection />
 
       <section className="section-shell max-w-7xl" aria-labelledby="home-outreach-gallery-title">
         <div className="mb-8 max-w-3xl">

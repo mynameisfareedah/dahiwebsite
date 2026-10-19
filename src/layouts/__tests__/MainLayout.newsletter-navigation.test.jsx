@@ -188,6 +188,32 @@ describe('MainLayout newsletter navigation', () => {
     await waitFor(() => expect(subscribeLink).not.toHaveAttribute('hidden'));
   });
 
+  it('hides Share and Back to Top while they overlap a page control', async () => {
+    renderLayout('/contact');
+
+    const floatingControls = document.querySelector('.share-progress-controls');
+    const submitButton = screen.getByRole('button', { name: 'Send Message' });
+    const floatingRect = {
+      top: 648, bottom: 752, left: 16, right: 64, width: 48, height: 104,
+    };
+    const overlappingRect = {
+      top: 660, bottom: 690, left: 20, right: 52, width: 32, height: 30,
+    };
+    const clearRect = {
+      top: 100, bottom: 140, left: 20, right: 120, width: 100, height: 40,
+    };
+
+    vi.spyOn(floatingControls, 'getBoundingClientRect').mockReturnValue(floatingRect);
+    const submitRect = vi.spyOn(submitButton, 'getBoundingClientRect').mockReturnValue(overlappingRect);
+
+    act(() => fireEvent.scroll(window));
+    await waitFor(() => expect(floatingControls).toHaveAttribute('hidden'));
+
+    submitRect.mockReturnValue(clearRect);
+    act(() => fireEvent.scroll(window));
+    await waitFor(() => expect(floatingControls).not.toHaveAttribute('hidden'));
+  });
+
   it('scrolls to the founder section after direct navigation to /team#founder', async () => {
     const scrollIntoView = vi.fn();
     originalScrollIntoViewDescriptor = Object.getOwnPropertyDescriptor(window.HTMLElement.prototype, 'scrollIntoView');
@@ -308,6 +334,16 @@ describe('MainLayout newsletter navigation', () => {
     observers[0].setVisible(false);
     await waitFor(() => expect(subscribeLink).not.toHaveAttribute('hidden'));
     expect(subscribeLink).not.toHaveStyle({ display: 'none' });
+  });
+
+  it('keeps Subscribe available when IntersectionObserver is unsupported', async () => {
+    originalIntersectionObserverDescriptor = Object.getOwnPropertyDescriptor(window, 'IntersectionObserver');
+    delete window.IntersectionObserver;
+    renderLayout('/');
+
+    await waitFor(() => {
+      expect(screen.getByTestId('floating-subscribe-cta')).not.toHaveAttribute('hidden');
+    });
   });
 
   it('hides the floating CTA while either WhatsApp action is visible', async () => {

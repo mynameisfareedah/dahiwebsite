@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import Sidebar from '../components/layout/Sidebar';
 import FloatingSubscribeCTA from '../components/layout/FloatingSubscribeCTA';
+import ShareProgressControls from '../components/layout/ShareProgressControls';
 import Footer from '../components/layout/Footer';
 import { trackPageView } from '../lib/analytics';
 
@@ -11,6 +12,7 @@ function MainLayout() {
   const [communityActionsVisibility, setCommunityActionsVisibility] = useState(null);
   const [contactFormVisibility, setContactFormVisibility] = useState(null);
   const [floatingSubscribeCollision, setFloatingSubscribeCollision] = useState(false);
+  const [shareProgressCollision, setShareProgressCollision] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
@@ -83,11 +85,36 @@ function MainLayout() {
 
     const updateCollision = () => {
       const subscribe = document.querySelector('[data-floating-subscribe-cta]');
-      const subscribeRect = subscribe?.getBoundingClientRect();
-      if (!subscribeRect || subscribeRect.width === 0 || subscribeRect.height === 0) {
-        setFloatingSubscribeCollision(false);
-        return;
-      }
+      const shareProgress = document.querySelector('.share-progress-controls');
+      const fixedRect = (element, { width, height, side }) => {
+        if (!element) return null;
+
+        const rect = element.getBoundingClientRect();
+        const style = window.getComputedStyle(element);
+        const resolvedWidth = rect.width || width;
+        const resolvedHeight = rect.height || height;
+        const left = Number.parseFloat(style.left);
+        const right = Number.parseFloat(style.right);
+        const bottom = Number.parseFloat(style.bottom);
+        const x = Number.isFinite(left)
+          ? left
+          : Number.isFinite(right)
+            ? window.innerWidth - right - resolvedWidth
+            : side === 'left' ? 16 : window.innerWidth - 16 - resolvedWidth;
+        const y = window.innerHeight - (Number.isFinite(bottom) ? bottom : 16) - resolvedHeight;
+
+        return {
+          left: rect.width ? rect.left : x,
+          right: rect.width ? rect.right : x + resolvedWidth,
+          top: rect.height ? rect.top : y,
+          bottom: rect.height ? rect.bottom : y + resolvedHeight,
+          width: resolvedWidth,
+          height: resolvedHeight,
+        };
+      };
+      const subscribeRect = fixedRect(subscribe, { width: 136, height: 48, side: 'right' });
+      const shareProgressRect = fixedRect(shareProgress, { width: 48, height: 104, side: 'left' });
+      if (!subscribeRect || !shareProgressRect) return;
 
       const footerRect = document.querySelector('footer')?.getBoundingClientRect();
       const controls = Array.from(document.querySelectorAll(
@@ -101,8 +128,15 @@ function MainLayout() {
         && footerRect.height > 0
         && intersects(footerRect, subscribeRect);
       const overlapsControl = controlRects.some((rect) => intersects(rect, subscribeRect));
+      const shareOverFooter = footerRect
+        && footerRect.width > 0
+        && footerRect.height > 0
+        && intersects(footerRect, shareProgressRect);
+      const shareOverControl = controlRects.some((rect) => intersects(rect, shareProgressRect));
+      const shareOverSubscribe = intersects(subscribeRect, shareProgressRect);
 
       setFloatingSubscribeCollision(Boolean(overlapsFooter || overlapsControl));
+      setShareProgressCollision(Boolean(shareOverFooter || shareOverControl || shareOverSubscribe));
     };
 
     let animationFrame = 0;
@@ -219,14 +253,17 @@ function MainLayout() {
       
       {/* Footer */}
       <Footer />
+      <ShareProgressControls hidden={mobileOpen || shareProgressCollision} />
       <FloatingSubscribeCTA
         hidden={
           mobileOpen
-          || (location.pathname === '/' && (
-            newsletterVisibility?.pathname !== location.pathname || newsletterVisibility.visible
-          ))
+          || (location.pathname === '/'
+            && newsletterVisibility?.pathname === location.pathname
+            && newsletterVisibility.visible)
           || (location.pathname === '/' && communityActionsVisibility?.visible)
-          || (location.pathname === '/contact' && contactFormVisibility?.visible)
+          || (location.pathname === '/contact'
+            && contactFormVisibility?.pathname === location.pathname
+            && contactFormVisibility.visible)
           || floatingSubscribeCollision
         }
       />

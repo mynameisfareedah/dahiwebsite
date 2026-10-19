@@ -32,7 +32,7 @@ function renderInRouter(ui) {
 }
 
 describe('homepage visual polish', () => {
-  it('keeps one community discussion image after removing the repeated About image', () => {
+  it('uses the approved silhouette artwork without changing the About preview', () => {
     const { container } = renderInRouter(
       <>
         <Hero />
@@ -42,7 +42,8 @@ describe('homepage visual polish', () => {
 
     expect(container.querySelector('#about')).toHaveClass('w-full');
     expect(container.querySelector('.home-about-copy')).toHaveClass('w-full', 'min-w-0');
-    expect(screen.getAllByAltText('DAHI community members in discussion')).toHaveLength(1);
+    expect(container.querySelector('#hero .home-hero-banner')).toBeInTheDocument();
+    expect(screen.queryByAltText('DAHI community members in discussion')).not.toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Health education rooted in evidence, compassion, and faith.' })).toBeInTheDocument();
     expect(screen.getByText(/In August 2026, this mission expanded/)).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Learn More About DAHI' })).toHaveAttribute('href', '/about');
@@ -51,7 +52,9 @@ describe('homepage visual polish', () => {
   it('adds a restrained hero entrance and keeps both existing calls to action', () => {
     renderInRouter(<Hero />);
 
+    expect(document.querySelector('#hero')).toHaveClass('home-hero');
     expect(screen.getByRole('heading', { name: 'Trusted Health Education for Muslim Women' })).toHaveClass('home-hero-enter--2');
+    expect(screen.getByText('Muslim Women')).toHaveClass('home-hero-title__highlight');
     expect(screen.getByRole('link', { name: 'Explore Resources' })).toHaveAttribute('href', '/resources');
     expect(screen.getByRole('link', { name: 'Learn About DAHI' })).toHaveAttribute('href', '/about');
     expect(screen.getByText('Doc Adi Health Initiative (DAHI)')).toHaveClass('home-hero-enter--1');

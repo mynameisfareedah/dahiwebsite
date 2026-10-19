@@ -51,6 +51,253 @@ body {
   padding-inline: clamp(1rem, 3vw, 3rem);
 }
 
+.home-hero {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.home-hero-banner {
+  position: relative;
+  display: flex;
+  min-height: 34rem;
+  align-items: center;
+  overflow: hidden;
+  isolation: isolate;
+  background-color: #381544;
+  background-image:
+    linear-gradient(90deg, rgba(31, 14, 42, 0.9) 0%, rgba(48, 20, 55, 0.76) 46%, rgba(48, 20, 55, 0.2) 100%),
+    url('/images/dahi-hero-silhouettes.webp');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%, contain;
+}
+
+.home-hero-overlay {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  background: linear-gradient(0deg, rgba(38, 17, 46, 0.3), transparent 65%);
+}
+
+.home-hero-content {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 88rem);
+  margin-inline: auto;
+  padding: clamp(2rem, 5vw, 3.5rem);
+  color: #fff;
+}
+
+.home-hero-eyebrow {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+}
+
+.home-hero-title {
+  max-width: 56rem;
+  margin: 0.75rem 0 0;
+  font-size: clamp(2.5rem, 5.4vw, 4.8rem);
+  font-weight: 900;
+  line-height: 1.08;
+  text-wrap: balance;
+}
+
+.home-hero-title__highlight {
+  color: #ff69b4;
+}
+
+.home-hero-description {
+  max-width: 44rem;
+  margin: 1.25rem 0 0;
+  color: rgba(255, 255, 255, 0.94);
+  font-size: clamp(1rem, 1.5vw, 1.2rem);
+  line-height: 1.75;
+}
+
+.home-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.75rem;
+}
+
+.home-hero-button {
+  display: inline-flex;
+  min-height: 2.9rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.25;
+  text-align: center;
+  text-decoration: none;
+  transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease, transform 180ms ease;
+}
+
+.home-hero-button--primary {
+  background: #6d2e7c;
+  color: #fff;
+}
+
+.home-hero-button--primary:hover {
+  background: #542361;
+  transform: translateY(-2px);
+}
+
+.home-hero-button--secondary {
+  border-color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+.home-hero-button--secondary:hover {
+  background: rgba(255, 255, 255, 0.22);
+  transform: translateY(-2px);
+}
+
+.home-hero-button:focus-visible {
+  outline: 3px solid var(--dahi-accent);
+  outline-offset: 3px;
+}
+
+@media (max-width: 1023px) {
+  .home-hero-banner {
+    background-position: center;
+  }
+}
+
+@media (max-width: 640px) {
+  .home-hero-banner {
+    min-height: 39rem;
+    align-items: flex-end;
+    background-image:
+      linear-gradient(180deg, rgba(38, 17, 46, 0.08) 0%, rgba(38, 17, 46, 0.42) 32%, rgba(38, 17, 46, 0.96) 59%, #381544 100%),
+      url('/images/dahi-hero-silhouettes.webp');
+    background-position: center top;
+    background-repeat: no-repeat, no-repeat;
+    background-size: 100% auto, 100% auto;
+  }
+
+  .home-hero-content {
+    padding: 1.5rem 1.25rem 2.25rem;
+  }
+
+  .home-hero-title {
+    font-size: clamp(2.25rem, 10vw, 3rem);
+  }
+
+  .home-hero-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+.share-progress-controls {
+  position: fixed;
+  z-index: 30;
+  left: calc(env(safe-area-inset-left, 0px) + 1rem);
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 1rem);
+  display: flex;
+  width: 3rem;
+  height: 6.5rem;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.share-progress-controls[hidden] {
+  display: none;
+}
+
+.share-progress-controls__button {
+  position: relative;
+  display: inline-flex;
+  width: 3rem;
+  height: 3rem;
+  flex: 0 0 3rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(109, 46, 124, 0.18);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.96);
+  color: var(--dahi-primary);
+  box-shadow: 0 5px 16px rgba(47, 20, 59, 0.16);
+  transition: transform 180ms ease, background-color 180ms ease, box-shadow 180ms ease;
+  cursor: pointer;
+}
+
+.share-progress-controls__button:hover {
+  transform: translateY(-2px);
+  background: #fff7fc;
+  box-shadow: 0 8px 20px rgba(47, 20, 59, 0.2);
+}
+
+.share-progress-controls__button:focus-visible {
+  outline: 3px solid var(--dahi-accent);
+  outline-offset: 3px;
+}
+
+.share-progress-controls__progress {
+  border-color: rgba(109, 46, 124, 0.3);
+}
+
+.share-progress-controls__ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+  overflow: visible;
+  pointer-events: none;
+}
+
+.share-progress-controls__ring-track,
+.share-progress-controls__ring-value {
+  fill: none;
+  stroke-width: 2.2;
+}
+
+.share-progress-controls__ring-track {
+  stroke: rgba(109, 46, 124, 0.14);
+}
+
+.share-progress-controls__ring-value {
+  stroke: #bd176f;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 160ms linear;
+}
+
+.share-progress-controls__progress > svg:last-child {
+  z-index: 1;
+}
+
+.share-progress-controls__feedback {
+  position: absolute;
+  bottom: calc(100% + 0.5rem);
+  left: 0;
+  width: max-content;
+  max-width: min(15rem, calc(100vw - 2rem));
+  border-radius: 0.75rem;
+  background: #3b174c;
+  padding: 0.55rem 0.75rem;
+  color: white;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  box-shadow: 0 4px 14px rgba(47, 20, 59, 0.2);
+}
+
+.share-progress-controls__feedback:empty {
+  display: none;
+}
+
 @media (min-width: 1024px) {
   .section-shell {
     padding: 5rem 1.5rem 5rem 0;
@@ -256,6 +503,15 @@ body {
   .home-focus-icon,
   .home-resource-image {
     transition: none !important;
+  }
+
+  .share-progress-controls__button,
+  .share-progress-controls__ring-value {
+    transition: none;
+  }
+
+  .share-progress-controls__button:hover {
+    transform: none;
   }
 }
 
