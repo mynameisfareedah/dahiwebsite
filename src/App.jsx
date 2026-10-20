@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import MainLayout from './layouts/MainLayout';
 import LoadingState from './components/common/LoadingState';
@@ -20,6 +20,7 @@ const BlogPage = lazy(() => import('./pages/Blog/BlogPage'));
 const VolunteerPage = lazy(() => import('./pages/Volunteer/VolunteerPage'));
 const ContactPage = lazy(() => import('./pages/Contact/ContactPage'));
 const PrivacyPage = lazy(() => import('./pages/Privacy/PrivacyPage'));
+const TestimonialsPage = lazy(() => import('./pages/Testimonials/TestimonialsPage'));
 const NotFoundPage = lazy(() => import('./pages/NotFound/NotFoundPage'));
 
 function App() {
@@ -45,6 +46,8 @@ function App() {
               <Route path="/volunteer" element={<VolunteerPage />} />
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/privacy" element={<PrivacyPage />} />
+              <Route path="/voices" element={<TestimonialsPage />} />
+              <Route path="/testimonials" element={<Navigate to="/voices" replace />} />
             </Route>
 
             {/* Admin routes */}

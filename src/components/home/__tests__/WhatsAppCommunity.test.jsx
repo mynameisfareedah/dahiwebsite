@@ -43,6 +43,7 @@ describe('WhatsApp community links', () => {
     expect(channelLink).toHaveAttribute('target', '_blank');
     expect(channelLink).toHaveAttribute('rel', 'noopener noreferrer');
     expect(within(footer).getByRole('link', { name: 'Newsletter' })).toHaveAttribute('href', '/#newsletter');
+    expect(within(footer).getByRole('link', { name: 'DAHI Voices' })).toHaveAttribute('href', '/voices');
     expect(within(footer).getAllByRole('link', { name: 'WhatsApp Group' })).toHaveLength(1);
   });
 });

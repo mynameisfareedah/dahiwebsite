@@ -3,27 +3,29 @@ import { OFFICIAL_CONTACT_EMAIL } from '../../constants/contactInfo';
 import { WHATSAPP_CHANNEL_URL, WHATSAPP_GROUP_URL } from '../../constants/communityLinks';
 import NewsletterLink from './NewsletterLink';
 
-function Footer() {
+function Footer({ hideOutreachCallout = false }) {
   return (
     <footer className="mt-12 text-slate-300">
       {/* Promotional Banner */}
-      <div className="bg-gradient-to-r from-dahiAccent/90 to-dahiPrimary/90 py-6">
-        <div className="mx-auto flex w-full max-w-[96rem] items-center justify-between gap-4 px-4 sm:px-6 lg:px-12">
-          <div className="flex items-center gap-2 sm:gap-4">
-            <span className="text-3xl">📅</span>
-            <div>
-              <div className="font-bold text-white">Our First Community Outreach</div>
-              <div className="text-xs text-white/90 sm:text-sm">Read about DAHI’s completed outreach in Gwagwalada, Abuja.</div>
+      {!hideOutreachCallout && (
+        <div className="bg-gradient-to-r from-dahiAccent/90 to-dahiPrimary/90 py-6">
+          <div className="mx-auto flex w-full max-w-[96rem] items-center justify-between gap-4 px-4 sm:px-6 lg:px-12">
+            <div className="flex items-center gap-2 sm:gap-4">
+              <span className="text-3xl" aria-hidden="true">📅</span>
+              <div>
+                <div className="font-bold text-white">Our First Community Outreach</div>
+                <div className="text-xs text-white/90 sm:text-sm">Read about DAHI’s completed outreach in Gwagwalada, Abuja.</div>
+              </div>
             </div>
+            <Link
+              to="/outreach"
+              className="flex-shrink-0 rounded-full bg-white px-4 py-2 text-xs font-semibold text-dahiPrimary transition hover:bg-white/90 sm:text-sm"
+            >
+              Read About Outreach
+            </Link>
           </div>
-          <Link
-            to="/outreach"
-            className="flex-shrink-0 rounded-full bg-white px-4 py-2 text-xs font-semibold text-dahiPrimary transition hover:bg-white/90 sm:text-sm"
-          >
-            Read About Outreach
-          </Link>
         </div>
-      </div>
+      )}
 
       {/* Footer Content */}
       <div className="border-t border-slate-200 bg-slate-900 py-10">
@@ -40,6 +42,7 @@ function Footer() {
             <div className="font-semibold text-white">Connect with us</div>
             <div className="flex flex-wrap gap-3">
               <NewsletterLink className="text-slate-300 transition hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">Newsletter</NewsletterLink>
+              <Link to="/voices" className="text-slate-300 transition hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">DAHI Voices</Link>
               <a href={`mailto:${OFFICIAL_CONTACT_EMAIL}`} className="text-slate-300 transition hover:text-white">Email</a>
               <a href={WHATSAPP_CHANNEL_URL} target="_blank" rel="noopener noreferrer" className="text-slate-300 transition hover:text-white">WhatsApp Channel</a>
               <a href={WHATSAPP_GROUP_URL} target="_blank" rel="noopener noreferrer" className="text-slate-300 transition hover:text-white">WhatsApp Group</a>

@@ -2,7 +2,8 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { describe, expect, it, vi } from 'vitest';
-import { focusAreas, testimonials } from '../../../data/siteContent';
+import { focusAreas } from '../../../data/siteContent';
+import { homepageTestimonials } from '../../../data/testimonials';
 import AboutPreview from '../AboutPreview';
 import FeaturedPrograms from '../FeaturedPrograms';
 import Hero from '../Hero';
@@ -71,14 +72,29 @@ describe('homepage visual polish', () => {
     }
   });
 
-  it('keeps testimonial wording while presenting each quote in a welcoming card', () => {
-    render(<Testimonials />);
+  it('features the approved testimonials and links to the complete collection', () => {
+    renderInRouter(<Testimonials />);
 
-    testimonials.slice(0, 3).forEach((item) => {
-      expect(screen.getByText(item.quote)).toBeInTheDocument();
+    homepageTestimonials.forEach((testimonial) => {
+      expect(screen.getByText(testimonial.quote)).toBeInTheDocument();
     });
+    expect(homepageTestimonials.map(({ id }) => id)).toEqual([
+      'webinar-well-structured',
+      'online-quiz-participant',
+      'community-appreciation-whatsapp',
+    ]);
+    expect(homepageTestimonials.map(({ quote }) => quote)).toEqual([
+      'The webinar was well-structured, and the delivery made every topic easy to understand.',
+      'Jazak Allahu Khayran for the quiz. I enjoyed taking part.',
+      'May Allah the exalted bless you abundantly and reward you for all your efforts.',
+    ]);
+    expect(homepageTestimonials).toHaveLength(3);
+    expect(new Set(homepageTestimonials.map(({ id }) => id)).size).toBe(3);
     expect(document.querySelectorAll('.home-testimonial-card')).toHaveLength(3);
     expect(document.querySelectorAll('.home-testimonial-quote[aria-hidden="true"]')).toHaveLength(3);
+    expect(screen.getByRole('heading', { name: 'What Our Community Says' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Explore DAHI Voices' })).toHaveAttribute('href', '/voices');
+    expect(screen.queryByText("It's actually a very clear guide, yeah.")).not.toBeInTheDocument();
   });
 
   it('shows a concise excerpt while preserving resource title, price, and purchase link', () => {

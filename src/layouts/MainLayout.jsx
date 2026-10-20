@@ -252,7 +252,7 @@ function MainLayout() {
       </div>
       
       {/* Footer */}
-      <Footer />
+      <Footer hideOutreachCallout={location.pathname === '/'} />
       <ShareProgressControls hidden={mobileOpen || shareProgressCollision} />
       <FloatingSubscribeCTA
         hidden={

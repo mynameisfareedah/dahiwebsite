@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { ChevronLeft, ChevronRight, Pause, Play, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 
 export const outreachPhotos = [
   {
@@ -142,37 +142,12 @@ export const outreachPhotos = [
 
 function OutreachPhotoLoop() {
   const [unavailableSources, setUnavailableSources] = useState(() => new Set());
-  const [isPaused, setIsPaused] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
-  const [isFocused, setIsFocused] = useState(false);
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const [selectedImage, setSelectedImage] = useState(null);
   const closeButtonRef = useRef(null);
   const triggerRef = useRef(null);
   const availablePhotos = outreachPhotos.filter((image) => !unavailableSources.has(image.src));
   const currentIndex = availablePhotos.length ? activeIndex % availablePhotos.length : 0;
-
-  useEffect(() => {
-    const motionPreference = window.matchMedia?.('(prefers-reduced-motion: reduce)');
-    if (!motionPreference) return undefined;
-
-    const updateMotionPreference = () => setPrefersReducedMotion(motionPreference.matches);
-
-    updateMotionPreference();
-    motionPreference.addEventListener?.('change', updateMotionPreference);
-    return () => motionPreference.removeEventListener?.('change', updateMotionPreference);
-  }, []);
-
-  useEffect(() => {
-    if (isPaused || isHovered || isFocused || prefersReducedMotion || selectedImage || availablePhotos.length < 2) return undefined;
-
-    const timer = window.setInterval(() => {
-      setActiveIndex((index) => (index % availablePhotos.length + 1) % availablePhotos.length);
-    }, 5000);
-
-    return () => window.clearInterval(timer);
-  }, [availablePhotos.length, isFocused, isHovered, isPaused, prefersReducedMotion, selectedImage]);
 
   useEffect(() => {
     if (!selectedImage) return undefined;
@@ -254,26 +229,11 @@ function OutreachPhotoLoop() {
   return (
     <div className="outreach-photo-loop">
       <div className="outreach-photo-loop__toolbar">
-        <p className="text-sm font-medium text-slate-600">Photographs from DAHI’s community outreach</p>
         <div className="outreach-photo-loop__controls">
-          <span className="outreach-photo-loop__count" aria-hidden="true">{currentIndex + 1} / {availablePhotos.length}</span>
-          <button type="button" className="outreach-photo-loop__toggle" aria-label="Show previous outreach photograph" onClick={() => moveToPhoto(-1)}>
+          <button type="button" className="outreach-photo-loop__nav-button" aria-label="Show previous outreach photograph" onClick={() => moveToPhoto(-1)}>
             <ChevronLeft aria-hidden="true" className="h-4 w-4" />
           </button>
-          {!prefersReducedMotion && (
-            <button
-              type="button"
-              className="outreach-photo-loop__toggle"
-              aria-label={isPaused ? 'Resume photo animation' : 'Pause photo animation'}
-              aria-controls="outreach-photo-loop"
-              aria-pressed={isPaused}
-              onClick={() => setIsPaused((paused) => !paused)}
-            >
-              {isPaused ? <Play aria-hidden="true" className="h-4 w-4" /> : <Pause aria-hidden="true" className="h-4 w-4" />}
-              <span>{isPaused ? 'Resume' : 'Pause'}</span>
-            </button>
-          )}
-          <button type="button" className="outreach-photo-loop__toggle" aria-label="Show next outreach photograph" onClick={() => moveToPhoto(1)}>
+          <button type="button" className="outreach-photo-loop__nav-button" aria-label="Show next outreach photograph" onClick={() => moveToPhoto(1)}>
             <ChevronRight aria-hidden="true" className="h-4 w-4" />
           </button>
         </div>
@@ -284,14 +244,8 @@ function OutreachPhotoLoop() {
         role="region"
         aria-label="DAHI community outreach photographs"
         tabIndex={0}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-        onFocusCapture={() => setIsFocused(true)}
-        onBlurCapture={(event) => {
-          if (!event.currentTarget.contains(event.relatedTarget)) setIsFocused(false);
-        }}
       >
-        <div className="outreach-photo-loop__track" data-paused={isPaused}>
+        <div className="outreach-photo-loop__track">
           {visiblePhotos.map(({ image, position }) => renderPhoto(image, position))}
         </div>
       </div>

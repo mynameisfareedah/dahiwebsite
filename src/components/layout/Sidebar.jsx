@@ -10,6 +10,7 @@ const sidebarLinks = [
   { to: '/blog', label: 'Blog' },
   { to: '/events', label: 'Events' },
   { to: '/outreach', label: 'Outreach' },
+  { to: '/voices', label: 'DAHI Voices' },
   { to: '/resources', label: 'Resources' },
   { to: '/volunteer', label: 'Volunteer' },
   { to: '/contact', label: 'Contact' },

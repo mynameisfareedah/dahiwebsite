@@ -3,7 +3,6 @@ import OutreachPhotoLoop from '../../components/home/OutreachPhotoLoop';
 import AboutPreview from '../../components/home/AboutPreview';
 import FeaturedPrograms from '../../components/home/FeaturedPrograms';
 import MeetDocAdi from '../../components/home/MeetDocAdi';
-import Impact from '../../components/home/Impact';
 import FeaturedEventsSection from '../../components/home/FeaturedEventsSection';
 import ResourcesPreview from '../../components/home/ResourcesPreview';
 import Testimonials from '../../components/home/Testimonials';
@@ -30,13 +29,10 @@ function HomePage() {
       {/* 4. Featured Programs / Meet the Founder */}
       <MeetDocAdi />
 
-      {/* 6. Impact & Achievements */}
-      <Impact />
-
-      {/* 6.5. Featured Substack Article */}
+      {/* 5. Featured Blog */}
       <FeaturedSubstackArticle />
 
-      {/* Featured published events */}
+      {/* 6. Featured Events */}
       <FeaturedEventsSection />
 
       <section className="section-shell max-w-7xl" aria-labelledby="home-outreach-gallery-title">
@@ -50,19 +46,19 @@ function HomePage() {
         <OutreachPhotoLoop />
       </section>
 
-      {/* 7. Featured Health Resources */}
+      {/* 8. Educational Resources */}
       <ResourcesPreview />
 
-      {/* 7. Testimonials */}
+      {/* 9. Testimonials */}
       <Testimonials />
 
-      {/* 8. Get Involved */}
+      {/* 10. Get Involved */}
       <GetInvolved />
 
-      {/* 10. Newsletter Subscription */}
+      {/* 11. Newsletter Subscription */}
       <NewsletterSection />
 
-      {/* 11. FAQ */}
+      {/* 12. FAQ */}
       <FAQ />
     </div>
   );

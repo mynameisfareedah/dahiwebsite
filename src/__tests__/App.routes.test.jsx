@@ -1,12 +1,18 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, useLocation } from 'react-router-dom';
 import App from '../App';
+
+function CurrentPath() {
+  const location = useLocation();
+  return <output data-testid="current-path">{location.pathname}</output>;
+}
 
 function renderAppAt(path) {
   return render(
     <MemoryRouter initialEntries={[path]}>
       <App />
+      <CurrentPath />
     </MemoryRouter>
   );
 }
@@ -16,6 +22,19 @@ describe('App Router - Real Routes', () => {
     renderAppAt('/privacy');
 
     expect(await screen.findByRole('heading', { name: /privacy policy/i })).toBeInTheDocument();
+  });
+
+  it('renders the public DAHI Voices page', async () => {
+    renderAppAt('/voices');
+
+    expect(await screen.findByRole('heading', { name: 'DAHI Voices' })).toBeInTheDocument();
+  });
+
+  it('redirects the legacy testimonials URL to /voices', async () => {
+    renderAppAt('/testimonials');
+
+    expect(await screen.findByRole('heading', { name: 'DAHI Voices' })).toBeInTheDocument();
+    expect(await screen.findByTestId('current-path')).toHaveTextContent('/voices');
   });
 
   it('keeps the manually authored outreach article route available', async () => {

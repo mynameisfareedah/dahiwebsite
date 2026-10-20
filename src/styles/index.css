@@ -577,13 +577,9 @@ body {
 .outreach-photo-loop__toolbar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 1rem;
   margin-bottom: 0.75rem;
-}
-
-.outreach-photo-loop__toolbar > p {
-  margin: 0;
 }
 
 .outreach-photo-loop__controls {
@@ -593,15 +589,7 @@ body {
   gap: 0.5rem;
 }
 
-.outreach-photo-loop__count {
-  min-width: 3rem;
-  color: #64748b;
-  font-size: 0.875rem;
-  font-variant-numeric: tabular-nums;
-  text-align: center;
-}
-
-.outreach-photo-loop__toggle,
+.outreach-photo-loop__nav-button,
 .outreach-photo-loop__close {
   display: inline-flex;
   min-width: 2.75rem;
@@ -619,7 +607,7 @@ body {
   cursor: pointer;
 }
 
-.outreach-photo-loop__toggle:hover {
+.outreach-photo-loop__nav-button:hover {
   border-color: var(--dahi-primary);
   background: #f0fdfa;
 }
@@ -754,7 +742,7 @@ body {
   color: #475569;
 }
 
-.outreach-photo-loop__toggle:focus-visible,
+.outreach-photo-loop__nav-button:focus-visible,
 .outreach-photo-loop__close:focus-visible,
 .outreach-photo-loop__card:focus-visible {
   outline: 3px solid var(--dahi-accent);
@@ -762,17 +750,6 @@ body {
 }
 
 @media (max-width: 640px) {
-  .outreach-photo-loop__toolbar {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .outreach-photo-loop__controls {
-    width: 100%;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-  }
-
   .outreach-photo-loop__viewport {
     --outreach-photo-width: min(15rem, calc(100vw - 3rem));
     min-height: 26rem;

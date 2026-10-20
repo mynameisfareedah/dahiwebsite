@@ -1,7 +1,8 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import userEvent from '@testing-library/user-event';
 import { useEffect, useState } from 'react';
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
-import { Link, MemoryRouter, Route, Routes } from 'react-router-dom';
+import { Link, MemoryRouter, Navigate, Route, Routes } from 'react-router-dom';
 import MainLayout from '../MainLayout';
 
 vi.mock('../../lib/analytics', () => ({ trackPageView: vi.fn() }));
@@ -27,6 +28,8 @@ function renderLayout(initialPath = '/blog', delayedNewsletter = false) {
       <Routes>
         <Route element={<MainLayout />}>
           <Route path="/blog" element={<h1>Blog</h1>} />
+          <Route path="/voices" element={<h1>DAHI Voices</h1>} />
+          <Route path="/testimonials" element={<Navigate to="/voices" replace />} />
           <Route path="/team" element={<section id="founder" tabIndex={-1} className="scroll-mt-24"><h1>Meet the Founder</h1></section>} />
           <Route path="/about" element={<section id="mission-vision-values" tabIndex={-1} className="scroll-mt-24"><h1>Our Mission, Vision and Core Values</h1></section>} />
           <Route path="/" element={delayedNewsletter ? <DelayedNewsletter /> : (
@@ -81,16 +84,66 @@ describe('MainLayout newsletter navigation', () => {
     }
   });
 
+  it('omits the outreach promotional callout on the homepage but retains it on other routes', () => {
+    const { unmount } = renderLayout('/');
+
+    expect(screen.getByRole('contentinfo')).toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: 'Read About Outreach' })).not.toBeInTheDocument();
+    expect(within(screen.getByRole('contentinfo')).getByRole('link', { name: 'Newsletter' })).toBeInTheDocument();
+
+    unmount();
+    renderLayout('/blog');
+
+    expect(screen.getByRole('contentinfo')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Read About Outreach' })).toHaveAttribute('href', '/outreach');
+  });
+
   it('shows primary links and the newsletter action at desktop widths while retaining the mobile drawer', () => {
     renderLayout();
 
-    expect(screen.getByRole('navigation', { name: 'Primary navigation' })).toHaveClass('min-[1280px]:flex');
+    const primaryNavigation = screen.getByRole('navigation', { name: 'Primary navigation' });
+    expect(primaryNavigation).toHaveClass('min-[1280px]:flex');
     expect(screen.getByRole('navigation', { name: 'Mobile navigation' })).toHaveClass('flex-1');
     expect(screen.getByRole('button', { name: 'Toggle navigation' })).toHaveClass('min-[1280px]:hidden');
     expect(screen.getByRole('button', { name: 'Toggle navigation' })).toHaveAttribute('aria-controls', 'mobile-sidebar');
+    const primaryLinks = within(primaryNavigation).getAllByRole('link').map((link) => link.getAttribute('href'));
+    expect(primaryLinks).toEqual([
+      '/',
+      '/about',
+      '/team',
+      '/blog',
+      '/events',
+      '/outreach',
+      '/voices',
+      '/resources',
+      '/volunteer',
+      '/contact',
+      '/#newsletter',
+    ]);
+    expect(within(primaryNavigation).getByRole('link', { name: 'DAHI Voices' })).toHaveAttribute('href', '/voices');
     expect(screen.getAllByRole('link', { name: 'Join Us' }).some((link) => (
       link.classList.contains('min-[1280px]:inline-flex')
     ))).toBe(true);
+  });
+
+  it('navigates to DAHI Voices from the mobile drawer and marks it as the active page', async () => {
+    const user = userEvent.setup();
+    renderLayout('/');
+
+    await user.click(screen.getByRole('button', { name: 'Toggle navigation' }));
+    const mobileNavigation = screen.getByRole('navigation', { name: 'Mobile navigation' });
+    const mobileLinks = within(mobileNavigation).getAllByRole('link').map((link) => link.getAttribute('href'));
+    expect(mobileLinks).toContain('/voices');
+    const voicesLink = within(mobileNavigation).getByRole('link', { name: 'DAHI Voices' });
+    voicesLink.focus();
+    await user.keyboard('{Enter}');
+
+    expect(await screen.findByRole('heading', { name: 'DAHI Voices' })).toBeInTheDocument();
+    expect(within(screen.getByRole('navigation', { name: 'Mobile navigation' }))
+      .getByRole('link', { name: 'DAHI Voices' })).toHaveAttribute('aria-current', 'page');
+    expect(screen.getByRole('button', { name: 'Toggle navigation' })).toHaveAttribute('aria-expanded', 'false');
+    expect(within(screen.getByRole('navigation', { name: 'Primary navigation' }))
+      .getByRole('link', { name: 'DAHI Voices' })).toHaveAttribute('aria-current', 'page');
   });
 
   it('navigates from another route, scrolls to the section, and moves focus', async () => {
