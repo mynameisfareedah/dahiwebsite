@@ -28,6 +28,15 @@ function jsonResponse(statusCode, payload) {
   });
 }
 
+function logAuthorizationFailure(stage, category) {
+  console.error(JSON.stringify({
+    event: 'subscriber_authorization_failure',
+    stage,
+    category,
+    timestamp: new Date().toISOString(),
+  }));
+}
+
 function parsePagination(searchParams) {
   const keys = [...searchParams.keys()];
   if (keys.some((key) => !['limit', 'starting_after'].includes(key))) return null;
@@ -97,6 +106,7 @@ export async function handleSubscriberRequest(request) {
       global: { headers: { Authorization: `Bearer ${match[1]}` } },
     });
   } catch {
+    logAuthorizationFailure('supabase_client_creation', 'client_initialization_failed');
     return jsonResponse(503, { error: 'authorization_unavailable' });
   }
 
@@ -105,6 +115,7 @@ export async function handleSubscriberRequest(request) {
   try {
     ({ data: authData, error: authError } = await supabase.auth.getUser(match[1]));
   } catch {
+    logAuthorizationFailure('supabase_auth_exception', 'auth_request_failed');
     return jsonResponse(503, { error: 'authorization_unavailable' });
   }
   if (authError || !authData?.user?.id) {
@@ -116,9 +127,11 @@ export async function handleSubscriberRequest(request) {
   try {
     ({ data: isAdmin, error: adminError } = await supabase.rpc('is_admin'));
   } catch {
+    logAuthorizationFailure('supabase_admin_rpc_exception', 'rpc_invocation_failed');
     return jsonResponse(503, { error: 'authorization_unavailable' });
   }
   if (adminError) {
+    logAuthorizationFailure('supabase_admin_rpc_error', 'rpc_returned_error');
     return jsonResponse(503, { error: 'authorization_unavailable' });
   }
   if (isAdmin !== true) {

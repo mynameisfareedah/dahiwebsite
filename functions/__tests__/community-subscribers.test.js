@@ -46,6 +46,7 @@ function configureAdmin({
   adminError = null,
   getUserThrows = false,
   adminCheckThrows = false,
+  createClientThrows = false,
 } = {}) {
   const getUser = getUserThrows
     ? vi.fn().mockRejectedValue(new Error('private auth network detail'))
@@ -57,13 +58,41 @@ function configureAdmin({
     ? vi.fn().mockRejectedValue(new Error('private admin network detail'))
     : vi.fn().mockResolvedValue({ data: isAdmin, error: adminError });
 
+  if (createClientThrows) {
+    createClient.mockImplementation(() => {
+      throw new Error('private Supabase credential detail');
+    });
+    return;
+  }
+
   createClient.mockReturnValue({
     auth: { getUser },
     rpc: checkAdmin,
   });
 }
 
+function expectSanitizedDiagnostic(stage, category, privateValue) {
+  expect(console.error).toHaveBeenCalledOnce();
+  const [entry] = console.error.mock.calls[0];
+  const diagnostic = JSON.parse(entry);
+
+  expect(diagnostic).toEqual({
+    event: 'subscriber_authorization_failure',
+    stage,
+    category,
+    timestamp: expect.any(String),
+  });
+  expect(Number.isNaN(Date.parse(diagnostic.timestamp))).toBe(false);
+  expect(entry).not.toContain(privateValue);
+  expect(entry).not.toContain('valid-test-token');
+  expect(entry).not.toContain('test-anon-key');
+  expect(entry).not.toContain('test-emailoctopus-key');
+  expect(entry).not.toContain('subscriber@example.test');
+  expect(entry).not.toContain('Test');
+}
+
 beforeEach(() => {
+  vi.spyOn(console, 'error').mockImplementation(() => {});
   process.env.EMAILOCTOPUS_API_KEY = 'test-emailoctopus-key';
   process.env.EMAILOCTOPUS_LIST_ID = 'test-list-id';
   process.env.SUPABASE_URL = 'https://supabase.example.test';
@@ -82,6 +111,7 @@ afterEach(() => {
   }
   vi.unstubAllGlobals();
   vi.clearAllMocks();
+  vi.restoreAllMocks();
 });
 
 describe('community subscribers endpoint', () => {
@@ -103,6 +133,17 @@ describe('community subscribers endpoint', () => {
     expect(fetch).not.toHaveBeenCalled();
   });
 
+  it('logs a safe stage when Supabase client creation throws', async () => {
+    configureAdmin({ createClientThrows: true });
+
+    const result = await handler(makeRequest());
+
+    expect(result.status).toBe(503);
+    expect(await result.json()).toEqual({ error: 'authorization_unavailable' });
+    expectSanitizedDiagnostic('supabase_client_creation', 'client_initialization_failed', 'private Supabase credential detail');
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
   it('returns a safe service error when Supabase token verification is unavailable', async () => {
     configureAdmin({ getUserThrows: true });
 
@@ -110,6 +151,7 @@ describe('community subscribers endpoint', () => {
 
     expect(result.status).toBe(503);
     expect(await result.json()).toEqual({ error: 'authorization_unavailable' });
+    expectSanitizedDiagnostic('supabase_auth_exception', 'auth_request_failed', 'private auth network detail');
     expect(fetch).not.toHaveBeenCalled();
   });
 
@@ -129,6 +171,19 @@ describe('community subscribers endpoint', () => {
 
     expect(result.status).toBe(503);
     expect(await result.json()).toEqual({ error: 'authorization_unavailable' });
+    expectSanitizedDiagnostic('supabase_admin_rpc_exception', 'rpc_invocation_failed', 'private admin network detail');
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
+  it('logs a safe stage when the admin RPC returns an error', async () => {
+    const privateError = 'private RPC SQL detail';
+    configureAdmin({ adminError: { message: privateError } });
+
+    const result = await handler(makeRequest());
+
+    expect(result.status).toBe(503);
+    expect(await result.json()).toEqual({ error: 'authorization_unavailable' });
+    expectSanitizedDiagnostic('supabase_admin_rpc_error', 'rpc_returned_error', privateError);
     expect(fetch).not.toHaveBeenCalled();
   });
 
@@ -168,6 +223,7 @@ describe('community subscribers endpoint', () => {
     );
     expect(result.headers.get('cache-control')).toContain('private');
     expect(result.headers.get('vary')).toBe('Authorization');
+    expect(console.error).not.toHaveBeenCalled();
   });
 
   it('forwards a bounded page size and provider cursor', async () => {
