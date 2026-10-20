@@ -28,6 +28,7 @@
     "react-hook-form": "^7.81.0",
     "react-hot-toast": "^2.6.0",
     "react-router-dom": "^6.21.2",
+    "ws": "^8.22.0",
     "zod": "^4.4.3"
   },
   "devDependencies": {

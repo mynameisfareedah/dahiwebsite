@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import WebSocket from 'ws';
 
 const EMAILOCTOPUS_API = 'https://api.emailoctopus.com';
 const DEFAULT_PAGE_SIZE = 25;
@@ -181,6 +182,7 @@ export async function handleSubscriberRequest(request) {
   try {
     supabase = createClient(supabaseUrl, supabaseAnonKey, {
       auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
+      realtime: { transport: WebSocket },
       global: { headers: { Authorization: `Bearer ${match[1]}` } },
     });
   } catch (error) {

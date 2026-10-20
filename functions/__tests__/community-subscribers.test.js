@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import WebSocket from 'ws';
 
 vi.mock('@supabase/supabase-js', () => ({ createClient: vi.fn() }));
 
@@ -13,6 +14,7 @@ const originalEnv = {
   VITE_SUPABASE_URL: process.env.VITE_SUPABASE_URL,
   VITE_SUPABASE_ANON_KEY: process.env.VITE_SUPABASE_ANON_KEY,
 };
+const originalProcess = globalThis.process;
 
 const providerContact = {
   id: 'fixture-contact-id',
@@ -163,6 +165,24 @@ afterEach(() => {
 });
 
 describe('community subscribers endpoint', () => {
+  it('constructs the real Supabase client without a global WebSocket using the explicit transport', async () => {
+    const { createClient: createRealClient } = await vi.importActual('@supabase/supabase-js');
+    vi.stubGlobal('process', originalProcess);
+    vi.stubGlobal('WebSocket', undefined);
+
+    const client = createRealClient(
+      'https://example.supabase.test',
+      'dummy-anon-key',
+      {
+        auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
+        realtime: { transport: WebSocket },
+      },
+    );
+
+    expect(globalThis.WebSocket).toBeUndefined();
+    expect(client.realtime.getChannels()).toHaveLength(0);
+  });
+
   it('rejects missing bearer tokens without accessing Supabase or EmailOctopus', async () => {
     const result = await handler(makeRequest({ token: '' }));
 
@@ -557,6 +577,7 @@ describe('community subscribers endpoint', () => {
       'https://supabase.example.test',
       'test-anon-key',
       expect.objectContaining({
+        realtime: { transport: WebSocket },
         global: { headers: { Authorization: 'Bearer valid-test-token' } },
       }),
     );
