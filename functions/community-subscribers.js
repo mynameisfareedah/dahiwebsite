@@ -37,6 +37,39 @@ function logAuthorizationFailure(stage, category) {
   }));
 }
 
+function classifySupabaseUrl(url) {
+  if (typeof url !== 'string' || !url.trim()) return 'missing_or_invalid_input';
+
+  const trimmedUrl = url.trim();
+  if (!/^https?:\/\//i.test(trimmedUrl)) return 'invalid_url';
+
+  try {
+    const parsedUrl = new URL(trimmedUrl.endsWith('/') ? trimmedUrl : `${trimmedUrl}/`);
+    if (parsedUrl.protocol === 'https:') return 'valid_https_url';
+    if (parsedUrl.protocol === 'http:') return 'valid_http_url';
+  } catch {
+    return 'invalid_url';
+  }
+
+  return 'invalid_url';
+}
+
+function classifySupabaseClientInitializationError(error) {
+  const message = error instanceof Error ? error.message : '';
+
+  if (message === 'supabaseUrl is required.' || message === 'supabaseKey is required.') {
+    return 'missing_or_invalid_input';
+  }
+  if (
+    message === 'Invalid supabaseUrl: Must be a valid HTTP or HTTPS URL.'
+    || message === 'Invalid supabaseUrl: Provided URL is malformed.'
+  ) {
+    return 'invalid_url';
+  }
+
+  return 'unexpected_constructor_exception';
+}
+
 function parsePagination(searchParams) {
   const keys = [...searchParams.keys()];
   if (keys.some((key) => !['limit', 'starting_after'].includes(key))) return null;
@@ -93,6 +126,10 @@ export async function handleSubscriberRequest(request) {
     return jsonResponse(400, { error: 'invalid_pagination' });
   }
 
+  const supabaseUrlSource = process.env.SUPABASE_URL ? 'SUPABASE_URL' : 'VITE_SUPABASE_URL';
+  const supabaseAnonKeySource = process.env.SUPABASE_ANON_KEY
+    ? 'SUPABASE_ANON_KEY'
+    : 'VITE_SUPABASE_ANON_KEY';
   const supabaseUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
   const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY;
   if (!supabaseUrl || !supabaseAnonKey) {
@@ -105,8 +142,17 @@ export async function handleSubscriberRequest(request) {
       auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
       global: { headers: { Authorization: `Bearer ${match[1]}` } },
     });
-  } catch {
-    logAuthorizationFailure('supabase_client_creation', 'client_initialization_failed');
+  } catch (error) {
+    console.error(JSON.stringify({
+      event: 'subscriber_authorization_failure',
+      stage: 'supabase_client_creation',
+      category: 'client_initialization_failed',
+      urlSource: supabaseUrlSource,
+      apiKeySource: supabaseAnonKeySource,
+      urlValidation: classifySupabaseUrl(supabaseUrl),
+      constructorFailure: classifySupabaseClientInitializationError(error),
+      timestamp: new Date().toISOString(),
+    }));
     return jsonResponse(503, { error: 'authorization_unavailable' });
   }
 

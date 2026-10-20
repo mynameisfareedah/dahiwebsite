@@ -10,6 +10,8 @@ const originalEnv = {
   EMAILOCTOPUS_LIST_ID: process.env.EMAILOCTOPUS_LIST_ID,
   SUPABASE_URL: process.env.SUPABASE_URL,
   SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
+  VITE_SUPABASE_URL: process.env.VITE_SUPABASE_URL,
+  VITE_SUPABASE_ANON_KEY: process.env.VITE_SUPABASE_ANON_KEY,
 };
 
 const providerContact = {
@@ -47,6 +49,7 @@ function configureAdmin({
   getUserThrows = false,
   adminCheckThrows = false,
   createClientThrows = false,
+  createClientError = new Error('private Supabase credential detail'),
 } = {}) {
   const getUser = getUserThrows
     ? vi.fn().mockRejectedValue(new Error('private auth network detail'))
@@ -60,7 +63,7 @@ function configureAdmin({
 
   if (createClientThrows) {
     createClient.mockImplementation(() => {
-      throw new Error('private Supabase credential detail');
+      throw createClientError;
     });
     return;
   }
@@ -71,24 +74,27 @@ function configureAdmin({
   });
 }
 
-function expectSanitizedDiagnostic(stage, category, privateValue) {
+function expectSanitizedDiagnostic(expectedFields, privateValues = []) {
   expect(console.error).toHaveBeenCalledOnce();
   const [entry] = console.error.mock.calls[0];
   const diagnostic = JSON.parse(entry);
 
   expect(diagnostic).toEqual({
     event: 'subscriber_authorization_failure',
-    stage,
-    category,
+    ...expectedFields,
     timestamp: expect.any(String),
   });
   expect(Number.isNaN(Date.parse(diagnostic.timestamp))).toBe(false);
-  expect(entry).not.toContain(privateValue);
-  expect(entry).not.toContain('valid-test-token');
-  expect(entry).not.toContain('test-anon-key');
-  expect(entry).not.toContain('test-emailoctopus-key');
-  expect(entry).not.toContain('subscriber@example.test');
-  expect(entry).not.toContain('Test');
+  [
+    ...privateValues,
+    'valid-test-token',
+    'test-anon-key',
+    'vite-test-anon-key',
+    'test-emailoctopus-key',
+    'subscriber@example.test',
+    'private-project',
+    'Test',
+  ].forEach((value) => expect(entry).not.toContain(value));
 }
 
 beforeEach(() => {
@@ -97,6 +103,8 @@ beforeEach(() => {
   process.env.EMAILOCTOPUS_LIST_ID = 'test-list-id';
   process.env.SUPABASE_URL = 'https://supabase.example.test';
   process.env.SUPABASE_ANON_KEY = 'test-anon-key';
+  process.env.VITE_SUPABASE_URL = 'https://vite-supabase.example.test';
+  process.env.VITE_SUPABASE_ANON_KEY = 'vite-test-anon-key';
   configureAdmin();
   vi.stubGlobal('fetch', vi.fn().mockResolvedValue(response(200, {
     data: [providerContact],
@@ -140,8 +148,157 @@ describe('community subscribers endpoint', () => {
 
     expect(result.status).toBe(503);
     expect(await result.json()).toEqual({ error: 'authorization_unavailable' });
-    expectSanitizedDiagnostic('supabase_client_creation', 'client_initialization_failed', 'private Supabase credential detail');
+    expectSanitizedDiagnostic({
+      stage: 'supabase_client_creation',
+      category: 'client_initialization_failed',
+      urlSource: 'SUPABASE_URL',
+      apiKeySource: 'SUPABASE_ANON_KEY',
+      urlValidation: 'valid_https_url',
+      constructorFailure: 'unexpected_constructor_exception',
+    }, [
+      'private Supabase credential detail',
+      'https://supabase.example.test',
+    ]);
+    expect(createClient).toHaveBeenCalledWith(
+      'https://supabase.example.test',
+      'test-anon-key',
+      expect.any(Object),
+    );
     expect(fetch).not.toHaveBeenCalled();
+  });
+
+  it('classifies invalid Supabase URLs without logging their values', async () => {
+    const privateUrl = 'not a URL private-project';
+    process.env.SUPABASE_URL = privateUrl;
+    configureAdmin({
+      createClientThrows: true,
+      createClientError: new Error('Invalid supabaseUrl: Must be a valid HTTP or HTTPS URL.'),
+    });
+
+    const result = await handler(makeRequest());
+
+    expect(result.status).toBe(503);
+    expect(await result.json()).toEqual({ error: 'authorization_unavailable' });
+    expectSanitizedDiagnostic({
+      stage: 'supabase_client_creation',
+      category: 'client_initialization_failed',
+      urlSource: 'SUPABASE_URL',
+      apiKeySource: 'SUPABASE_ANON_KEY',
+      urlValidation: 'invalid_url',
+      constructorFailure: 'invalid_url',
+    }, [privateUrl]);
+  });
+
+  it('classifies malformed Supabase URLs without logging their values', async () => {
+    const privateUrl = 'https://';
+    process.env.SUPABASE_URL = privateUrl;
+    configureAdmin({
+      createClientThrows: true,
+      createClientError: new Error('Invalid supabaseUrl: Provided URL is malformed.'),
+    });
+
+    const result = await handler(makeRequest());
+
+    expect(result.status).toBe(503);
+    expect(await result.json()).toEqual({ error: 'authorization_unavailable' });
+    expectSanitizedDiagnostic({
+      stage: 'supabase_client_creation',
+      category: 'client_initialization_failed',
+      urlSource: 'SUPABASE_URL',
+      apiKeySource: 'SUPABASE_ANON_KEY',
+      urlValidation: 'invalid_url',
+      constructorFailure: 'invalid_url',
+    }, [privateUrl]);
+  });
+
+  it('classifies URLs that are empty after trimming as missing or invalid input', async () => {
+    process.env.SUPABASE_URL = '   ';
+    configureAdmin({
+      createClientThrows: true,
+      createClientError: new Error('supabaseUrl is required.'),
+    });
+
+    const result = await handler(makeRequest());
+
+    expect(result.status).toBe(503);
+    expect(await result.json()).toEqual({ error: 'authorization_unavailable' });
+    expectSanitizedDiagnostic({
+      stage: 'supabase_client_creation',
+      category: 'client_initialization_failed',
+      urlSource: 'SUPABASE_URL',
+      apiKeySource: 'SUPABASE_ANON_KEY',
+      urlValidation: 'missing_or_invalid_input',
+      constructorFailure: 'missing_or_invalid_input',
+    });
+  });
+
+  it('classifies valid HTTP URLs without logging their values', async () => {
+    const privateUrl = 'http://private-project.example.test';
+    process.env.SUPABASE_URL = privateUrl;
+    configureAdmin({ createClientThrows: true });
+
+    const result = await handler(makeRequest());
+
+    expect(result.status).toBe(503);
+    expect(await result.json()).toEqual({ error: 'authorization_unavailable' });
+    expectSanitizedDiagnostic({
+      stage: 'supabase_client_creation',
+      category: 'client_initialization_failed',
+      urlSource: 'SUPABASE_URL',
+      apiKeySource: 'SUPABASE_ANON_KEY',
+      urlValidation: 'valid_http_url',
+      constructorFailure: 'unexpected_constructor_exception',
+    }, [privateUrl, 'private-project']);
+  });
+
+  it('reports selected VITE variable names without logging their values', async () => {
+    delete process.env.SUPABASE_URL;
+    delete process.env.SUPABASE_ANON_KEY;
+    process.env.VITE_SUPABASE_URL = 'https://private-project.supabase.example.test';
+    process.env.VITE_SUPABASE_ANON_KEY = 'private-vite-anon-key';
+    configureAdmin({ createClientThrows: true });
+
+    const result = await handler(makeRequest());
+
+    expect(result.status).toBe(503);
+    expect(await result.json()).toEqual({ error: 'authorization_unavailable' });
+    expectSanitizedDiagnostic({
+      stage: 'supabase_client_creation',
+      category: 'client_initialization_failed',
+      urlSource: 'VITE_SUPABASE_URL',
+      apiKeySource: 'VITE_SUPABASE_ANON_KEY',
+      urlValidation: 'valid_https_url',
+      constructorFailure: 'unexpected_constructor_exception',
+    }, ['private-project', 'private-vite-anon-key']);
+    expect(createClient).toHaveBeenCalledWith(
+      'https://private-project.supabase.example.test',
+      'private-vite-anon-key',
+      expect.any(Object),
+    );
+  });
+
+  it('preserves the service response when a required Supabase input is missing', async () => {
+    delete process.env.SUPABASE_URL;
+    delete process.env.VITE_SUPABASE_URL;
+
+    const result = await handler(makeRequest());
+
+    expect(result.status).toBe(503);
+    expect(await result.json()).toEqual({ error: 'service_unavailable' });
+    expect(createClient).not.toHaveBeenCalled();
+    expect(console.error).not.toHaveBeenCalled();
+  });
+
+  it('preserves the service response when the Supabase API key is missing', async () => {
+    delete process.env.SUPABASE_ANON_KEY;
+    delete process.env.VITE_SUPABASE_ANON_KEY;
+
+    const result = await handler(makeRequest());
+
+    expect(result.status).toBe(503);
+    expect(await result.json()).toEqual({ error: 'service_unavailable' });
+    expect(createClient).not.toHaveBeenCalled();
+    expect(console.error).not.toHaveBeenCalled();
   });
 
   it('returns a safe service error when Supabase token verification is unavailable', async () => {
@@ -151,7 +308,10 @@ describe('community subscribers endpoint', () => {
 
     expect(result.status).toBe(503);
     expect(await result.json()).toEqual({ error: 'authorization_unavailable' });
-    expectSanitizedDiagnostic('supabase_auth_exception', 'auth_request_failed', 'private auth network detail');
+    expectSanitizedDiagnostic({
+      stage: 'supabase_auth_exception',
+      category: 'auth_request_failed',
+    }, ['private auth network detail']);
     expect(fetch).not.toHaveBeenCalled();
   });
 
@@ -171,7 +331,10 @@ describe('community subscribers endpoint', () => {
 
     expect(result.status).toBe(503);
     expect(await result.json()).toEqual({ error: 'authorization_unavailable' });
-    expectSanitizedDiagnostic('supabase_admin_rpc_exception', 'rpc_invocation_failed', 'private admin network detail');
+    expectSanitizedDiagnostic({
+      stage: 'supabase_admin_rpc_exception',
+      category: 'rpc_invocation_failed',
+    }, ['private admin network detail']);
     expect(fetch).not.toHaveBeenCalled();
   });
 
@@ -183,7 +346,10 @@ describe('community subscribers endpoint', () => {
 
     expect(result.status).toBe(503);
     expect(await result.json()).toEqual({ error: 'authorization_unavailable' });
-    expectSanitizedDiagnostic('supabase_admin_rpc_error', 'rpc_returned_error', privateError);
+    expectSanitizedDiagnostic({
+      stage: 'supabase_admin_rpc_error',
+      category: 'rpc_returned_error',
+    }, [privateError]);
     expect(fetch).not.toHaveBeenCalled();
   });
 
