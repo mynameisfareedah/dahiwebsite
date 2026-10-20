@@ -42,6 +42,36 @@ function makeRequest({ method = 'GET', token = 'valid-test-token', query = '' } 
   });
 }
 
+function configureRuntime({ nodeVersion = '24.18.0', webSocketAvailable = true } = {}) {
+  vi.stubGlobal('process', {
+    env: process.env,
+    versions: nodeVersion ? { node: nodeVersion } : {},
+  });
+  vi.stubGlobal('WebSocket', webSocketAvailable ? class MockWebSocket {} : undefined);
+}
+
+function makeRealtimeWebSocketError(nodeMajor) {
+  if (nodeMajor === 'unknown') {
+    return new Error(
+      'Unknown JavaScript runtime without WebSocket support.\n\n'
+      + "Suggested solution: Ensure you're running in a supported environment "
+      + '(browser, Node.js, Deno) or provide a custom WebSocket implementation.',
+    );
+  }
+  if (nodeMajor >= 22) {
+    return new Error(
+      `Node.js ${nodeMajor} detected but native WebSocket not found.\n\n`
+      + 'Suggested solution: Provide a WebSocket implementation via the transport option.',
+    );
+  }
+  return new Error(
+    `Node.js ${nodeMajor} detected without native WebSocket support.\n\n`
+    + 'Suggested solution: For Node.js < 22, install "ws" package and provide it via the transport option:\n'
+    + 'import ws from "ws"\n'
+    + 'new RealtimeClient(url, { transport: ws })',
+  );
+}
+
 function configureAdmin({
   userError = null,
   isAdmin = true,
@@ -78,9 +108,18 @@ function expectSanitizedDiagnostic(expectedFields, privateValues = []) {
   expect(console.error).toHaveBeenCalledOnce();
   const [entry] = console.error.mock.calls[0];
   const diagnostic = JSON.parse(entry);
+  const defaultRuntimeFields = expectedFields.stage === 'supabase_client_creation'
+    ? {
+      nodeMajor: 24,
+      webSocketAvailable: true,
+      exceptionType: 'Error',
+      runtimeFailureCategory: 'unknown_constructor_error',
+    }
+    : {};
 
   expect(diagnostic).toEqual({
     event: 'subscriber_authorization_failure',
+    ...defaultRuntimeFields,
     ...expectedFields,
     timestamp: expect.any(String),
   });
@@ -105,6 +144,7 @@ beforeEach(() => {
   process.env.SUPABASE_ANON_KEY = 'test-anon-key';
   process.env.VITE_SUPABASE_URL = 'https://vite-supabase.example.test';
   process.env.VITE_SUPABASE_ANON_KEY = 'vite-test-anon-key';
+  configureRuntime();
   configureAdmin();
   vi.stubGlobal('fetch', vi.fn().mockResolvedValue(response(200, {
     data: [providerContact],
@@ -165,6 +205,139 @@ describe('community subscribers endpoint', () => {
       expect.any(Object),
     );
     expect(fetch).not.toHaveBeenCalled();
+  });
+
+  it('identifies the exact Realtime WebSocket failure on Node 20 without WebSocket', async () => {
+    configureRuntime({ nodeVersion: '20.19.0', webSocketAvailable: false });
+    const privateMessage = makeRealtimeWebSocketError(20).message;
+    configureAdmin({
+      createClientThrows: true,
+      createClientError: new Error(privateMessage),
+    });
+
+    const result = await handler(makeRequest());
+
+    expect(result.status).toBe(503);
+    expect(await result.json()).toEqual({ error: 'authorization_unavailable' });
+    expectSanitizedDiagnostic({
+      stage: 'supabase_client_creation',
+      category: 'client_initialization_failed',
+      urlSource: 'SUPABASE_URL',
+      apiKeySource: 'SUPABASE_ANON_KEY',
+      urlValidation: 'valid_https_url',
+      constructorFailure: 'unexpected_constructor_exception',
+      nodeMajor: 20,
+      webSocketAvailable: false,
+      exceptionType: 'Error',
+      runtimeFailureCategory: 'websocket_runtime_unavailable',
+    }, [privateMessage, 'https://supabase.example.test']);
+  });
+
+  it.each([
+    ['22.0.0', 22],
+    ['24.18.0', 24],
+  ])('does not label unrelated Node %s errors as WebSocket failures when WebSocket exists', async (nodeVersion, nodeMajor) => {
+    configureRuntime({ nodeVersion, webSocketAvailable: true });
+    configureAdmin({
+      createClientThrows: true,
+      createClientError: new TypeError('private unrelated constructor detail'),
+    });
+
+    const result = await handler(makeRequest());
+
+    expect(result.status).toBe(503);
+    expect(await result.json()).toEqual({ error: 'authorization_unavailable' });
+    expectSanitizedDiagnostic({
+      stage: 'supabase_client_creation',
+      category: 'client_initialization_failed',
+      urlSource: 'SUPABASE_URL',
+      apiKeySource: 'SUPABASE_ANON_KEY',
+      urlValidation: 'valid_https_url',
+      constructorFailure: 'unexpected_constructor_exception',
+      nodeMajor,
+      webSocketAvailable: true,
+      exceptionType: 'TypeError',
+      runtimeFailureCategory: 'unknown_constructor_error',
+    }, ['private unrelated constructor detail']);
+  });
+
+  it.each([
+    [new ReferenceError('private reference detail'), 'ReferenceError', 'private reference detail'],
+    [{ message: 'private object detail', token: 'private exception token' }, 'other', 'private object detail', 'private exception token'],
+  ])('restricts exception types to the diagnostic allowlist', async (exception, exceptionType, ...privateValues) => {
+    configureAdmin({
+      createClientThrows: true,
+      createClientError: exception,
+    });
+
+    const result = await handler(makeRequest());
+
+    expect(result.status).toBe(503);
+    expect(await result.json()).toEqual({ error: 'authorization_unavailable' });
+    expectSanitizedDiagnostic({
+      stage: 'supabase_client_creation',
+      category: 'client_initialization_failed',
+      urlSource: 'SUPABASE_URL',
+      apiKeySource: 'SUPABASE_ANON_KEY',
+      urlValidation: 'valid_https_url',
+      constructorFailure: 'unexpected_constructor_exception',
+      nodeMajor: 24,
+      webSocketAvailable: true,
+      exceptionType,
+      runtimeFailureCategory: 'unknown_constructor_error',
+    }, privateValues);
+  });
+
+  it('identifies the known Node 24 WebSocket-unavailable signature when the global is missing', async () => {
+    configureRuntime({ nodeVersion: '24.18.0', webSocketAvailable: false });
+    const privateMessage = makeRealtimeWebSocketError(24).message;
+    configureAdmin({
+      createClientThrows: true,
+      createClientError: new Error(privateMessage),
+    });
+
+    const result = await handler(makeRequest());
+
+    expect(result.status).toBe(503);
+    expect(await result.json()).toEqual({ error: 'authorization_unavailable' });
+    expectSanitizedDiagnostic({
+      stage: 'supabase_client_creation',
+      category: 'client_initialization_failed',
+      urlSource: 'SUPABASE_URL',
+      apiKeySource: 'SUPABASE_ANON_KEY',
+      urlValidation: 'valid_https_url',
+      constructorFailure: 'unexpected_constructor_exception',
+      nodeMajor: 24,
+      webSocketAvailable: false,
+      exceptionType: 'Error',
+      runtimeFailureCategory: 'websocket_runtime_unavailable',
+    }, [privateMessage]);
+  });
+
+  it('reports an unknown runtime and recognizes its exact WebSocket error signature', async () => {
+    configureRuntime({ nodeVersion: null, webSocketAvailable: false });
+    const privateMessage = makeRealtimeWebSocketError('unknown').message;
+    configureAdmin({
+      createClientThrows: true,
+      createClientError: new Error(privateMessage),
+    });
+
+    const result = await handler(makeRequest());
+
+    expect(result.status).toBe(503);
+    expect(await result.json()).toEqual({ error: 'authorization_unavailable' });
+    expectSanitizedDiagnostic({
+      stage: 'supabase_client_creation',
+      category: 'client_initialization_failed',
+      urlSource: 'SUPABASE_URL',
+      apiKeySource: 'SUPABASE_ANON_KEY',
+      urlValidation: 'valid_https_url',
+      constructorFailure: 'unexpected_constructor_exception',
+      nodeMajor: 'unknown',
+      webSocketAvailable: false,
+      exceptionType: 'Error',
+      runtimeFailureCategory: 'websocket_runtime_unavailable',
+    }, [privateMessage]);
   });
 
   it('classifies invalid Supabase URLs without logging their values', async () => {

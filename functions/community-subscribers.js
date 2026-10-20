@@ -70,6 +70,47 @@ function classifySupabaseClientInitializationError(error) {
   return 'unexpected_constructor_exception';
 }
 
+function getNodeMajor() {
+  const nodeVersion = globalThis.process?.versions?.node;
+  if (typeof nodeVersion !== 'string') return 'unknown';
+
+  const match = /^v?(\d+)\./.exec(nodeVersion);
+  if (!match) return 'unknown';
+
+  const major = Number(match[1]);
+  return Number.isSafeInteger(major) ? major : 'unknown';
+}
+
+function classifyRuntimeFailure(error, nodeMajor) {
+  if (!(error instanceof Error)) return 'unknown_constructor_error';
+
+  let expectedMessage;
+  if (typeof nodeMajor !== 'number') {
+    expectedMessage = 'Unknown JavaScript runtime without WebSocket support.\n\n'
+      + "Suggested solution: Ensure you're running in a supported environment "
+      + '(browser, Node.js, Deno) or provide a custom WebSocket implementation.';
+  } else if (nodeMajor >= 22) {
+    expectedMessage = `Node.js ${nodeMajor} detected but native WebSocket not found.\n\n`
+      + 'Suggested solution: Provide a WebSocket implementation via the transport option.';
+  } else {
+    expectedMessage = `Node.js ${nodeMajor} detected without native WebSocket support.\n\n`
+      + 'Suggested solution: For Node.js < 22, install "ws" package and provide it via the transport option:\n'
+      + 'import ws from "ws"\n'
+      + 'new RealtimeClient(url, { transport: ws })';
+  }
+
+  return error.message === expectedMessage
+    ? 'websocket_runtime_unavailable'
+    : 'unknown_constructor_error';
+}
+
+function classifyConstructorExceptionType(error) {
+  if (error instanceof TypeError) return 'TypeError';
+  if (error instanceof ReferenceError) return 'ReferenceError';
+  if (error instanceof Error) return 'Error';
+  return 'other';
+}
+
 function parsePagination(searchParams) {
   const keys = [...searchParams.keys()];
   if (keys.some((key) => !['limit', 'starting_after'].includes(key))) return null;
@@ -143,6 +184,7 @@ export async function handleSubscriberRequest(request) {
       global: { headers: { Authorization: `Bearer ${match[1]}` } },
     });
   } catch (error) {
+    const nodeMajor = getNodeMajor();
     console.error(JSON.stringify({
       event: 'subscriber_authorization_failure',
       stage: 'supabase_client_creation',
@@ -151,6 +193,10 @@ export async function handleSubscriberRequest(request) {
       apiKeySource: supabaseAnonKeySource,
       urlValidation: classifySupabaseUrl(supabaseUrl),
       constructorFailure: classifySupabaseClientInitializationError(error),
+      nodeMajor,
+      webSocketAvailable: typeof globalThis.WebSocket === 'function',
+      exceptionType: classifyConstructorExceptionType(error),
+      runtimeFailureCategory: classifyRuntimeFailure(error, nodeMajor),
       timestamp: new Date().toISOString(),
     }));
     return jsonResponse(503, { error: 'authorization_unavailable' });
