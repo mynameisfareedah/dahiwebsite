@@ -22,7 +22,7 @@ function buildError(message) {
 export const communityMemberService = {
   async getCommunityMembers() {
     if (!isSupabaseConfigured || !supabase) {
-      return buildSuccess([]);
+      return buildError('Supabase is not configured.');
     }
 
     const { data, error } = await supabase

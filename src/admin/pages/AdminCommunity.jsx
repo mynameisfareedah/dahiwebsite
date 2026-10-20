@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Heart, TrendingUp } from 'lucide-react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Heart } from 'lucide-react';
 import {
   PageHeader,
   ConfirmDeleteModal,
   EmptyState,
   SearchBar,
   Pagination,
+  LoadingSpinner,
 } from '../components';
 import {
   usePagination,
@@ -14,6 +15,23 @@ import {
   useToast,
 } from '../hooks/useDataManagement';
 import { communityMemberService } from '../services/communityMemberService';
+import { newsletterSubscriberService } from '../services/newsletterSubscriberService';
+
+const SUBSCRIBER_PAGE_SIZE = 25;
+
+function formatDate(value) {
+  if (!value) return '—';
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? '—' : date.toLocaleDateString();
+}
+
+function subscriberStatusLabel(status) {
+  return {
+    SUBSCRIBED: 'Confirmed',
+    PENDING: 'Pending',
+    UNSUBSCRIBED: 'Unsubscribed',
+  }[status] || 'Unknown';
+}
 
 export default function AdminCommunity() {
   const [members, setMembers] = useState([]);
@@ -21,13 +39,55 @@ export default function AdminCommunity() {
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
   const [fetchError, setFetchError] = useState(null);
+  const [subscribers, setSubscribers] = useState([]);
+  const [subscriberNextCursor, setSubscriberNextCursor] = useState(null);
+  const [subscriberCursors, setSubscriberCursors] = useState([null]);
+  const [subscriberPage, setSubscriberPage] = useState(0);
+  const [subscriberSearch, setSubscriberSearch] = useState('');
+  const [subscriberStatus, setSubscriberStatus] = useState('');
+  const [isLoadingSubscribers, setIsLoadingSubscribers] = useState(true);
+  const [subscriberError, setSubscriberError] = useState(null);
 
   const isMountedRef = React.useRef(true);
+  const subscriberRequestRef = React.useRef(0);
   React.useEffect(() => {
+    isMountedRef.current = true;
     return () => {
       isMountedRef.current = false;
     };
   }, []);
+
+  const loadSubscribers = useCallback(async (cursor = null) => {
+    const requestId = ++subscriberRequestRef.current;
+    setIsLoadingSubscribers(true);
+    setSubscriberError(null);
+    try {
+      const result = await newsletterSubscriberService.getSubscribers({
+        limit: SUBSCRIBER_PAGE_SIZE,
+        cursor,
+      });
+      if (!isMountedRef.current || requestId !== subscriberRequestRef.current) return;
+      setSubscribers(result.contacts);
+      setSubscriberNextCursor(result.nextCursor);
+    } catch (error) {
+      if (!isMountedRef.current || requestId !== subscriberRequestRef.current) return;
+      setSubscriberError(error.message || 'Newsletter subscribers could not be loaded.');
+      setSubscribers([]);
+      setSubscriberNextCursor(null);
+    } finally {
+      if (isMountedRef.current && requestId === subscriberRequestRef.current) {
+        setIsLoadingSubscribers(false);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    async function loadInitialSubscribers() {
+      await loadSubscribers();
+    }
+
+    loadInitialSubscribers();
+  }, [loadSubscribers]);
 
   // Load community members from Supabase
   useEffect(() => {
@@ -73,6 +133,29 @@ export default function AdminCommunity() {
   const highEngagementCount = members.filter(
     (m) => m.engagement_score >= 50
   ).length;
+  const activeMemberCount = members.filter((member) => member.status === 'active').length;
+  const visibleSubscribers = subscribers.filter((subscriber) => {
+    const search = subscriberSearch.trim().toLowerCase();
+    const name = [subscriber.fields.FirstName, subscriber.fields.LastName].filter(Boolean).join(' ');
+    const matchesSearch = !search || `${name} ${subscriber.email}`.toLowerCase().includes(search);
+    const matchesStatus = !subscriberStatus || subscriber.status === subscriberStatus;
+    return matchesSearch && matchesStatus;
+  });
+
+  const goToSubscriberPage = async (page) => {
+    const cursor = subscriberCursors[page];
+    if (typeof cursor !== 'string' && cursor !== null) return;
+    setSubscriberPage(page);
+    await loadSubscribers(cursor);
+  };
+
+  const goToNextSubscriberPage = async () => {
+    if (!subscriberNextCursor) return;
+    const nextPage = subscriberPage + 1;
+    setSubscriberCursors((current) => [...current.slice(0, nextPage), subscriberNextCursor]);
+    setSubscriberPage(nextPage);
+    await loadSubscribers(subscriberNextCursor);
+  };
 
   const handleDelete = (member) => {
     setDeleteConfirm({ id: member.id, name: member.name });
@@ -102,45 +185,156 @@ export default function AdminCommunity() {
     }
   };
 
-  const engagementColor = (level) => {
-    switch (level) {
-      case 'high':
-        return 'bg-green-900 text-green-100';
-      case 'medium':
-        return 'bg-yellow-900 text-yellow-100';
-      case 'low':
-        return 'bg-gray-700 text-gray-100';
-      default:
-        return 'bg-gray-700 text-gray-100';
-    }
-  };
-
   return (
     <div className="space-y-6">
       <PageHeader
         title="Community Management"
-        subtitle="Manage community members and engagement"
+        subtitle="View newsletter subscribers and manage registered community members"
       />
 
+      <section aria-labelledby="newsletter-subscribers-heading" className="space-y-4">
+        <div>
+          <h2 id="newsletter-subscribers-heading" className="text-xl font-bold text-white">Newsletter Subscribers</h2>
+          <p className="mt-1 text-sm text-gray-400">
+            EmailOctopus is the source of truth. Search and status filters apply to the current provider page.
+          </p>
+        </div>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div className="rounded-lg border border-gray-800 bg-gray-900 p-4">
+            <p className="text-sm text-gray-400">Subscribers on this page</p>
+            <p className="mt-2 text-2xl font-bold text-white">{isLoadingSubscribers ? '—' : subscribers.length}</p>
+          </div>
+          <div className="rounded-lg border border-gray-800 bg-gray-900 p-4">
+            <p className="text-sm text-gray-400">Displayed after filters</p>
+            <p className="mt-2 text-2xl font-bold text-white">{isLoadingSubscribers ? '—' : visibleSubscribers.length}</p>
+          </div>
+        </div>
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <label className="flex-1 text-sm text-gray-300">
+            Search this page
+            <input
+              type="search"
+              value={subscriberSearch}
+              onChange={(event) => setSubscriberSearch(event.target.value)}
+              placeholder="Search name or email"
+              className="mt-1 w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-white"
+            />
+          </label>
+          <label className="text-sm text-gray-300">
+            Status
+            <select
+              value={subscriberStatus}
+              onChange={(event) => setSubscriberStatus(event.target.value)}
+              className="mt-1 block w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-white"
+            >
+              <option value="">All statuses</option>
+              <option value="SUBSCRIBED">Confirmed</option>
+              <option value="PENDING">Pending</option>
+              <option value="UNSUBSCRIBED">Unsubscribed</option>
+            </select>
+          </label>
+        </div>
+        {isLoadingSubscribers ? (
+          <LoadingSpinner text="Loading newsletter subscribers..." />
+        ) : subscriberError ? (
+          <div role="alert" className="rounded-lg border border-red-800 bg-red-950/40 p-4 text-red-200">
+            <p>{subscriberError}</p>
+            <button
+              type="button"
+              onClick={() => loadSubscribers(subscriberCursors[subscriberPage])}
+              className="mt-3 rounded bg-red-800 px-3 py-2 text-sm font-semibold hover:bg-red-700"
+            >
+              Retry
+            </button>
+          </div>
+        ) : visibleSubscribers.length === 0 ? (
+          <EmptyState
+            icon={Heart}
+            title={subscribers.length === 0 ? 'No newsletter subscribers on this page' : 'No subscribers match'}
+            description={subscribers.length === 0 ? 'No contacts were returned for this EmailOctopus page.' : 'Try a different name, email, or status.'}
+          />
+        ) : (
+          <div className="overflow-x-auto rounded-lg border border-gray-800 bg-gray-900">
+            <table className="w-full">
+              <thead className="border-b border-gray-700 bg-gray-800">
+                <tr>
+                  {['Name', 'Email', 'Status', 'Added', 'Preferences'].map((heading) => (
+                    <th key={heading} className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-300">{heading}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-700">
+                {visibleSubscribers.map((subscriber) => {
+                  const name = [subscriber.fields.FirstName, subscriber.fields.LastName].filter(Boolean).join(' ');
+                  const preferences = [
+                    ...(Array.isArray(subscriber.fields.UpdateCategories)
+                      ? subscriber.fields.UpdateCategories
+                      : [subscriber.fields.UpdateCategories].filter(Boolean)),
+                    ...(Array.isArray(subscriber.fields.HealthInterests)
+                      ? subscriber.fields.HealthInterests
+                      : [subscriber.fields.HealthInterests].filter(Boolean)),
+                  ];
+                  return (
+                    <tr key={subscriber.id || subscriber.email}>
+                      <td className="px-4 py-3 text-white">{name || '—'}</td>
+                      <td className="px-4 py-3 text-gray-300">{subscriber.email || '—'}</td>
+                      <td className="px-4 py-3 text-gray-300">{subscriberStatusLabel(subscriber.status)}</td>
+                      <td className="px-4 py-3 text-gray-300">{formatDate(subscriber.createdAt)}</td>
+                      <td className="px-4 py-3 text-gray-300">{preferences.length ? preferences.join(', ') : '—'}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+        {!isLoadingSubscribers && !subscriberError && (subscriberPage > 0 || subscriberNextCursor) && (
+          <div className="flex items-center justify-between rounded-lg border border-gray-800 bg-gray-900 px-4 py-3">
+            <span className="text-sm text-gray-400">Provider page {subscriberPage + 1}</span>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                disabled={subscriberPage === 0}
+                onClick={() => goToSubscriberPage(subscriberPage - 1)}
+                className="rounded bg-gray-800 px-3 py-2 text-sm text-white disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Previous
+              </button>
+              <button
+                type="button"
+                disabled={!subscriberNextCursor}
+                onClick={goToNextSubscriberPage}
+                className="rounded bg-gray-800 px-3 py-2 text-sm text-white disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        )}
+      </section>
+
+      <section aria-labelledby="community-members-heading" className="space-y-4">
+        <div>
+          <h2 id="community-members-heading" className="text-xl font-bold text-white">Community Members</h2>
+          <p className="mt-1 text-sm text-gray-400">
+            Registered community member records, managed separately from newsletter subscriptions.
+          </p>
+        </div>
       {/* Statistics */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="bg-gray-900 border border-gray-800 rounded-lg p-4">
           <p className="text-gray-400 text-sm">Total Members</p>
-          <p className="text-2xl font-bold text-white mt-2">{members.length}</p>
+          <p className="text-2xl font-bold text-white mt-2">{isFetching ? '—' : members.length}</p>
         </div>
         <div className="bg-gray-900 border border-gray-800 rounded-lg p-4">
           <p className="text-gray-400 text-sm">Active Members</p>
-          <p className="text-2xl font-bold text-white mt-2">{members.length}</p>
+          <p className="text-2xl font-bold text-white mt-2">{isFetching ? '—' : activeMemberCount}</p>
         </div>
         <div className="bg-gray-900 border border-gray-800 rounded-lg p-4">
           <p className="text-gray-400 text-sm">High Engagement</p>
           <p className="text-2xl font-bold text-white mt-2">
-            {highEngagementCount}
+            {isFetching ? '—' : highEngagementCount}
           </p>
-        </div>
-        <div className="bg-gray-900 border border-gray-800 rounded-lg p-4">
-          <p className="text-gray-400 text-sm">Total Posts</p>
-          <p className="text-2xl font-bold text-white mt-2">-</p>
         </div>
       </div>
 
@@ -150,7 +344,11 @@ export default function AdminCommunity() {
         onSearch={setSearchQuery}
       />
 
-      {currentItems.length === 0 && searchQuery === '' ? (
+      {isFetching ? (
+        <LoadingSpinner text="Loading community members..." />
+      ) : fetchError ? (
+        <div role="alert" className="rounded-lg border border-red-800 bg-red-950/40 p-4 text-red-200">{fetchError}</div>
+      ) : currentItems.length === 0 && searchQuery === '' ? (
         <EmptyState
           icon={Heart}
           title="No community members"
@@ -257,6 +455,7 @@ export default function AdminCommunity() {
         onCancel={() => setDeleteConfirm(null)}
         isLoading={isLoading}
       />
+      </section>
     </div>
   );
 }
