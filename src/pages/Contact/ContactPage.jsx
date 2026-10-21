@@ -169,7 +169,6 @@ function ContactPage() {
         <CTASection eyebrow="Let's build healthier communities together" title="Whether you're looking to learn, collaborate, volunteer, or support our mission, we'd love to hear from you." description="Together, we can improve access to trusted women's health education and empower more women to make informed health decisions." actions={[
           <a key="contact" href={`mailto:${OFFICIAL_CONTACT_EMAIL}`} className="inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-semibold text-dahiPrimary transition hover:-translate-y-0.5">Contact Us</a>,
           <Link key="resources" to="/resources" className="inline-flex items-center justify-center rounded-full border border-white/70 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10">Explore Resources</Link>,
-          <Link key="community" to="/blog" className="inline-flex items-center justify-center rounded-full border border-white/70 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10">Join Our Community</Link>,
         ]} />
         <div className="text-center">
           <a href="#top" className="inline-flex items-center justify-center rounded-full border border-slate-300 px-6 py-3 text-sm font-semibold text-slate-700 transition hover:border-dahiPrimary hover:text-dahiPrimary">Back to top</a>

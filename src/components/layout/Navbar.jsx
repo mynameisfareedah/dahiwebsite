@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
+import NewsletterLink from './NewsletterLink';
 
 const navLinks = [
   { to: '/', label: 'Home' },
@@ -48,7 +49,7 @@ function Navbar() {
             <i className="fa-solid fa-heart mr-1.5"></i>
             Support Outreach
           </NavLink>
-          <Link to="/#newsletter" className="inline-flex items-center justify-center rounded-full bg-dahiPrimary px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-dahiSecondary">Join Our Community</Link>
+          <NewsletterLink className="inline-flex items-center justify-center rounded-full bg-dahiPrimary px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-dahiSecondary">Join Our Newsletter</NewsletterLink>
         </div>
 
         <button
@@ -83,7 +84,7 @@ function Navbar() {
             <i className="fa-solid fa-heart mr-1.5"></i>
             Support Outreach
           </NavLink>
-          <Link to="/#newsletter" onClick={() => setMobileOpen(false)} className="mt-2 inline-flex items-center justify-center rounded-full bg-dahiPrimary px-5 py-2.5 text-sm font-semibold text-white">Join Our Community</Link>
+          <NewsletterLink onClick={() => setMobileOpen(false)} className="mt-2 inline-flex items-center justify-center rounded-full bg-dahiPrimary px-5 py-2.5 text-sm font-semibold text-white">Join Our Newsletter</NewsletterLink>
         </div>
       </div>
     </header>

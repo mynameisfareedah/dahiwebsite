@@ -104,6 +104,14 @@ export const testimonials = [
     attribution: 'Anonymous DAHI participant',
     status: 'verified',
   },
+  {
+    id: 'teenage-girls-menstrual-health-talk',
+    quote: "I attended Dr Adiyat's menstrual health talk for girls. It was presented in a very interactive and engaging manner. The examples Dr Adiyat used to help us understand the concept of menstruation were realistic, Informative and at times even funny. Most of all, she was very friendly and I would definitely want to attend again.",
+    category: 'Educational Sessions',
+    attribution: "Attendee — Teenage Girls' Menstrual Health Talk",
+    context: "Teenage Girls' Menstrual Health Talk · 1 June",
+    status: 'verified',
+  },
 ];
 
 export const publishableTestimonials = testimonials.filter((testimonial) => testimonial.status === 'verified');

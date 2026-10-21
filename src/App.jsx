@@ -44,6 +44,7 @@ function App() {
               <Route path="/blog/first-community-outreach" element={<FirstOutreachArticlePage />} />
               <Route path="/blog/:slug" element={<SubstackArticlePage />} />
               <Route path="/volunteer" element={<VolunteerPage />} />
+              <Route path="/join-community" element={<Navigate to="/#newsletter" replace />} />
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/privacy" element={<PrivacyPage />} />
               <Route path="/voices" element={<TestimonialsPage />} />
