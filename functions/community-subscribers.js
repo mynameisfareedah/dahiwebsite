@@ -141,13 +141,29 @@ function normalizeContact(contact) {
     }
   }
 
+  let status = 'UNKNOWN';
+  switch (contact.status) {
+    case 'subscribed':
+    case 'SUBSCRIBED':
+      status = 'SUBSCRIBED';
+      break;
+    case 'pending':
+    case 'PENDING':
+      status = 'PENDING';
+      break;
+    case 'unsubscribed':
+    case 'UNSUBSCRIBED':
+      status = 'UNSUBSCRIBED';
+      break;
+    default:
+      break;
+  }
+
   return {
     id: typeof contact.id === 'string' ? contact.id : '',
     email: typeof contact.email_address === 'string' ? contact.email_address : '',
     fields: safeFields,
-    status: ['SUBSCRIBED', 'PENDING', 'UNSUBSCRIBED'].includes(contact.status)
-      ? contact.status
-      : 'UNKNOWN',
+    status,
     createdAt: typeof contact.created_at === 'string' ? contact.created_at : null,
   };
 }

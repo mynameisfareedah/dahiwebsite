@@ -586,6 +586,54 @@ describe('community subscribers endpoint', () => {
     expect(console.error).not.toHaveBeenCalled();
   });
 
+  it.each([
+    ['pending', 'PENDING'],
+    ['subscribed', 'SUBSCRIBED'],
+    ['unsubscribed', 'UNSUBSCRIBED'],
+  ])('maps the v2 %s status while preserving subscriber fields', async (providerStatus, expectedStatus) => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(response(200, {
+      data: [{ ...providerContact, status: providerStatus }],
+      paging: { next: null },
+    })));
+
+    const result = await handler(makeRequest());
+    const payload = await result.json();
+
+    expect(result.status).toBe(200);
+    expect(payload.contacts).toEqual([expect.objectContaining({
+      id: 'fixture-contact-id',
+      email: 'subscriber@example.test',
+      fields: {
+        FirstName: 'Test',
+        LastName: 'Subscriber',
+        UpdateCategories: ['Webinars and events'],
+        HealthInterests: ['Menopause'],
+      },
+      status: expectedStatus,
+      createdAt: '2026-10-01T10:00:00Z',
+    })]);
+  });
+
+  it.each([
+    ['missing', undefined],
+    ['unsupported', 'bounced'],
+  ])('retains UNKNOWN for %s v2 contact status', async (_description, providerStatus) => {
+    const contact = { ...providerContact };
+    if (providerStatus === undefined) delete contact.status;
+    else contact.status = providerStatus;
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(response(200, {
+      data: [contact],
+      paging: { next: null },
+    })));
+
+    const result = await handler(makeRequest());
+    const payload = await result.json();
+
+    expect(result.status).toBe(200);
+    expect(payload.contacts).toHaveLength(1);
+    expect(payload.contacts[0].status).toBe('UNKNOWN');
+  });
+
   it('forwards a bounded page size and provider cursor', async () => {
     const result = await handler(makeRequest({
       query: '?limit=50&starting_after=fixture-cursor',

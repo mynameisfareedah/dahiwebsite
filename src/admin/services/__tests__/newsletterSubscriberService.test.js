@@ -39,6 +39,23 @@ describe('newsletterSubscriberService', () => {
     );
   });
 
+  it('preserves normalized EmailOctopus status values returned by the Function', async () => {
+    const contacts = [
+      { id: 'fixture-1', email: 'first@example.test', fields: {}, status: 'SUBSCRIBED', createdAt: null },
+      { id: 'fixture-2', email: 'second@example.test', fields: {}, status: 'PENDING', createdAt: null },
+      { id: 'fixture-3', email: 'third@example.test', fields: {}, status: 'UNSUBSCRIBED', createdAt: null },
+    ];
+    fetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ contacts, nextCursor: null }),
+    });
+
+    await expect(newsletterSubscriberService.getSubscribers()).resolves.toEqual({
+      contacts,
+      nextCursor: null,
+    });
+  });
+
   it('requires an active session before making the request', async () => {
     getSession.mockResolvedValue({ data: { session: null }, error: null });
 
