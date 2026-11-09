@@ -17,7 +17,22 @@ vi.mock('../../../lib/supabase', () => ({
   handleSupabaseError: mocks.handleSupabaseError,
 }));
 
-import { getFeaturedEvents } from '../eventsService';
+import { createEvent, getFeaturedEvents, updateEvent } from '../eventsService';
+
+function buildWriteQuery({ data, error = null } = {}) {
+  const query = {
+    eq: vi.fn(),
+    insert: vi.fn(),
+    update: vi.fn(),
+    select: vi.fn(),
+    single: vi.fn().mockResolvedValue({ data, error }),
+  };
+  query.eq.mockReturnValue(query);
+  query.insert.mockReturnValue(query);
+  query.update.mockReturnValue(query);
+  query.select.mockReturnValue(query);
+  return query;
+}
 
 describe('getFeaturedEvents', () => {
   beforeEach(() => {
@@ -59,5 +74,61 @@ describe('getFeaturedEvents', () => {
       featured: true,
       date: '2026-08-10',
     });
+  });
+
+  it('creates events with normalized required and optional dates', async () => {
+    const query = buildWriteQuery({
+      data: { id: 'new-event', event_date: '2026-08-10', event_end_date: null },
+    });
+    mocks.from.mockReturnValueOnce(query);
+
+    const result = await createEvent({
+      title: 'New event',
+      date: '2026-08-10',
+      endDate: '',
+    });
+
+    expect(result.error).toBeNull();
+    expect(query.insert).toHaveBeenCalledWith([expect.objectContaining({
+      event_date: '2026-08-10',
+      event_end_date: null,
+    })]);
+  });
+
+  it('rejects a missing required start date before creating an event', async () => {
+    const result = await createEvent({ title: 'Undated event', date: '' });
+
+    expect(result.error.message).toBe('Start Date is required.');
+    expect(mocks.from).not.toHaveBeenCalled();
+  });
+
+  it('updates with null optional dates and preserves omitted date fields', async () => {
+    const query = buildWriteQuery({
+      data: { id: 'existing-event', event_date: '2026-08-10', event_end_date: null },
+    });
+    mocks.from.mockReturnValueOnce(query);
+
+    const result = await updateEvent('existing-event', {
+      date: '2026-08-10',
+      endDate: '',
+      event_end_date: null,
+    });
+
+    expect(result.error).toBeNull();
+    expect(query.update).toHaveBeenCalledWith(expect.objectContaining({
+      event_date: '2026-08-10',
+      event_end_date: null,
+    }));
+
+    const preserveQuery = buildWriteQuery({
+      data: { id: 'existing-event', event_date: '2026-08-10', event_end_date: '2026-08-11' },
+    });
+    mocks.from.mockReturnValueOnce(preserveQuery);
+
+    const preserveResult = await updateEvent('existing-event', { title: 'Updated title' });
+
+    expect(preserveResult.error).toBeNull();
+    expect(preserveQuery.update.mock.calls[0][0]).not.toHaveProperty('event_date');
+    expect(preserveQuery.update.mock.calls[0][0]).not.toHaveProperty('event_end_date');
   });
 });

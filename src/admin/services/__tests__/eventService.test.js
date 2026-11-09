@@ -79,6 +79,7 @@ describe('eventService - Real Implementation', () => {
     expect(insert).toHaveBeenCalledWith(expect.objectContaining({
       event_type: 'webinar',
       featured: true,
+      event_date: '2026-08-01',
     }));
     expect(insert.mock.calls[0][0]).not.toHaveProperty('category');
     expect(insert.mock.calls[0][0]).not.toHaveProperty('capacity');
@@ -99,7 +100,11 @@ describe('eventService - Real Implementation', () => {
 
     vi.mocked(supabase.from).mockReturnValueOnce({ insert });
 
-    const result = await eventService.createEvent({ title: 'Bad Event', eventType: 'webinar' });
+    const result = await eventService.createEvent({
+      title: 'Bad Event',
+      eventType: 'webinar',
+      date: '2026-08-01',
+    });
 
     expect(result.success).toBe(false);
     expect(result.error.message).toBe('Insert failed');
@@ -211,6 +216,59 @@ describe('eventService - Real Implementation', () => {
     }));
     expect(update.mock.calls[0][0]).not.toHaveProperty('category');
     expect(update.mock.calls[0][0]).not.toHaveProperty('capacity');
+  });
+
+  it('clears an empty optional end date without sending an empty string', async () => {
+    const single = vi.fn().mockResolvedValueOnce({
+      data: { id: 'evt-1', event_date: '2026-08-02', event_end_date: null },
+      error: null,
+    });
+    const select = vi.fn().mockReturnValue({ single });
+    const eq = vi.fn().mockReturnValue({ select });
+    const update = vi.fn().mockReturnValue({ eq });
+    vi.mocked(supabase.from).mockReturnValueOnce({ update });
+
+    const result = await eventService.updateEvent('evt-1', {
+      date: '2026-08-02',
+      endDate: '',
+      event_end_date: null,
+    });
+
+    expect(result.success).toBe(true);
+    expect(update).toHaveBeenCalledWith(expect.objectContaining({
+      event_date: '2026-08-02',
+      event_end_date: null,
+    }));
+    expect(update.mock.calls[0][0].event_end_date).not.toBe('');
+  });
+
+  it('rejects missing required dates before writing an event', async () => {
+    const result = await eventService.createEvent({
+      title: 'Undated event',
+      eventType: 'webinar',
+      date: '',
+    });
+
+    expect(result.success).toBe(false);
+    expect(result.error.message).toBe('Start Date is required.');
+    expect(supabase.from).not.toHaveBeenCalled();
+  });
+
+  it('preserves stored date fields when an update omits them', async () => {
+    const single = vi.fn().mockResolvedValueOnce({
+      data: { id: 'evt-1', event_date: '2026-08-02', event_end_date: '2026-08-03' },
+      error: null,
+    });
+    const select = vi.fn().mockReturnValue({ single });
+    const eq = vi.fn().mockReturnValue({ select });
+    const update = vi.fn().mockReturnValue({ eq });
+    vi.mocked(supabase.from).mockReturnValueOnce({ update });
+
+    const result = await eventService.updateEvent('evt-1', { title: 'Updated title' });
+
+    expect(result.success).toBe(true);
+    expect(update.mock.calls[0][0]).not.toHaveProperty('event_date');
+    expect(update.mock.calls[0][0]).not.toHaveProperty('event_end_date');
   });
 
   it('deletes an event successfully', async () => {

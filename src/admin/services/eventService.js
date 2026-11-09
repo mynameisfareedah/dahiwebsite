@@ -3,6 +3,7 @@ import { EVENT_STATUS } from '../../constants/status';
 import { isEventType } from '../../constants/eventTypes';
 import { EVENT_TYPE_SCHEMA_ACTIVATION_MESSAGE, isEventTypeSchemaReady } from '../../constants/eventTypeSchema';
 import { logAudit } from './auditService';
+import { normalizeEventDate } from '../../utils/eventSchedule';
 
 const EVENT_TABLE = 'events';
 const STORAGE_BUCKET =
@@ -40,6 +41,14 @@ function buildSuccessResponse(data) {
     data,
     error: null,
   };
+}
+
+function getProvidedValue(data, ...fields) {
+  for (const field of fields) {
+    if (data[field] !== undefined) return { provided: true, value: data[field] };
+  }
+
+  return { provided: false, value: undefined };
 }
 
 function normalizeEvent(event) {
@@ -294,6 +303,12 @@ export const eventService = {
         return buildErrorResponse({ message: 'Select a valid Event Type before creating the event.' });
       }
 
+      const eventDate = normalizeEventDate(data.date ?? data.event_date, 'Start Date', true);
+      const eventEndDate = normalizeEventDate(
+        getProvidedValue(data, 'event_end_date', 'endDate').value,
+        'End Date'
+      );
+
       // Get current user
       const {
         data: { user: currentUser },
@@ -312,8 +327,8 @@ export const eventService = {
         slug: (data.title || '').toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') || 'event',
         description: data.description || null,
         event_type: data.eventType,
-        event_date: data.date || data.event_date || null,
-        event_end_date: data.event_end_date ?? data.endDate ?? null,
+        event_date: eventDate,
+        event_end_date: eventEndDate,
         start_time: data.time || data.start_time || null,
         event_schedule: data.event_schedule ?? data.schedule ?? null,
         location: data.location || null,
@@ -380,10 +395,11 @@ export const eventService = {
       const allowedStatuses = [EVENT_STATUS.DRAFT, EVENT_STATUS.PUBLISHED];
       const sanitizedStatus = allowedStatuses.includes(data.status) ? data.status : EVENT_STATUS.DRAFT;
 
+      const eventDateValue = getProvidedValue(data, 'date', 'event_date');
+      const eventEndDateValue = getProvidedValue(data, 'event_end_date', 'endDate');
       const payload = {
         title: data.title,
         description: data.description || null,
-        event_date: data.date || data.event_date || null,
         start_time: data.time || data.start_time || null,
         location: data.location || null,
         poster_url: data.poster_url || null,
@@ -401,8 +417,11 @@ export const eventService = {
         status: sanitizedStatus,
         updated_at: new Date().toISOString(),
       };
-      if ('event_end_date' in data || 'endDate' in data) {
-        payload.event_end_date = data.event_end_date ?? data.endDate ?? null;
+      if (eventDateValue.provided) {
+        payload.event_date = normalizeEventDate(eventDateValue.value, 'Start Date', true);
+      }
+      if (eventEndDateValue.provided) {
+        payload.event_end_date = normalizeEventDate(eventEndDateValue.value, 'End Date');
       }
       if ('event_schedule' in data || 'schedule' in data) {
         payload.event_schedule = data.event_schedule ?? data.schedule ?? null;

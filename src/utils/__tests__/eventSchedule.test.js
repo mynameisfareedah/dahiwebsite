@@ -5,6 +5,7 @@ import {
   formatEventDateRange,
   formatEventTimeSummary,
   getEventScheduleFormValues,
+  normalizeEventDate,
   toEventServicePayload,
   validateEventSchedule,
 } from '../eventSchedule';
@@ -15,6 +16,16 @@ describe('event scheduling helpers', () => {
     expect(formatEventDateRange('2026-10-17', '2026-10-18')).toBe('17–18 October 2026');
     expect(formatEventDateRange('2026-10-17', '2026-11-02')).toBe('17 October–2 November 2026');
     expect(formatEventDateRange('2026-10-17', null)).toBe('17 October 2026');
+  });
+
+  it('normalizes valid database dates and safely handles optional empty values', () => {
+    expect(normalizeEventDate('2026-10-17', 'Start Date', true)).toBe('2026-10-17');
+    expect(normalizeEventDate('', 'End Date')).toBeNull();
+    expect(normalizeEventDate(null, 'End Date')).toBeNull();
+    expect(normalizeEventDate(undefined, 'End Date')).toBeNull();
+    expect(() => normalizeEventDate('', 'Start Date', true)).toThrow('Start Date is required.');
+    expect(() => normalizeEventDate('2026-02-30', 'Start Date', true))
+      .toThrow('Start Date must be a valid date in YYYY-MM-DD format.');
   });
 
   it('formats multi-day sessions with their dates and start/end times', () => {

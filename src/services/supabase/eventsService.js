@@ -1,5 +1,6 @@
 import { supabase, isSupabaseConfigured, handleSupabaseError } from '../../lib/supabase';
 import { EVENT_STATUS } from '../../constants/status';
+import { normalizeEventDate } from '../../utils/eventSchedule';
 
 /**
  * Events Service
@@ -51,6 +52,14 @@ const mapEvent = (event) => {
 };
 
 const mapEvents = (events) => (Array.isArray(events) ? events.map(mapEvent) : []);
+
+function getProvidedValue(data, ...fields) {
+  for (const field of fields) {
+    if (data[field] !== undefined) return { provided: true, value: data[field] };
+  }
+
+  return { provided: false, value: undefined };
+}
 
 /**
  * Get all events
@@ -115,6 +124,11 @@ export async function createEvent(eventData) {
 
     const allowedStatuses = [EVENT_STATUS.DRAFT, EVENT_STATUS.PUBLISHED];
     const sanitizedStatus = allowedStatuses.includes(eventData.status) ? eventData.status : EVENT_STATUS.DRAFT;
+    const eventDate = normalizeEventDate(eventData.date ?? eventData.event_date, 'Start Date', true);
+    const eventEndDate = normalizeEventDate(
+      getProvidedValue(eventData, 'event_end_date', 'endDate').value,
+      'End Date'
+    );
 
     const insertPayload = {
       title: eventData.title,
@@ -122,8 +136,8 @@ export async function createEvent(eventData) {
       location: eventData.location,
       category: eventData.category || 'general',
       status: sanitizedStatus,
-      event_date: eventData.date ?? eventData.event_date,
-      event_end_date: eventData.endDate ?? eventData.event_end_date ?? null,
+      event_date: eventDate,
+      event_end_date: eventEndDate,
       start_time: eventData.time ?? eventData.start_time,
       event_schedule: eventData.event_schedule ?? eventData.schedule ?? null,
       attendees_count: eventData.attendees_count ?? 0,
@@ -167,6 +181,8 @@ export async function updateEvent(id, eventData) {
 
     const allowedStatuses = [EVENT_STATUS.DRAFT, EVENT_STATUS.PUBLISHED];
     const sanitizedStatus = allowedStatuses.includes(eventData.status) ? eventData.status : EVENT_STATUS.DRAFT;
+    const eventDateValue = getProvidedValue(eventData, 'date', 'event_date');
+    const eventEndDateValue = getProvidedValue(eventData, 'event_end_date', 'endDate');
 
     const updatePayload = {
       title: eventData.title,
@@ -174,8 +190,6 @@ export async function updateEvent(id, eventData) {
       location: eventData.location,
       category: eventData.category,
       status: sanitizedStatus,
-      event_date: eventData.date ?? eventData.event_date,
-      event_end_date: eventData.endDate ?? eventData.event_end_date,
       start_time: eventData.time ?? eventData.start_time,
       event_schedule: eventData.event_schedule ?? eventData.schedule,
       attendees_count: eventData.attendees_count ?? eventData.attendees,
@@ -194,6 +208,12 @@ export async function updateEvent(id, eventData) {
       poster_url: eventData.poster_url || eventData.posterPath || undefined,
       updated_at: new Date().toISOString(),
     };
+    if (eventDateValue.provided) {
+      updatePayload.event_date = normalizeEventDate(eventDateValue.value, 'Start Date', true);
+    }
+    if (eventEndDateValue.provided) {
+      updatePayload.event_end_date = normalizeEventDate(eventEndDateValue.value, 'End Date');
+    }
 
     const { data, error } = await supabase
       .from('events')

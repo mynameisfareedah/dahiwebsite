@@ -53,7 +53,7 @@ const formRules = {
     (val) => validators.minLength(val, 3, 'Event title'),
   ],
   eventType: [(val) => validators.required(val, 'Event Type')],
-  date: [(val) => validators.required(val, 'Date')],
+  date: [(val) => validators.required(val, 'Start Date')],
   location: [(val) => validators.required(val, 'Location')],
   registrationUrl: [(val) => validateOptionalRegistrationUrl(val)],
 };

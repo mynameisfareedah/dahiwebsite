@@ -166,6 +166,18 @@ describe('admin Event Type forms', () => {
     expect(mocks.createEvent).not.toHaveBeenCalled();
   });
 
+  it('shows a required Start Date message and does not submit without a date', async () => {
+    const { container } = renderCreateEvent();
+
+    changeField(container, 'title', 'Undated event');
+    changeField(container, 'eventType', 'webinar');
+    changeField(container, 'location', 'DAHI');
+    fireEvent.submit(container.querySelector('form'));
+
+    await waitFor(() => expect(screen.getByText('Start Date is required')).toBeInTheDocument());
+    expect(mocks.createEvent).not.toHaveBeenCalled();
+  });
+
   it('loads and safely updates the existing Event Type without a Category form value', async () => {
     const { container } = renderEditEvent();
     await waitFor(() => expect(container.querySelector('[name="eventType"]')).not.toBeNull());

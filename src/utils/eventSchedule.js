@@ -22,6 +22,20 @@ function parseCalendarDate(value) {
   return { year, month, day, date };
 }
 
+export function normalizeEventDate(value, fieldName = 'Date', required = false) {
+  if (value == null || (typeof value === 'string' && value.trim() === '')) {
+    if (required) throw new Error(`${fieldName} is required.`);
+    return null;
+  }
+
+  const parsed = parseCalendarDate(value);
+  if (!parsed) {
+    throw new Error(`${fieldName} must be a valid date in YYYY-MM-DD format.`);
+  }
+
+  return `${String(parsed.year).padStart(4, '0')}-${String(parsed.month).padStart(2, '0')}-${String(parsed.day).padStart(2, '0')}`;
+}
+
 function getSchedule(event) {
   const schedule = event?.event_schedule ?? event?.schedule;
   return Array.isArray(schedule)

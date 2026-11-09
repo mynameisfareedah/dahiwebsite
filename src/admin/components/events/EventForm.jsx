@@ -87,7 +87,7 @@ export function EventForm({
           value={values.date}
           onChange={onChange}
           onBlur={onBlur}
-          error={touched.date && errors.date}
+          error={errors.date}
           required
         />
         <FormInput
