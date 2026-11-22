@@ -14,6 +14,10 @@ vi.mock('../../../lib/supabase', () => ({
   handleSupabaseError: (error) => error,
 }));
 
+vi.mock('../auditService', () => ({
+  logAudit: vi.fn(),
+}));
+
 import { eventService } from '../eventService';
 import { supabase } from '../../../lib/supabase';
 
@@ -195,7 +199,7 @@ describe('eventService - Real Implementation', () => {
       time: '12:00',
       endDate: '2026-08-03',
       event_schedule: [
-        { date: '2026-08-02', time: '12:00' },
+        { date: '2026-08-02', time: '12:00', end_time: '13:00' },
         { date: '2026-08-03', time: null },
       ],
       status: 'published',
@@ -210,7 +214,7 @@ describe('eventService - Real Implementation', () => {
       featured: true,
       event_end_date: '2026-08-03',
       event_schedule: [
-        { date: '2026-08-02', time: '12:00' },
+        { date: '2026-08-02', time: '12:00', end_time: '13:00' },
         { date: '2026-08-03', time: null },
       ],
     }));
@@ -269,6 +273,7 @@ describe('eventService - Real Implementation', () => {
     expect(result.success).toBe(true);
     expect(update.mock.calls[0][0]).not.toHaveProperty('event_date');
     expect(update.mock.calls[0][0]).not.toHaveProperty('event_end_date');
+    expect(update.mock.calls[0][0]).not.toHaveProperty('registration_deadline');
   });
 
   it('deletes an event successfully', async () => {

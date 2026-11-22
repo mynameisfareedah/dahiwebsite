@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormCheckbox, FormInput, FormSelect, FormTextarea } from '../FormField';
-import { formatEventDateRange } from '../../../utils/eventSchedule';
+import { formatEventDateRange, formatEventSessionTime } from '../../../utils/eventSchedule';
 
 const REGISTRATION_STATUS_OPTIONS = [
   { value: 'open', label: 'Open' },
@@ -124,23 +124,36 @@ export function EventForm({
         </div>
 
         {values.scheduleMode === 'shared' && values.timeStatus === 'confirmed' ? (
-          <FormInput
-            label="Confirmed Time"
-            name="time"
-            type="time"
-            value={values.time}
-            onChange={onChange}
-            onBlur={onBlur}
-            error={errors.time}
-            required
-          />
+          <div className="grid gap-4 sm:grid-cols-2">
+            <FormInput
+              label="Confirmed Time"
+              name="time"
+              type="time"
+              value={values.time}
+              onChange={onChange}
+              onBlur={onBlur}
+              error={errors.time}
+              required
+            />
+            <FormInput
+              label="End Time"
+              name="endTime"
+              type="time"
+              value={values.endTime || ''}
+              min={values.time || undefined}
+              onChange={onChange}
+              onBlur={onBlur}
+              error={errors.endTime}
+              help="Optional. Must be later than the start time."
+            />
+          </div>
         ) : null}
 
         {values.scheduleMode === 'sessions' ? (
           <div className="space-y-4">
             <div className="space-y-4">
               {(values.sessions || []).map((session, index) => (
-                <div key={`session-${index}`} className="grid gap-4 rounded-xl border border-gray-700 p-4 md:grid-cols-[1fr_1fr_1fr_auto] md:items-end">
+                <div key={`session-${index}`} className="grid gap-4 rounded-xl border border-gray-700 p-4 md:grid-cols-[1fr_1fr_1fr_1fr_auto] md:items-end">
                   <FormInput
                     label={`Session ${index + 1} Date`}
                     name={`session-${index}-date`}
@@ -167,6 +180,19 @@ export function EventForm({
                     />
                   ) : (
                     <p className="pb-2 text-sm text-gray-400">Time will display as TBA.</p>
+                  )}
+                  {session.timeStatus === 'confirmed' ? (
+                    <FormInput
+                      label="End Time"
+                      name={`session-${index}-endTime`}
+                      type="time"
+                      value={session.endTime || ''}
+                      min={session.time || undefined}
+                      onChange={(event) => onScheduleChange(index, 'endTime', event.target.value)}
+                      help="Optional. Must be later than the start time."
+                    />
+                  ) : (
+                    <p className="pb-2 text-sm text-gray-400">No end time set.</p>
                   )}
                   <button
                     type="button"
@@ -253,8 +279,14 @@ export function EventForm({
           <p><span className="font-semibold text-white">Event Title:</span> {values.title || 'Untitled Event'}</p>
           <p><span className="font-semibold text-white">Date:</span> {values.date ? formatEventDateRange(values.date, values.endDate) : 'TBD'}</p>
           <p><span className="font-semibold text-white">Time:</span> {values.scheduleMode === 'sessions'
-            ? (values.sessions || []).map((session) => session.timeStatus === 'confirmed' ? session.time : 'TBA').join(' · ') || 'TBA'
-            : values.timeStatus === 'confirmed' ? values.time || 'TBA' : 'TBA'}</p>
+            ? (values.sessions || []).map((session) => formatEventSessionTime(
+              session.timeStatus === 'confirmed' ? session.time : null,
+              session.endTime
+            ) || 'TBA').join(' · ') || 'TBA'
+            : formatEventSessionTime(
+              values.timeStatus === 'confirmed' ? values.time : null,
+              values.endTime
+            ) || 'TBA'}</p>
           <p><span className="font-semibold text-white">Registration Status:</span> {values.registrationEnabled ? values.registrationStatus : 'closed'}</p>
           <p><span className="font-semibold text-white">Button Text:</span> {values.registrationButtonText || 'Register Now'}</p>
           <p className="break-all"><span className="font-semibold text-white">Registration URL:</span> {values.registrationUrl || 'Not set'}</p>

@@ -112,6 +112,42 @@ export const testimonials = [
     context: "Teenage Girls' Menstrual Health Talk · 1 June",
     status: 'verified',
   },
+  {
+    id: 'aberdeen-menstruation-outreach-participant-1',
+    quote: 'She did really well and explained everything really well. She also answered all the questions very well. She also gave examples of what she was talking about and let the students do demonstrations about what we were talking about.',
+    category: 'Educational Sessions',
+    attribution: 'Aberdeen Session Participant',
+    context: 'Teenage Menstruation Education Outreach · Aberdeen',
+    status: 'verified',
+    featuredOnHome: false,
+  },
+  {
+    id: 'aberdeen-menstruation-outreach-participant-2',
+    quote: 'Thank you for telling us all about this. I did feel comfortable. You should come again. It really helped me.',
+    category: 'Educational Sessions',
+    attribution: 'Aberdeen Session Participant',
+    context: 'Teenage Menstruation Education Outreach · Aberdeen',
+    status: 'verified',
+    featuredOnHome: false,
+  },
+  {
+    id: 'aberdeen-menstruation-outreach-participant-3',
+    quote: "I think she is really good because she made us feel very comfortable and asked us about our day and then slowly got to the point. It was really comfortable and she explained things other people can't explain. She told us stories so we wouldn't be shy or uncomfortable. I would say I want this doctor again because she was really sweet and I hope she comes again.",
+    category: 'Educational Sessions',
+    attribution: 'Aberdeen Session Participant',
+    context: 'Teenage Menstruation Education Outreach · Aberdeen',
+    status: 'verified',
+    featuredOnHome: false,
+  },
+  {
+    id: 'aberdeen-menstruation-outreach-participant-4',
+    quote: 'It was useful, and the lady was nice and made us comfortable enough to speak to her openly.',
+    category: 'Educational Sessions',
+    attribution: 'Aberdeen Session Participant',
+    context: 'Teenage Menstruation Education Outreach · Aberdeen',
+    status: 'verified',
+    featuredOnHome: false,
+  },
 ];
 
 export const publishableTestimonials = testimonials.filter((testimonial) => testimonial.status === 'verified');

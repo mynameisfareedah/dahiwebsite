@@ -1,8 +1,35 @@
 import { describe, expect, it } from 'vitest';
-import { EVENT_TYPE_OPTIONS, PUBLIC_EVENT_FILTER_OPTIONS } from '../eventTypes';
+import {
+  EVENT_TYPE_OPTIONS,
+  getEventCategoryDisplayLabel,
+  PUBLIC_EVENT_FILTER_OPTIONS,
+} from '../eventTypes';
 import { getPublicEventType, matchesPublicEventFilter } from '../../utils/publicEventType';
 
 describe('public Event Types', () => {
+  it('uses the existing Event Type label when a category is absent', () => {
+    expect(getEventCategoryDisplayLabel({
+      category: null,
+      event_type: 'masterclass',
+    }, 'N/A')).toBe('Masterclasses');
+    expect(getEventCategoryDisplayLabel({
+      category: 'wellness',
+      event_type: 'masterclass',
+    }, 'N/A')).toBe('wellness');
+    expect(getEventCategoryDisplayLabel({
+      category: '   ',
+      event_type: 'masterclass',
+    }, 'N/A')).toBe('Masterclasses');
+    expect(getEventCategoryDisplayLabel({
+      category: '\t\n',
+      event_type: 'outreach_community',
+    }, 'N/A')).toBe('Outreach & Community');
+    expect(getEventCategoryDisplayLabel({
+      category: null,
+      event_type: null,
+    }, 'N/A')).toBe('N/A');
+  });
+
   it('exposes exactly the five approved public filters', () => {
     expect(PUBLIC_EVENT_FILTER_OPTIONS).toEqual([
       { value: 'all', label: 'All Activities' },

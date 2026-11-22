@@ -20,14 +20,14 @@ describe('TestimonialsPage', () => {
   it('renders the requested heading, introduction, and verified text-only testimonials', () => {
     renderPage();
 
-    expect(testimonials).toHaveLength(13);
-    expect(publishableTestimonials).toHaveLength(13);
-    expect(new Set(publishableTestimonials.map((testimonial) => testimonial.id)).size).toBe(13);
-    expect(new Set(publishableTestimonials.map((testimonial) => testimonial.quote)).size).toBe(13);
+    expect(testimonials).toHaveLength(18);
+    expect(publishableTestimonials).toHaveLength(18);
+    expect(new Set(publishableTestimonials.map((testimonial) => testimonial.id)).size).toBe(18);
+    expect(new Set(publishableTestimonials.map((testimonial) => testimonial.quote)).size).toBe(18);
     expect(screen.getByRole('heading', { level: 1, name: 'DAHI Voices' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { level: 2, name: 'Real Experiences. Meaningful Reflections.' })).toBeInTheDocument();
     expect(screen.getByText('Hear directly from members of the DAHI community as they share their experiences with our educational programmes, online quizzes, and health resources.')).toBeInTheDocument();
-    expect(document.querySelectorAll('.home-testimonial-card')).toHaveLength(13);
+    expect(document.querySelectorAll('.home-testimonial-card')).toHaveLength(18);
     for (const testimonial of publishableTestimonials) {
       const card = screen.getByText(testimonial.quote).closest('article');
       expect(card).toBeInTheDocument();
@@ -51,6 +51,35 @@ describe('TestimonialsPage', () => {
     expect(screen.getByText('You are doing a great job ma,may Allah reward you with the best of both worlds')).toBeInTheDocument();
     expect(screen.queryByText("It's actually a very clear guide, yeah.")).not.toBeInTheDocument();
     expect(document.querySelectorAll('img')).toHaveLength(0);
+  });
+
+  it('renders the four anonymous Aberdeen session testimonials without featuring them on the homepage', () => {
+    renderPage();
+
+    const aberdeenTestimonials = testimonials.filter(({ id }) => id.startsWith('aberdeen-menstruation-outreach-'));
+    expect(aberdeenTestimonials).toHaveLength(4);
+
+    for (const testimonial of aberdeenTestimonials) {
+      expect(testimonial).toMatchObject({
+        category: 'Educational Sessions',
+        attribution: 'Aberdeen Session Participant',
+        context: 'Teenage Menstruation Education Outreach · Aberdeen',
+        status: 'verified',
+        featuredOnHome: false,
+      });
+      expect(testimonial).not.toHaveProperty('respondentName');
+      expect(testimonial).not.toHaveProperty('image');
+
+      const card = screen.getByText(testimonial.quote).closest('article');
+      expect(card).toBeInTheDocument();
+      expect(within(card).getByText(testimonial.attribution)).toBeInTheDocument();
+      expect(within(card).getByText(testimonial.context)).toBeInTheDocument();
+    }
+
+    expect(screen.getByText('She did really well and explained everything really well. She also answered all the questions very well. She also gave examples of what she was talking about and let the students do demonstrations about what we were talking about.')).toBeInTheDocument();
+    expect(screen.getByText('Thank you for telling us all about this. I did feel comfortable. You should come again. It really helped me.')).toBeInTheDocument();
+    expect(screen.getByText("I think she is really good because she made us feel very comfortable and asked us about our day and then slowly got to the point. It was really comfortable and she explained things other people can't explain. She told us stories so we wouldn't be shy or uncomfortable. I would say I want this doctor again because she was really sweet and I hope she comes again.")).toBeInTheDocument();
+    expect(screen.getByText('It was useful, and the lady was nice and made us comfortable enough to speak to her openly.')).toBeInTheDocument();
   });
 
   it('filters populated categories accessibly and hides categories without verified entries', async () => {

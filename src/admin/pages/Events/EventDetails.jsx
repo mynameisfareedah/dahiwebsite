@@ -4,6 +4,7 @@ import { ChevronDown } from 'lucide-react';
 import { useToast } from '../../hooks/useDataManagement';
 import { eventService, getEventImageUrl } from '../../services/eventService';
 import { EVENT_STATUS } from '../../../constants/status';
+import { getEventCategoryDisplayLabel } from '../../../constants/eventTypes';
 import {
   formatEventDate,
   formatEventDateRange,
@@ -196,7 +197,9 @@ export default function EventDetails() {
           <div className="grid gap-4 md:grid-cols-2">
             <div className="rounded-3xl border border-gray-800 bg-slate-900 p-5">
               <p className="text-sm uppercase tracking-[0.2em] text-gray-400">Category</p>
-              <p className="mt-2 text-lg font-semibold text-white">{event.category || 'N/A'}</p>
+              <p className="mt-2 text-lg font-semibold text-white">
+                {getEventCategoryDisplayLabel(event, 'N/A')}
+              </p>
             </div>
             <div className="rounded-3xl border border-gray-800 bg-slate-900 p-5">
               <p className="text-sm uppercase tracking-[0.2em] text-gray-400">Slug</p>

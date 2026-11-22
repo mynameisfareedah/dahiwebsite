@@ -148,7 +148,8 @@ export async function createEvent(eventData) {
       registration_enabled:
         eventData.registrationEnabled == null ? true : Boolean(eventData.registrationEnabled),
       registration_status: eventData.registrationStatus || 'open',
-      registration_deadline: eventData.registration_deadline || null,
+      registration_deadline:
+        eventData.registration_deadline || eventData.registrationDeadline || null,
       featured: Boolean(eventData.featured),
       poster_url: eventData.poster_url || eventData.posterPath || null,
     };
@@ -200,7 +201,6 @@ export async function updateEvent(id, eventData) {
       registration_enabled:
         eventData.registrationEnabled == null ? true : Boolean(eventData.registrationEnabled),
       registration_status: eventData.registrationStatus || 'open',
-      registration_deadline: eventData.registration_deadline || null,
       featured:
         eventData.featured == null
           ? undefined
@@ -213,6 +213,10 @@ export async function updateEvent(id, eventData) {
     }
     if (eventEndDateValue.provided) {
       updatePayload.event_end_date = normalizeEventDate(eventEndDateValue.value, 'End Date');
+    }
+    const registrationDeadline = getProvidedValue(eventData, 'registration_deadline', 'registrationDeadline');
+    if (registrationDeadline.provided) {
+      updatePayload.registration_deadline = registrationDeadline.value || null;
     }
 
     const { data, error } = await supabase

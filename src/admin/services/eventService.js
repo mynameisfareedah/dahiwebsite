@@ -409,7 +409,6 @@ export const eventService = {
         registration_enabled:
           data.registrationEnabled == null ? true : Boolean(data.registrationEnabled),
         registration_status: data.registrationStatus || 'open',
-        registration_deadline: data.registrationDeadline || data.registration_deadline || null,
         featured:
           data.featured == null
             ? undefined
@@ -422,6 +421,10 @@ export const eventService = {
       }
       if (eventEndDateValue.provided) {
         payload.event_end_date = normalizeEventDate(eventEndDateValue.value, 'End Date');
+      }
+      const registrationDeadline = getProvidedValue(data, 'registration_deadline', 'registrationDeadline');
+      if (registrationDeadline.provided) {
+        payload.registration_deadline = registrationDeadline.value || null;
       }
       if ('event_schedule' in data || 'schedule' in data) {
         payload.event_schedule = data.event_schedule ?? data.schedule ?? null;

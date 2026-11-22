@@ -21,3 +21,12 @@ export function isEventType(value) {
 export function getEventTypeLabel(value) {
   return EVENT_TYPE_OPTIONS.find((option) => option.value === value)?.label || 'Not assigned';
 }
+
+export function getEventCategoryDisplayLabel(event, fallback = 'Not assigned') {
+  if (typeof event?.category === 'string' && event.category.trim()) {
+    return event.category;
+  }
+
+  const eventTypeLabel = getEventTypeLabel(event?.event_type);
+  return eventTypeLabel === 'Not assigned' ? fallback : eventTypeLabel;
+}

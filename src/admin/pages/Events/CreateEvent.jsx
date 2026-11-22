@@ -24,6 +24,7 @@ const initialFormValues = {
   scheduleMode: 'shared',
   timeStatus: 'tba',
   time: '',
+  endTime: '',
   sessions: [],
   location: '',
   registrationUrl: '',
@@ -122,7 +123,7 @@ export default function CreateEvent() {
 
   const handleScheduleModeChange = (scheduleMode) => {
     if (scheduleMode === 'sessions' && values.sessions.length === 0) {
-      setFieldValue('sessions', [{ date: values.date, time: '', timeStatus: 'tba' }]);
+      setFieldValue('sessions', [{ date: values.date, time: '', endTime: '', timeStatus: 'tba' }]);
     }
     setFieldValue('scheduleMode', scheduleMode);
   };
@@ -130,7 +131,11 @@ export default function CreateEvent() {
   const handleScheduleChange = (index, field, value) => {
     setFieldValue('sessions', values.sessions.map((session, sessionIndex) => (
       sessionIndex === index
-        ? { ...session, [field]: value, ...(field === 'timeStatus' && value === 'tba' ? { time: '' } : {}) }
+        ? {
+          ...session,
+          [field]: value,
+          ...(field === 'timeStatus' && value === 'tba' ? { time: '', endTime: '' } : {}),
+        }
         : session
     )));
   };
@@ -138,7 +143,7 @@ export default function CreateEvent() {
   const handleAddSession = () => {
     setFieldValue('sessions', [
       ...values.sessions,
-      { date: values.endDate || values.date, time: '', timeStatus: 'tba' },
+      { date: values.endDate || values.date, time: '', endTime: '', timeStatus: 'tba' },
     ]);
   };
 
@@ -150,7 +155,10 @@ export default function CreateEvent() {
 
   const handleSharedTimeStatusChange = (timeStatus) => {
     setFieldValue('timeStatus', timeStatus);
-    if (timeStatus === 'tba') setFieldValue('time', '');
+    if (timeStatus === 'tba') {
+      setFieldValue('time', '');
+      setFieldValue('endTime', '');
+    }
   };
 
   return (

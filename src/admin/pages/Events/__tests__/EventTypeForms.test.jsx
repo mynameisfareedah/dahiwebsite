@@ -121,6 +121,37 @@ describe('admin Event Type forms', () => {
     expect(mocks.createEvent.mock.calls[0][0]).not.toHaveProperty('capacity');
   });
 
+  it('creates a confirmed shared event with an end time in event_schedule', async () => {
+    const { container } = renderCreateEvent();
+
+    changeField(container, 'title', 'Uterine Fibroids: Understanding Your Options');
+    changeField(container, 'eventType', 'masterclass');
+    changeField(container, 'date', '2026-12-06');
+    changeField(container, 'timeStatus', 'confirmed');
+    changeField(container, 'time', '11:00');
+    changeField(container, 'endTime', '13:00');
+    changeField(container, 'location', 'Online');
+    changeField(container, 'registrationUrl', 'https://selar.com/6i81906j9k');
+    fireEvent.submit(container.querySelector('form'));
+
+    await waitFor(() => expect(mocks.createEvent).toHaveBeenCalledOnce());
+    expect(mocks.createEvent.mock.calls[0][0]).toMatchObject({
+      title: 'Uterine Fibroids: Understanding Your Options',
+      eventType: 'masterclass',
+      date: '2026-12-06',
+      start_time: '11:00',
+      event_end_date: null,
+      event_schedule: [
+        { date: '2026-12-06', time: '11:00', end_time: '13:00' },
+      ],
+      location: 'Online',
+      registrationUrl: 'https://selar.com/6i81906j9k',
+      status: 'draft',
+      featured: false,
+    });
+    expect(mocks.createEvent.mock.calls[0][0]).not.toHaveProperty('endTime');
+  });
+
   it('creates a two-day quiz with separate TBA sessions and its participation URL', async () => {
     const { container } = renderCreateEvent();
 
@@ -202,6 +233,56 @@ describe('admin Event Type forms', () => {
     expect(mocks.updateEvent.mock.calls[0][1]).not.toHaveProperty('capacity');
   });
 
+  it('updates a shared event with an optional end time in event_schedule', async () => {
+    mocks.getEventById.mockResolvedValueOnce({
+      success: true,
+      data: {
+        id: 'event-1',
+        title: 'Uterine Fibroids: Understanding Your Options',
+        description: 'Existing event description',
+        event_type: 'masterclass',
+        event_date: '2026-12-06',
+        start_time: '11:00',
+        event_schedule: null,
+        location: 'ONLINE',
+        registration_url: 'https://selar.com/6i81906j9k',
+        registration_enabled: true,
+        registration_status: 'open',
+        status: 'draft',
+        featured: false,
+        poster_url: 'posters/existing-fibroids-poster.jpeg',
+      },
+    });
+
+    const { container } = renderEditEvent();
+    await waitFor(() => expect(container.querySelector('[name="endTime"]')).not.toBeNull());
+    expect(container.querySelector('[name="time"]')).toHaveValue('11:00');
+    expect(container.querySelector('[name="endTime"]')).toHaveValue('');
+
+    changeField(container, 'endTime', '13:00');
+    fireEvent.submit(container.querySelector('form'));
+
+    await waitFor(() => expect(mocks.updateEvent).toHaveBeenCalledOnce());
+    expect(mocks.updateEvent.mock.calls[0][1]).toMatchObject({
+      title: 'Uterine Fibroids: Understanding Your Options',
+      description: 'Existing event description',
+      eventType: 'masterclass',
+      date: '2026-12-06',
+      start_time: '11:00',
+      event_schedule: [
+        { date: '2026-12-06', time: '11:00', end_time: '13:00' },
+      ],
+      location: 'ONLINE',
+      registrationUrl: 'https://selar.com/6i81906j9k',
+      registrationEnabled: true,
+      registrationStatus: 'open',
+      status: 'draft',
+      featured: false,
+      poster_url: 'posters/existing-fibroids-poster.jpeg',
+    });
+    expect(mocks.updateEvent.mock.calls[0][1]).not.toHaveProperty('endTime');
+  });
+
   it('lets an administrator confirm one TBA session while leaving another TBA', async () => {
     mocks.getEventById.mockResolvedValueOnce({
       success: true,
@@ -229,6 +310,7 @@ describe('admin Event Type forms', () => {
 
     changeField(container, 'session-0-timeStatus', 'confirmed');
     changeField(container, 'session-0-time', '15:30');
+    changeField(container, 'session-0-endTime', '16:30');
     fireEvent.submit(container.querySelector('form'));
 
     await waitFor(() => expect(mocks.updateEvent).toHaveBeenCalledOnce());
@@ -236,7 +318,7 @@ describe('admin Event Type forms', () => {
       start_time: '15:30',
       event_end_date: '2026-10-18',
       event_schedule: [
-        { date: '2026-10-17', time: '15:30' },
+        { date: '2026-10-17', time: '15:30', end_time: '16:30' },
         { date: '2026-10-18', time: null },
       ],
     });

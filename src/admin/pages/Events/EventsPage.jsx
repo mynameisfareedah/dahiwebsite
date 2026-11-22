@@ -7,7 +7,11 @@ import { LoadingState } from '../../components/events/LoadingState';
 import { EmptyState } from '../../components/events/EmptyState';
 import { getEventImageUrl } from '../../services/eventService';
 import { EVENT_STATUS } from '../../../constants/status';
-import { EVENT_TYPE_OPTIONS, getEventTypeLabel } from '../../../constants/eventTypes';
+import {
+  EVENT_TYPE_OPTIONS,
+  getEventCategoryDisplayLabel,
+  getEventTypeLabel,
+} from '../../../constants/eventTypes';
 import { isEventTypeSchemaReady } from '../../../constants/eventTypeSchema';
 import { formatEventDateRange, formatEventTimeSummary } from '../../../utils/eventSchedule';
 
@@ -386,7 +390,9 @@ export default memo(function EventsPage() {
                         </div>
                       </div>
                     </td>
-                    <td className="px-5 py-4 text-slate-300">{event.category || '—'}</td>
+                    <td className="px-5 py-4 text-slate-300">
+                      {getEventCategoryDisplayLabel(event, '—')}
+                    </td>
                     <td className="px-5 py-4 text-slate-300">{getEventTypeLabel(event.event_type)}</td>
                     <td className="px-5 py-4 text-slate-300">
                       <div>{formatEventDateRange(event.date, event.endDate)}</div>

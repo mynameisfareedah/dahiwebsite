@@ -13,6 +13,45 @@ import {
   getEventSessions,
 } from '../../utils/eventSchedule';
 
+const ABERDEEN_EVENT_TITLE = 'Teenage Menstruation Education Outreach';
+const DOC_ADI_LINKEDIN_ARTICLE = 'https://lnkd.in/p/ePtyDdqh';
+
+function DocAdiReflection() {
+  return (
+    <article className="soft-card space-y-6 p-6 sm:p-8 lg:p-10">
+      <SectionHeading
+        eyebrow="Doc Adi&apos;s reflection"
+        title="Beyond the Classroom: A Reflection from Doc Adi"
+      />
+      <div className="space-y-4 text-base leading-7 text-slate-600 sm:text-lg sm:leading-8">
+        <p>
+          The session was a reminder that receiving health education does not always mean understanding it. During her engagement with teenage girls aged 13–15, Dr Adiyat Olamide Dele-Salawu encountered genuine questions and misconceptions about menstruation and the female reproductive system.
+        </p>
+        <p>
+          Through relatable examples, open conversations and practical explanations, she explored menstrual health, emotional regulation and the importance of communicating personal needs respectfully.
+        </p>
+        <p>
+          Her reflection highlights an important message: health education is not simply about providing information. It is about creating safe spaces where girls can ask questions without shame, understand their bodies and learn when to seek help.
+        </p>
+      </div>
+      <footer className="flex flex-col gap-4 border-t border-slate-100 pt-5 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-sm font-semibold text-slate-900">
+          Dr Adiyat Olamide Dele-Salawu, GP and Founder, Doc Adi Health Initiative.
+        </p>
+        <a
+          href={DOC_ADI_LINKEDIN_ARTICLE}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex min-h-11 items-center justify-center rounded-full bg-dahiPrimary px-5 py-3 text-sm font-semibold text-white transition hover:bg-dahiSecondary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dahiPrimary"
+          aria-label="Read Doc Adi&apos;s LinkedIn article (opens in a new tab)"
+        >
+          Read Doc Adi&apos;s LinkedIn article
+        </a>
+      </footer>
+    </article>
+  );
+}
+
 function EventDetailsPage() {
   const { id } = useParams();
   const location = useLocation();
@@ -140,6 +179,8 @@ function EventDetailsPage() {
             </div>
           </div>
         </div>
+
+        {event.title === ABERDEEN_EVENT_TITLE ? <DocAdiReflection /> : null}
       </section>
     </>
   );

@@ -65,6 +65,12 @@ function formatSessionTime(startTime, endTime) {
   return end ? `${start}–${end}` : start;
 }
 
+export function formatEventSessionTime(startTime, endTime) {
+  const start = normalizeTime(startTime);
+  const end = normalizeTime(endTime);
+  return end ? formatSessionTime(start, end) : start;
+}
+
 export function formatEventDate(dateString) {
   const parsed = parseCalendarDate(dateString);
   if (!parsed) return dateString || '-';
@@ -134,13 +140,19 @@ export function getEventSessions(event) {
   if (schedule.length > 0) {
     return schedule.map((session) => ({
       date: session.date || event?.event_date || event?.date || '',
-      time: normalizeTime(session.time),
+      time: formatEventSessionTime(
+        session.time ?? session.start_time,
+        session.end_time ?? session.endTime
+      ),
     }));
   }
 
   return [{
     date: event?.event_date || event?.date || '',
-    time: normalizeTime(event?.start_time ?? event?.time),
+    time: formatEventSessionTime(
+      event?.start_time ?? event?.time,
+      event?.end_time ?? event?.endTime
+    ),
   }];
 }
 
@@ -150,17 +162,40 @@ export function getEventScheduleFormValues(event = {}) {
   const schedule = getSchedule(event);
 
   if (schedule.length > 0) {
+    const onlySession = schedule[0];
+    const onlySessionDate = onlySession.date || date;
+    if (
+      schedule.length === 1
+      && onlySessionDate === date
+      && (!savedEndDate || savedEndDate === date)
+    ) {
+      const time = normalizeTime(onlySession.time ?? onlySession.start_time);
+      return {
+        date,
+        endDate: savedEndDate,
+        scheduleMode: 'shared',
+        timeStatus: time ? 'confirmed' : 'tba',
+        time,
+        endTime: normalizeTime(onlySession.end_time ?? onlySession.endTime),
+        sessions: [],
+      };
+    }
+
     return {
       date,
       endDate: savedEndDate,
       scheduleMode: 'sessions',
       timeStatus: 'tba',
       time: '',
-      sessions: schedule.map((session) => ({
-        date: session.date || date,
-        time: normalizeTime(session.time),
-        timeStatus: session.time ? 'confirmed' : 'tba',
-      })),
+      sessions: schedule.map((session) => {
+        const time = normalizeTime(session.time ?? session.start_time);
+        return {
+          date: session.date || date,
+          time,
+          endTime: normalizeTime(session.end_time ?? session.endTime),
+          timeStatus: time ? 'confirmed' : 'tba',
+        };
+      }),
     };
   }
 
@@ -171,6 +206,7 @@ export function getEventScheduleFormValues(event = {}) {
     scheduleMode: 'shared',
     timeStatus: savedTime ? 'confirmed' : 'tba',
     time: savedTime,
+    endTime: normalizeTime(event.end_time ?? event.endTime),
     sessions: [],
   };
 }
@@ -198,6 +234,8 @@ export function validateEventSchedule(values) {
 
     const invalidSession = values.sessions.some((session) => {
       const sessionDate = parseCalendarDate(session.date);
+      const time = session.timeStatus === 'confirmed' ? normalizeTime(session.time) : '';
+      const endTime = normalizeTime(session.endTime);
       if (
         !sessionDate
         || session.date < values.date
@@ -205,7 +243,8 @@ export function validateEventSchedule(values) {
       ) {
         return true;
       }
-      return session.timeStatus === 'confirmed' && !normalizeTime(session.time);
+      return (session.timeStatus === 'confirmed' && !time)
+        || (endTime && (!time || endTime <= time));
     });
 
     if (invalidSession) {
@@ -215,6 +254,14 @@ export function validateEventSchedule(values) {
     errors.time = 'Time is required when the event time is confirmed';
   }
 
+  if (values.scheduleMode !== 'sessions' && values.endTime) {
+    const startTime = values.timeStatus === 'confirmed' ? normalizeTime(values.time) : '';
+    const endTime = normalizeTime(values.endTime);
+    if (!startTime || endTime <= startTime) {
+      errors.endTime = 'End Time must be later than the start time';
+    }
+  }
+
   return errors;
 }
 
@@ -222,10 +269,14 @@ export function buildEventSchedulePayload(values) {
   const eventEndDate = values.endDate || null;
 
   if (values.scheduleMode === 'sessions') {
-    const schedule = (values.sessions || []).map((session) => ({
-      date: session.date,
-      time: session.timeStatus === 'confirmed' ? normalizeTime(session.time) || null : null,
-    }));
+    const schedule = (values.sessions || []).map((session) => {
+      const endTime = normalizeTime(session.endTime);
+      return {
+        date: session.date,
+        time: session.timeStatus === 'confirmed' ? normalizeTime(session.time) || null : null,
+        ...(endTime ? { end_time: endTime } : {}),
+      };
+    });
     return {
       event_end_date: eventEndDate,
       start_time: schedule[0]?.time || null,
@@ -241,16 +292,20 @@ export function buildEventSchedulePayload(values) {
     };
   }
 
+  const startTime = normalizeTime(values.time) || null;
+  const endTime = normalizeTime(values.endTime);
   return {
     event_end_date: eventEndDate,
-    start_time: normalizeTime(values.time) || null,
-    event_schedule: null,
+    start_time: startTime,
+    event_schedule: endTime
+      ? [{ date: values.date, time: startTime, end_time: endTime }]
+      : null,
   };
 }
 
 export function toEventServicePayload(values) {
   const eventValues = { ...values };
-  ['scheduleMode', 'timeStatus', 'sessions', 'time', 'capacity'].forEach((field) => {
+  ['scheduleMode', 'timeStatus', 'sessions', 'time', 'endTime', 'capacity'].forEach((field) => {
     delete eventValues[field];
   });
 
