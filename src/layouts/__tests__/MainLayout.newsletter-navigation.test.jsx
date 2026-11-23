@@ -103,9 +103,12 @@ describe('MainLayout newsletter navigation', () => {
 
     const primaryNavigation = screen.getByRole('navigation', { name: 'Primary navigation' });
     expect(primaryNavigation).toHaveClass('min-[1280px]:flex');
-    expect(screen.getByRole('navigation', { name: 'Mobile navigation' })).toHaveClass('flex-1');
+    expect(screen.getByRole('navigation', { name: 'Mobile navigation', hidden: true })).toHaveClass('flex-1');
     expect(screen.getByRole('button', { name: 'Toggle navigation' })).toHaveClass('min-[1280px]:hidden');
     expect(screen.getByRole('button', { name: 'Toggle navigation' })).toHaveAttribute('aria-controls', 'mobile-sidebar');
+    expect(screen.queryByRole('navigation', { name: 'Mobile navigation' })).not.toBeInTheDocument();
+    expect(document.getElementById('mobile-sidebar')).toHaveAttribute('aria-hidden', 'true');
+    expect(document.getElementById('mobile-sidebar')).toHaveAttribute('inert');
     const primaryLinks = within(primaryNavigation).getAllByRole('link').map((link) => link.getAttribute('href'));
     expect(primaryLinks).toEqual([
       '/',
@@ -126,6 +129,200 @@ describe('MainLayout newsletter navigation', () => {
     ))).toBe(true);
   });
 
+  it('opens and closes the mobile drawer with the toggle without stealing initial focus', async () => {
+    const user = userEvent.setup();
+    renderLayout();
+
+    const toggle = screen.getByRole('button', { name: 'Toggle navigation' });
+    const sidebar = document.getElementById('mobile-sidebar');
+    expect(document.activeElement).not.toBe(toggle);
+
+    await user.click(toggle);
+    expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    expect(document.activeElement).toBe(toggle);
+    expect(sidebar).not.toHaveAttribute('aria-hidden', 'true');
+    expect(sidebar).not.toHaveAttribute('inert');
+    expect(screen.getByRole('navigation', { name: 'Mobile navigation' })).toBeInTheDocument();
+
+    await user.click(toggle);
+    expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    expect(sidebar).toHaveAttribute('aria-hidden', 'true');
+    expect(sidebar).toHaveAttribute('inert');
+    expect(screen.queryByRole('navigation', { name: 'Mobile navigation' })).not.toBeInTheDocument();
+    expect(document.activeElement).toBe(toggle);
+  });
+
+  it('closes the open drawer on Escape and restores focus to the toggle', async () => {
+    const user = userEvent.setup();
+    renderLayout();
+
+    const toggle = screen.getByRole('button', { name: 'Toggle navigation' });
+    await user.click(toggle);
+    within(screen.getByRole('navigation', { name: 'Mobile navigation' }))
+      .getByRole('link', { name: 'About' }).focus();
+
+    await user.keyboard('{Escape}');
+
+    expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    expect(document.activeElement).toBe(toggle);
+  });
+
+  it('does not close the drawer or steal focus when Escape is pressed while closed', async () => {
+    const user = userEvent.setup();
+    renderLayout();
+
+    const toggle = screen.getByRole('button', { name: 'Toggle navigation' });
+    const primaryBlogLink = document.querySelector('nav[aria-label="Primary navigation"] a[href="/blog"]');
+    primaryBlogLink.focus();
+
+    await user.keyboard('{Escape}');
+
+    expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    expect(document.activeElement).toBe(primaryBlogLink);
+  });
+
+  it('closes the drawer from the overlay and restores focus to the toggle', async () => {
+    const user = userEvent.setup();
+    renderLayout();
+
+    const toggle = screen.getByRole('button', { name: 'Toggle navigation' });
+    await user.click(toggle);
+    within(screen.getByRole('navigation', { name: 'Mobile navigation' }))
+      .getByRole('link', { name: 'About' }).focus();
+
+    await user.click(document.getElementById('mobile-sidebar').previousElementSibling);
+
+    expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    expect(document.activeElement).toBe(toggle);
+  });
+
+  it('closes at the desktop breakpoint, restores scrolling, and stays closed on mobile return', async () => {
+    const previousOverflow = document.body.style.overflow;
+    const previousMatchMedia = window.matchMedia;
+    const listeners = new Set();
+    const desktopBreakpoint = {
+      matches: false,
+      addEventListener: vi.fn((eventName, listener) => {
+        if (eventName === 'change') listeners.add(listener);
+      }),
+      removeEventListener: vi.fn((eventName, listener) => {
+        if (eventName === 'change') listeners.delete(listener);
+      }),
+      change(matches) {
+        this.matches = matches;
+        listeners.forEach((listener) => listener({ matches }));
+      },
+    };
+    window.matchMedia = vi.fn().mockReturnValue(desktopBreakpoint);
+    document.body.style.overflow = 'scroll';
+    const user = userEvent.setup();
+    const { unmount } = renderLayout('/blog');
+
+    try {
+      const toggle = screen.getByRole('button', { name: 'Toggle navigation' });
+      await user.click(toggle);
+      expect(document.body.style.overflow).toBe('hidden');
+
+      act(() => desktopBreakpoint.change(true));
+
+      const desktopBlogLink = document.querySelector(
+        'nav[aria-label="Primary navigation"] a[href="/blog"]',
+      );
+      expect(toggle).toHaveAttribute('aria-expanded', 'false');
+      expect(document.body.style.overflow).toBe('scroll');
+      expect(document.activeElement).toBe(desktopBlogLink);
+      expect(listeners.size).toBe(0);
+
+      act(() => desktopBreakpoint.change(false));
+      expect(toggle).toHaveAttribute('aria-expanded', 'false');
+      expect(document.getElementById('mobile-sidebar')).toHaveAttribute('inert');
+
+      await user.click(toggle);
+      within(screen.getByRole('navigation', { name: 'Mobile navigation' }))
+        .getByRole('link', { name: 'About' }).focus();
+      act(() => desktopBreakpoint.change(true));
+
+      const desktopAboutLink = document.querySelector(
+        'nav[aria-label="Primary navigation"] a[href="/about"]',
+      );
+      expect(toggle).toHaveAttribute('aria-expanded', 'false');
+      expect(document.activeElement).toBe(desktopAboutLink);
+      expect(listeners.size).toBe(0);
+    } finally {
+      unmount();
+      window.matchMedia = previousMatchMedia;
+      document.body.style.overflow = previousOverflow;
+    }
+  });
+
+  it('leaves Escape to an active modal and closes the drawer after the modal is gone', async () => {
+    const user = userEvent.setup();
+    renderLayout();
+
+    const toggle = screen.getByRole('button', { name: 'Toggle navigation' });
+    await user.click(toggle);
+    const dialog = document.createElement('div');
+    dialog.setAttribute('role', 'dialog');
+    dialog.setAttribute('aria-modal', 'true');
+    dialog.tabIndex = -1;
+    const handleDialogEscape = vi.fn();
+    dialog.addEventListener('keydown', handleDialogEscape);
+    document.body.appendChild(dialog);
+
+    try {
+      dialog.focus();
+      await user.keyboard('{Escape}');
+
+      expect(handleDialogEscape).toHaveBeenCalledOnce();
+      expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    } finally {
+      dialog.remove();
+    }
+
+    within(screen.getByRole('navigation', { name: 'Mobile navigation' }))
+      .getByRole('link', { name: 'About' }).focus();
+    await user.keyboard('{Escape}');
+
+    expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    expect(document.activeElement).toBe(toggle);
+  });
+
+  it('locks body scrolling while open and restores the previous overflow on close', async () => {
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'auto';
+    const user = userEvent.setup();
+    const { unmount } = renderLayout();
+
+    try {
+      await user.click(screen.getByRole('button', { name: 'Toggle navigation' }));
+      expect(document.body.style.overflow).toBe('hidden');
+
+      await user.click(screen.getByRole('button', { name: 'Toggle navigation' }));
+      expect(document.body.style.overflow).toBe('auto');
+    } finally {
+      unmount();
+      document.body.style.overflow = previousOverflow;
+    }
+  });
+
+  it('restores body scrolling when unmounted while open', async () => {
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'scroll';
+    const user = userEvent.setup();
+    const { unmount } = renderLayout();
+
+    try {
+      await user.click(screen.getByRole('button', { name: 'Toggle navigation' }));
+      expect(document.body.style.overflow).toBe('hidden');
+
+      unmount();
+      expect(document.body.style.overflow).toBe('scroll');
+    } finally {
+      unmount();
+      document.body.style.overflow = previousOverflow;
+    }
+  });
+
   it('navigates to DAHI Voices from the mobile drawer and marks it as the active page', async () => {
     const user = userEvent.setup();
     renderLayout('/');
@@ -139,11 +336,12 @@ describe('MainLayout newsletter navigation', () => {
     await user.keyboard('{Enter}');
 
     expect(await screen.findByRole('heading', { name: 'DAHI Voices' })).toBeInTheDocument();
-    expect(within(screen.getByRole('navigation', { name: 'Mobile navigation' }))
-      .getByRole('link', { name: 'DAHI Voices' })).toHaveAttribute('aria-current', 'page');
+    expect(within(document.getElementById('mobile-sidebar'))
+      .getByRole('link', { name: 'DAHI Voices', hidden: true })).toHaveAttribute('aria-current', 'page');
     expect(screen.getByRole('button', { name: 'Toggle navigation' })).toHaveAttribute('aria-expanded', 'false');
     expect(within(screen.getByRole('navigation', { name: 'Primary navigation' }))
       .getByRole('link', { name: 'DAHI Voices' })).toHaveAttribute('aria-current', 'page');
+    expect(document.activeElement).toBe(document.getElementById('main-content'));
   });
 
   it('navigates from another route, scrolls to the section, and moves focus', async () => {
@@ -170,7 +368,11 @@ describe('MainLayout newsletter navigation', () => {
       value: scrollIntoView,
     });
     originalMatchMediaDescriptor = Object.getOwnPropertyDescriptor(window, 'matchMedia');
-    window.matchMedia = vi.fn().mockReturnValue({ matches: true });
+    window.matchMedia = vi.fn().mockImplementation((query) => ({
+      matches: query === '(prefers-reduced-motion: reduce)',
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+    }));
     renderLayout();
 
     fireEvent.click(screen.getByRole('button', { name: 'Toggle navigation' }));

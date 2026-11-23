@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { lockBodyScroll } from '../../utils/bodyScrollLock';
 
 function OutreachInterestModal({ isOpen, onClose, mode = 'register' }) {
   const [formData, setFormData] = useState({ name: '', email: '', note: '' });
@@ -12,15 +13,14 @@ function OutreachInterestModal({ isOpen, onClose, mode = 'register' }) {
     if (isOpen) {
       setMounted(true);
       requestAnimationFrame(() => setVisible(true));
-      const prevOverflow = document.body.style.overflow;
-      document.body.style.overflow = 'hidden';
+      const releaseBodyScroll = lockBodyScroll();
 
       const onKey = (e) => { if (e.key === 'Escape') onClose?.(); };
       window.addEventListener('keydown', onKey);
 
       return () => {
         window.removeEventListener('keydown', onKey);
-        document.body.style.overflow = prevOverflow;
+        releaseBodyScroll();
       };
     }
 

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import VolunteerForm from './VolunteerForm';
+import { lockBodyScroll } from '../../utils/bodyScrollLock';
 
 function VolunteerModal({ isOpen, onClose }) {
   const [mounted, setMounted] = useState(false);
@@ -12,8 +13,7 @@ function VolunteerModal({ isOpen, onClose }) {
       // allow mount then flip visible for CSS entry animation
       requestAnimationFrame(() => setVisible(true));
 
-      const prevOverflow = document.body.style.overflow;
-      document.body.style.overflow = 'hidden';
+      const releaseBodyScroll = lockBodyScroll();
 
       const onKey = (e) => {
         if (e.key === 'Escape') onClose?.();
@@ -22,7 +22,7 @@ function VolunteerModal({ isOpen, onClose }) {
 
       return () => {
         window.removeEventListener('keydown', onKey);
-        document.body.style.overflow = prevOverflow;
+        releaseBodyScroll();
       };
     }
 

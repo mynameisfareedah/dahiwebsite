@@ -1,7 +1,8 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import NewsletterLink from './NewsletterLink';
+import { lockBodyScroll } from '../../utils/bodyScrollLock';
 
 const sidebarLinks = [
   { to: '/', label: 'Home' },
@@ -18,11 +19,103 @@ const sidebarLinks = [
 
 function Sidebar({ mobileOpen, setMobileOpen }) {
   const location = useLocation();
+  const toggleButtonRef = useRef(null);
+  const sidebarRef = useRef(null);
+  const previousPathnameRef = useRef(location.pathname);
 
-  // Close sidebar when route changes
-  useEffect(() => {
+  const closeMobileMenu = useCallback(({ restoreFocus = false } = {}) => {
+    if (restoreFocus) {
+      toggleButtonRef.current?.focus();
+    } else if (sidebarRef.current?.contains(document.activeElement)) {
+      const mainContent = document.getElementById('main-content');
+      if (mainContent) mainContent.focus({ preventScroll: true });
+      else toggleButtonRef.current?.focus();
+    }
+
     setMobileOpen(false);
-  }, [location.pathname, setMobileOpen]);
+  }, [setMobileOpen]);
+
+  useEffect(() => {
+    if (previousPathnameRef.current === location.pathname) return;
+
+    previousPathnameRef.current = location.pathname;
+    if (mobileOpen) closeMobileMenu();
+  }, [closeMobileMenu, location.pathname, mobileOpen]);
+
+  useEffect(() => {
+    if (!mobileOpen) return undefined;
+
+    const handleKeyDown = (event) => {
+      if (event.key !== 'Escape' || event.defaultPrevented) return;
+      if (document.querySelector('[role="dialog"][aria-modal="true"]')) return;
+
+      closeMobileMenu({ restoreFocus: true });
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [closeMobileMenu, mobileOpen]);
+
+  useEffect(() => {
+    if (!mobileOpen) return undefined;
+
+    const desktopBreakpoint = window.matchMedia('(min-width: 1280px)');
+    const closeAtDesktopBreakpoint = (event) => {
+      if (!event.matches) return;
+
+      const activeElement = document.activeElement;
+      if (activeElement === toggleButtonRef.current || sidebarRef.current?.contains(activeElement)) {
+        const activeHref = activeElement.closest('a[href]')?.getAttribute('href');
+        const desktopLinks = Array.from(
+          document.querySelectorAll('nav[aria-label="Primary navigation"] a[href]'),
+        );
+        const desktopLink = desktopLinks.find((link) => link.getAttribute('href') === activeHref)
+          || desktopLinks.find((link) => link.getAttribute('aria-current') === 'page')
+          || desktopLinks[0];
+
+        if (desktopLink) desktopLink.focus({ preventScroll: true });
+        else document.getElementById('main-content')?.focus({ preventScroll: true });
+      }
+
+      setMobileOpen(false);
+    };
+
+    let removeBreakpointListener;
+    if (
+      typeof desktopBreakpoint.addEventListener === 'function'
+      && typeof desktopBreakpoint.removeEventListener === 'function'
+    ) {
+      desktopBreakpoint.addEventListener('change', closeAtDesktopBreakpoint);
+      removeBreakpointListener = () => {
+        desktopBreakpoint.removeEventListener('change', closeAtDesktopBreakpoint);
+      };
+    } else if (
+      typeof desktopBreakpoint.addListener === 'function'
+      && typeof desktopBreakpoint.removeListener === 'function'
+    ) {
+      desktopBreakpoint.addListener(closeAtDesktopBreakpoint);
+      removeBreakpointListener = () => {
+        desktopBreakpoint.removeListener(closeAtDesktopBreakpoint);
+      };
+    } else {
+      const handleResize = () => {
+        closeAtDesktopBreakpoint({
+          matches: window.matchMedia('(min-width: 1280px)').matches,
+        });
+      };
+      window.addEventListener('resize', handleResize);
+      removeBreakpointListener = () => window.removeEventListener('resize', handleResize);
+    }
+
+    if (desktopBreakpoint.matches) closeAtDesktopBreakpoint(desktopBreakpoint);
+
+    return removeBreakpointListener;
+  }, [mobileOpen, setMobileOpen]);
+
+  useEffect(() => {
+    if (!mobileOpen) return undefined;
+    return lockBodyScroll();
+  }, [mobileOpen]);
 
   return (
     <>
@@ -59,7 +152,11 @@ function Sidebar({ mobileOpen, setMobileOpen }) {
           Join Us
         </NewsletterLink>
         <button
-          onClick={() => setMobileOpen(!mobileOpen)}
+          ref={toggleButtonRef}
+          onClick={() => {
+            if (mobileOpen) closeMobileMenu({ restoreFocus: true });
+            else setMobileOpen(true);
+          }}
           className="shrink-0 rounded-lg border border-slate-200 p-2 text-slate-700 hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dahiPrimary min-[1280px]:hidden"
           aria-expanded={mobileOpen}
           aria-controls="mobile-sidebar"
@@ -73,13 +170,16 @@ function Sidebar({ mobileOpen, setMobileOpen }) {
       {mobileOpen && (
         <div
           className="fixed inset-0 z-30 bg-black/50 min-[1280px]:hidden"
-          onClick={() => setMobileOpen(false)}
+          onClick={() => closeMobileMenu({ restoreFocus: true })}
         />
       )}
 
       {/* Sidebar */}
       <aside
+        ref={sidebarRef}
         id="mobile-sidebar"
+        aria-hidden={!mobileOpen}
+        inert={mobileOpen ? undefined : ''}
         className={`fixed top-0 left-0 bottom-0 z-40 w-64 transform border-r border-slate-200 bg-white transition-transform duration-300 ease-in-out min-[1280px]:hidden ${
           mobileOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
@@ -102,6 +202,7 @@ function Sidebar({ mobileOpen, setMobileOpen }) {
                 <li key={link.to}>
                   <NavLink
                     to={link.to}
+                    onClick={() => closeMobileMenu({ restoreFocus: location.pathname === link.to })}
                     className={({ isActive }) =>
                       `block px-4 py-3 rounded-lg font-semibold text-sm transition ${
                         isActive
@@ -116,7 +217,7 @@ function Sidebar({ mobileOpen, setMobileOpen }) {
               ))}
               <li>
                 <NewsletterLink
-                  onClick={() => setMobileOpen(false)}
+                  onClick={() => closeMobileMenu({ restoreFocus: true })}
                   className="block rounded-lg px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-dahiPrimary"
                 >
                   Newsletter
@@ -128,7 +229,7 @@ function Sidebar({ mobileOpen, setMobileOpen }) {
           {/* External Links & CTA Section */}
           <div className="border-t border-slate-200 px-4 py-4 space-y-3">
             <NewsletterLink
-              onClick={() => setMobileOpen(false)}
+              onClick={() => closeMobileMenu({ restoreFocus: true })}
               className="flex items-center justify-center gap-2 rounded-lg bg-dahiPrimary px-4 py-3 font-semibold text-white transition hover:bg-dahiSecondary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dahiPrimary"
             >
               Join Us
